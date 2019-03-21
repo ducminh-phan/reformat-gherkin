@@ -2,8 +2,12 @@
 name = "reformat-gherkin"
 version = "0.1.0"
 description = "Formatter for gherkin language"
+readme = "README.md"
 authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
 license = "MIT"
+
+[tool.poetry.scripts]
+reformat-gherkin = "reformat_gherkin:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"

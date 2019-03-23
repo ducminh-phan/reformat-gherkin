@@ -1,7 +1,9 @@
+import attr
+
 from .location import Location
 
 
+@attr.s(slots=True, auto_attribs=True)
 class Comment:
-    def __init__(self, location: Location, text: str):
-        self.location: Location = location
-        self.text: str = text
+    location: Location
+    text: str

@@ -1,7 +1,9 @@
+import attr
+
 from .location import Location
 
 
+@attr.s(slots=True, auto_attribs=True)
 class TableCell:
-    def __init__(self, location: Location, value: str):
-        self.location: Location = location
-        self.value: str = value
+    location: Location
+    value: str

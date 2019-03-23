@@ -1,9 +1,14 @@
+from typing import List
+
+import attr
+
 from .location import Location
+from .step import Step
 
 
+@attr.s(slots=True, auto_attribs=True)
 class Background:
-    def __init__(self, location: Location, keyword: str, name: str, steps):
-        self.location: Location = location
-        self.keyword: str = keyword
-        self.name: str = name
-        self.steps = steps
+    location: Location
+    keyword: str
+    name: str
+    steps: List[Step]

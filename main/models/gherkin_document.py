@@ -1,10 +1,12 @@
 from typing import List
 
+import attr
+
 from .comment import Comment
 from .feature import Feature
 
 
+@attr.s(slots=True, auto_attribs=True)
 class GherkinDocument:
-    def __init__(self, feature: Feature, comments: List[Comment]):
-        self.feature: Feature = feature
-        self.comments: List[Comment] = comments
+    feature: Feature
+    comments: List[Comment]

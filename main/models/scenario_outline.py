@@ -1,22 +1,18 @@
 from typing import List
 
+import attr
+
+from .examples import Examples
 from .location import Location
+from .step import Step
 from .tag import Tag
 
 
+@attr.s(slots=True, auto_attribs=True)
 class ScenarioOutline:
-    def __init__(
-        self,
-        location: Location,
-        keyword: str,
-        name: str,
-        steps,
-        tags: List[Tag],
-        examples,
-    ):
-        self.location: Location = location
-        self.keyword: str = keyword
-        self.name: str = name
-        self.steps = steps
-        self.tags: List[Tag] = tags
-        self.examples = examples
+    location: Location
+    keyword: str
+    name: str
+    steps: List[Step]
+    tags: List[Tag]
+    examples: List[Examples]

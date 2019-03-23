@@ -13,6 +13,7 @@ reformat-gherkin = "reformat_gherkin:main"
 python = "^3.6"
 gherkin-official = "^4.1"
 click = "^7.0"
+attrs = "^19.1"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^1.14"

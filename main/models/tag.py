@@ -1,7 +1,9 @@
+import attr
+
 from .location import Location
 
 
+@attr.s(slots=True, auto_attribs=True)
 class Tag:
-    def __init__(self, location: Location, name: str):
-        self.location: Location = location
-        self.name: str = name
+    location: Location
+    name: str

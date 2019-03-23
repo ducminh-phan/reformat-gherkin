@@ -1,4 +1,7 @@
+import attr
+
+
+@attr.s(slots=True, auto_attribs=True)
 class Location:
-    def __init__(self, line: int, column: int):
-        self.line: int = line
-        self.column: int = column
+    line: int = attr.ib()
+    column: int = attr.ib()

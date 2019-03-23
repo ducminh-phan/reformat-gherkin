@@ -1,10 +1,12 @@
 from typing import List
 
+import attr
+
 from .location import Location
 from .table_cell import TableCell
 
 
+@attr.s(slots=True, auto_attribs=True)
 class TableRow:
-    def __init__(self, location: Location, cells: List[TableCell]):
-        self.location: Location = location
-        self.cells: List[TableCell] = cells
+    location: Location
+    cells: List[TableCell]

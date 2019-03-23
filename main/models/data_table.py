@@ -1,10 +1,12 @@
 from typing import List
 
+import attr
+
 from .location import Location
 from .table_row import TableRow
 
 
+@attr.s(slots=True, auto_attribs=True)
 class DataTable:
-    def __init__(self, location: Location, rows: List[TableRow]):
-        self.location: Location = location
-        self.rows: List[TableRow] = rows
+    location: Location
+    rows: List[TableRow]

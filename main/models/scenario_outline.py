@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import attr
 
@@ -16,3 +16,4 @@ class ScenarioOutline:
     steps: List[Step]
     tags: List[Tag]
     examples: List[Examples]
+    description: Optional[str]

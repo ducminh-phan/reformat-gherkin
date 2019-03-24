@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import attr
 
@@ -14,3 +14,4 @@ class Scenario:
     name: str
     steps: List[Step]
     tags: List[Tag]
+    description: Optional[str]

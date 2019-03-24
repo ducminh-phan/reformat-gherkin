@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import attr
 
@@ -12,3 +12,4 @@ class Background:
     keyword: str
     name: str
     steps: List[Step]
+    description: Optional[str]

@@ -15,3 +15,4 @@ class Examples:
     tags: List[Tag]
     table_header: Optional[TableRow]
     table_body: Optional[List[TableRow]]
+    description: Optional[str]

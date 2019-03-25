@@ -8,5 +8,5 @@ from .feature import Feature
 
 @attr.s(slots=True, auto_attribs=True)
 class GherkinDocument:
-    feature: Optional[Feature]
     comments: List[Comment]
+    feature: Optional[Feature] = None

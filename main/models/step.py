@@ -11,4 +11,4 @@ class Step:
     location: Location
     keyword: str
     text: str
-    argument: Optional[DataTable]
+    argument: Optional[DataTable] = None

@@ -12,4 +12,4 @@ class Background:
     keyword: str
     name: str
     steps: List[Step]
-    description: Optional[str]
+    description: Optional[str] = None

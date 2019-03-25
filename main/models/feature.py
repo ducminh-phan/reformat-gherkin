@@ -15,7 +15,7 @@ class Feature:
     location: Location
     keyword: str
     name: str
-    background: Optional[Background]
     scenarios: List[Union[Scenario, ScenarioOutline]]
     tags: List[Tag]
-    description: Optional[str]
+    background: Optional[Background] = None
+    description: Optional[str] = None

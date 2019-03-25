@@ -16,4 +16,4 @@ class ScenarioOutline:
     steps: List[Step]
     tags: List[Tag]
     examples: List[Examples]
-    description: Optional[str]
+    description: Optional[str] = None

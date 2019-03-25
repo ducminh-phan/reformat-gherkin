@@ -13,6 +13,6 @@ class Examples:
     keyword: str
     name: str
     tags: List[Tag]
-    table_header: Optional[TableRow]
-    table_body: Optional[List[TableRow]]
-    description: Optional[str]
+    table_header: Optional[TableRow] = None
+    table_body: Optional[List[TableRow]] = None
+    description: Optional[str] = None

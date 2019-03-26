@@ -1,7 +1,7 @@
-import attr
+from attr import dataclass
 
 
-@attr.s(slots=True, auto_attribs=True)
+@dataclass(slots=True)
 class Location:
-    line: int = attr.ib()
-    column: int = attr.ib()
+    line: int
+    column: int

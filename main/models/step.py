@@ -1,12 +1,12 @@
 from typing import Optional
 
-import attr
+from attr import dataclass
 
 from .data_table import DataTable
 from .location import Location
 
 
-@attr.s(slots=True, auto_attribs=True)
+@dataclass(slots=True)
 class Step:
     location: Location
     keyword: str

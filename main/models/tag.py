@@ -1,9 +1,9 @@
-import attr
+from attr import dataclass
 
 from .location import Location
 
 
-@attr.s(slots=True, auto_attribs=True)
+@dataclass(slots=True)
 class Tag:
     location: Location
     name: str

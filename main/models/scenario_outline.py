@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-import attr
+from attr import dataclass
 
 from .examples import Examples
 from .location import Location
@@ -8,7 +8,7 @@ from .step import Step
 from .tag import Tag
 
 
-@attr.s(slots=True, auto_attribs=True)
+@dataclass(slots=True)
 class ScenarioOutline:
     location: Location
     keyword: str

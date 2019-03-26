@@ -1,12 +1,12 @@
 from typing import List
 
-import attr
+from attr import dataclass
 
 from .location import Location
 from .table_row import TableRow
 
 
-@attr.s(slots=True, auto_attribs=True)
+@dataclass(slots=True)
 class DataTable:
     location: Location
     rows: List[TableRow]

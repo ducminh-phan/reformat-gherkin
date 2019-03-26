@@ -1,13 +1,13 @@
 from typing import List, Optional
 
-import attr
+from attr import dataclass
 
 from .location import Location
 from .table_row import TableRow
 from .tag import Tag
 
 
-@attr.s(slots=True, auto_attribs=True)
+@dataclass(slots=True)
 class Examples:
     location: Location
     keyword: str

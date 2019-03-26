@@ -1,7 +1,7 @@
-import attr
+from attr import dataclass
 
 
-@attr.s(auto_attribs=True, frozen=True, cmp=True)
+@dataclass(frozen=True, cmp=True)
 class BaseError(Exception):
     message: str
 
@@ -22,7 +22,7 @@ class DeserializeError(BaseError):
     pass
 
 
-@attr.s(auto_attribs=True, frozen=True, cmp=True)
+@dataclass(frozen=True, cmp=True)
 class BaseWarning(Warning):
     message: str
 

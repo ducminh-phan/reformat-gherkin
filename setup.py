@@ -53,6 +53,7 @@ setup(
         "gherkin-official (>=4.1,<5.0)",
         "click (>=7.0,<8.0)",
         "attrs (>=19.1,<20.0)",
+        "cattrs (>=0.9.0,<0.10.0)",
     ],  # Optional
     # https://setuptools.readthedocs.io/en/latest/setuptools.html#dependencies-that-aren-t-in-pypi
     dependency_links=[],  # Optional

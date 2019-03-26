@@ -1,48 +1,35 @@
-from importlib import import_module
+from typing import Any, Dict, Type
 
+from cattr.converters import Converter
 from gherkin.errors import ParserError
 from gherkin.parser import Parser
 
 from .errors import DeserializeError, InvalidInput
+from .models.gherkin_document import GherkinDocument
 from .utils import camel_to_snake_case
 
 
-def get_model_from_type(type_):
-    file_name = camel_to_snake_case(type_)
-    module_path = f"main.models.{file_name}"
+class CustomConverter(Converter):
+    def structure_attrs_fromdict(self, obj: Dict[str, Any], cls: Type) -> Any:
+        # Make sure the type in the parsed object matches the class we use
+        # to structure the object
+        if "type" in obj:
+            type_name = obj.pop("type")
+            cls_name = cls.__name__
+            assert type_name == cls_name, f"{type_name} does not match {cls_name}"
 
-    module = import_module(module_path)
+        # Note that keys are in camelCase convention, for example, tableHeader,
+        # tableBody. Therefore, we need to convert the keys to snake_case.
+        transformed_obj = {}
+        for key, value in obj.items():
+            transformed_obj[camel_to_snake_case(key)] = value
 
-    return getattr(module, type_)
+        return super(CustomConverter, self).structure_attrs_fromdict(
+            transformed_obj, cls
+        )
 
 
-def deserialize(parse_results):
-    """
-    Deserialize the JSON object returned from gherkin library. The results are
-    instances of models defined in main.models. The parse results are deserialized
-    recursively.
-    """
-    if isinstance(parse_results, list):
-        return [deserialize(result) for result in parse_results]
-
-    if isinstance(parse_results, dict):
-        # Location objects do not have the key `type` in the JSON representation
-        if "type" in parse_results:
-            type_ = parse_results.pop("type")
-        else:
-            type_ = "Location"
-
-        model = get_model_from_type(type_)
-
-        deserialized_results = {}
-        for key, value in parse_results.items():
-            # Note that keys are in camelCase convention, for example, tableHeader,
-            # tableBody. Therefore, we need to convert the keys to snake case here.
-            deserialized_results[camel_to_snake_case(key)] = deserialize(value)
-
-        return model(**deserialized_results)
-
-    return parse_results
+converter = CustomConverter()
 
 
 def parse(content):
@@ -57,7 +44,7 @@ def parse(content):
         raise InvalidInput(e)
 
     try:
-        result = deserialize(parse_result)
+        result = converter.structure(parse_result, GherkinDocument)
     except Exception as e:
         raise DeserializeError(f"{e.__class__.__name__}:\n{e}")
 

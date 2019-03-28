@@ -28,5 +28,4 @@ class AlignmentMode(Enum):
 @dataclass(frozen=True, kw_only=True)
 class Options:
     write_back: WriteBackMode
-    recursive: bool
     step_keyword_alignment: AlignmentMode

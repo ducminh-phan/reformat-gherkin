@@ -1,32 +1,49 @@
+from typing import Optional, Tuple
+
 import click
+
+from .options import AlignmentMode, Options, WriteBackMode
 
 
 @click.command()
-@click.argument("path", type=click.Path(exists=True))
+@click.argument(
+    "src",
+    nargs=-1,
+    type=click.Path(
+        exists=True, file_okay=True, dir_okay=True, readable=True, resolve_path=True
+    ),
+    is_eager=True,
+)
 @click.option(
-    "-o",
-    "--output",
-    default="inplace",
-    show_default=True,
+    "--check",
+    is_flag=True,
     help=(
-        "Specify the output path. Valid options: inplace, stdout, "
-        "or a path to a folder, which should not be a sub-folder of the path provided."
+        "Don't write the files back, just return the status. Return code 0 "
+        "means nothing would change. Return code 1 means some files would be "
+        "reformatted. Return code -1 means there was an internal error."
     ),
 )
 @click.option(
-    "-R",
-    "--no-recursive",
-    "recursive",
-    flag_value=False,
-    default=True,
+    "-a",
+    "--alignment",
+    type=click.Choice([AlignmentMode.LEFT.value, AlignmentMode.RIGHT.value]),
     help=(
-        "By default, the sub-folders are scanned recursively. Use this option to "
-        "scan files without looking into sub-folders."
+        "Specify the alignment of step keywords (Given, When, Then,...). "
+        "If specified, all statements after step keywords are left-aligned, "
+        "spaces are inserted before/after the keywords to right/left align them. "
+        "By default, step keywords are left-aligned, and there is a single "
+        "space between the step keyword and the statement."
     ),
 )
-def main(path: str, output: str, recursive: bool):
+def main(src: Tuple[str], check: bool, alignment: Optional[str]):
     """
     Reformat a Gherkin file or all files in a directory. If a directory is provided,
     the tool will reformat all files in all sub-folders recursively.
     """
-    print(path, output, recursive)
+    write_back_mode = WriteBackMode.from_configuration(check=check)
+    alignment_mode = AlignmentMode.from_configuration(alignment)
+
+    options = Options(write_back=write_back_mode, step_keyword_alignment=alignment_mode)
+
+    print(src, check, alignment)
+    print(options)

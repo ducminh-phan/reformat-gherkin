@@ -41,3 +41,9 @@ class EmptyExamplesWarning(BaseWarning):
     """
 
     pass
+
+
+class NothingChanged(BaseWarning):
+    """Raised when reformatted code is the same as source."""
+
+    pass

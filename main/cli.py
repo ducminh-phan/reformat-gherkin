@@ -35,7 +35,15 @@ from .options import AlignmentMode, Options, WriteBackMode
         "space between the step keyword and the statement."
     ),
 )
-def main(src: Tuple[str], check: bool, alignment: Optional[str]):
+@click.option(
+    "--fast/--safe",
+    is_flag=True,
+    help=(
+        "If --fast given, skip the check for equivalence of file contents. "
+        "[default: --safe]"
+    ),
+)
+def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool):
     """
     Reformat a Gherkin file or all files in a directory. If a directory is provided,
     the tool will reformat all files in all sub-folders recursively.
@@ -43,7 +51,9 @@ def main(src: Tuple[str], check: bool, alignment: Optional[str]):
     write_back_mode = WriteBackMode.from_configuration(check=check)
     alignment_mode = AlignmentMode.from_configuration(alignment)
 
-    options = Options(write_back=write_back_mode, step_keyword_alignment=alignment_mode)
+    options = Options(
+        write_back=write_back_mode, step_keyword_alignment=alignment_mode, fast=fast
+    )
 
-    print(src, check, alignment)
+    print(src)
     print(options)

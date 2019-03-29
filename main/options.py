@@ -29,3 +29,4 @@ class AlignmentMode(Enum):
 class Options:
     write_back: WriteBackMode
     step_keyword_alignment: AlignmentMode
+    fast: bool

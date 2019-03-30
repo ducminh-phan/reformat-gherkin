@@ -1,6 +1,6 @@
 from typing import List
 
-from attr import dataclass
+from attr import attrib, dataclass
 
 from .location import Location
 from .table_cell import TableCell
@@ -8,5 +8,5 @@ from .table_cell import TableCell
 
 @dataclass(slots=True)
 class TableRow:
-    location: Location
+    location: Location = attrib(cmp=False)
     cells: List[TableCell]

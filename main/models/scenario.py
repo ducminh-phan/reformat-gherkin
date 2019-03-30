@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from attr import dataclass
+from attr import attrib, dataclass
 
 from .location import Location
 from .step import Step
@@ -9,7 +9,7 @@ from .tag import Tag
 
 @dataclass(slots=True)
 class Scenario:
-    location: Location
+    location: Location = attrib(cmp=False)
     keyword: str
     name: str
     steps: List[Step]

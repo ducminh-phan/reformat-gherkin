@@ -5,7 +5,13 @@ from typing import Set, Tuple
 
 import click
 
-from .errors import BaseError, NothingChanged
+from .errors import (
+    BaseError,
+    EquivalentError,
+    InternalError,
+    NothingChanged,
+    StableError,
+)
 from .options import Options, WriteBackMode
 from .parser import parse
 from .utils import diff, dump_to_file
@@ -51,6 +57,9 @@ def reformat_single_file(src: Path, *, options: Options) -> bool:
 def format_file_contents(src_contents: str, *, options: Options) -> str:
     """
     Reformat the contents a file and return new contents.
+
+    If `options.fast` is False, additionally confirm that the reformatted file is
+    valid by calling :func:`assert_equivalent` and :func:`assert_stable` on it.
     """
     if src_contents.strip() == "":
         raise NothingChanged
@@ -80,7 +89,7 @@ def assert_equivalent(src: str, dst: str) -> None:
         dst_model = parse(dst)
     except BaseError as exc:
         log = dump_to_file("".join(traceback.format_tb(exc.__traceback__)), dst)
-        raise AssertionError(
+        raise InternalError(
             f"INTERNAL ERROR: Invalid file contents are produced: {exc}. "
             f"Please report a bug on {REPORT_URL}. "
             f"This invalid output might be helpful: {log}"
@@ -88,7 +97,7 @@ def assert_equivalent(src: str, dst: str) -> None:
 
     if src_model != dst_model:
         log = dump_to_file(diff(src_model, dst_model, "src", "dst"))
-        raise AssertionError(
+        raise EquivalentError(
             f"INTERNAL ERROR: Black produced code that is not equivalent to "
             f"the source. "
             f"Please report a bug on {REPORT_URL}. "
@@ -106,7 +115,7 @@ def assert_stable(src: str, dst: str, *, options: Options) -> None:
             diff(src, dst, "source", "first pass"),
             diff(dst, newdst, "first pass", "second pass"),
         )
-        raise AssertionError(
+        raise StableError(
             f"INTERNAL ERROR: Different contents are produced on the second pass "
             f"of the formatter. "
             f"Please report a bug on {REPORT_URL}. "

@@ -5,9 +5,12 @@ import pytest
 
 @pytest.fixture(scope="session")
 def valid_contents():
-    for path in glob("tests/data/valid/*.feature"):
-        with open(path, "r", encoding="utf-8") as f:
-            yield f.read()
+    def _valid_contents():
+        for path in glob("tests/data/valid/*.feature"):
+            with open(path, "r", encoding="utf-8") as f:
+                yield f.read()
+
+    return _valid_contents()
 
 
 @pytest.fixture(scope="session")

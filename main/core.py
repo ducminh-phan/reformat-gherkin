@@ -86,7 +86,7 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"This invalid output might be helpful: {log}"
         ) from None
 
-    if src_model != dst_model:  # TODO: Do not include location when comparing models
+    if src_model != dst_model:
         log = dump_to_file(diff(src_model, dst_model, "src", "dst"))
         raise AssertionError(
             f"INTERNAL ERROR: Black produced code that is not equivalent to "

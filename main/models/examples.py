@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from attr import dataclass
+from attr import attrib, dataclass
 
 from .location import Location
 from .table_row import TableRow
@@ -9,7 +9,7 @@ from .tag import Tag
 
 @dataclass(slots=True)
 class Examples:
-    location: Location
+    location: Location = attrib(cmp=False)
     keyword: str
     name: str
     tags: List[Tag]

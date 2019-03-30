@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from attr import dataclass
+from attr import attrib, dataclass
 
 from .background import Background
 from .location import Location
@@ -12,7 +12,7 @@ from .tag import Tag
 @dataclass(slots=True)
 class Feature:
     language: str
-    location: Location
+    location: Location = attrib(cmp=False)
     keyword: str
     name: str
     children: List[Union[Background, Scenario, ScenarioOutline]]

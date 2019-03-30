@@ -1,9 +1,9 @@
-from attr import dataclass
+from attr import attrib, dataclass
 
 from .location import Location
 
 
 @dataclass(slots=True)
 class Tag:
-    location: Location
+    location: Location = attrib(cmp=False)
     name: str

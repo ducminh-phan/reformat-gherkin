@@ -38,10 +38,7 @@ from .options import AlignmentMode, Options, WriteBackMode
 @click.option(
     "--fast/--safe",
     is_flag=True,
-    help=(
-        "If --fast given, skip the check for equivalence of file contents. "
-        "[default: --safe]"
-    ),
+    help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
 )
 def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool):
     """

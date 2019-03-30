@@ -32,7 +32,7 @@ class CustomConverter(Converter):
 converter = CustomConverter()
 
 
-def parse(content):
+def parse(content: str) -> GherkinDocument:
     """
     Parse the content of a file to a Gherkin document model.
     """

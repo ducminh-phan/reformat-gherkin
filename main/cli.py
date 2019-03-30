@@ -40,7 +40,7 @@ from .options import AlignmentMode, Options, WriteBackMode
     is_flag=True,
     help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
 )
-def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool):
+def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool) -> None:
     """
     Reformat a Gherkin file or all files in a directory. If a directory is provided,
     the tool will reformat all files in all sub-folders recursively.

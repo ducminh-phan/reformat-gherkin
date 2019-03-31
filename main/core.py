@@ -96,7 +96,8 @@ def assert_equivalent(src: str, dst: str) -> None:
         ) from None
 
     if src_model != dst_model:
-        log = dump_to_file(diff(src_model, dst_model, "src", "dst"))
+        # TODO: Make comparing ASTs more clear here
+        log = dump_to_file(diff(str(src_model), str(dst_model), "src", "dst"))
         raise EquivalentError(
             f"INTERNAL ERROR: Black produced code that is not equivalent to "
             f"the source. "

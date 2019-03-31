@@ -1,9 +1,5 @@
-from attr import dataclass
-
-
-@dataclass(frozen=True, cmp=True)
 class BaseError(Exception):
-    message: str
+    pass
 
 
 class InvalidInput(BaseError):
@@ -36,9 +32,8 @@ class StableError(InternalError):
     """
 
 
-@dataclass(frozen=True, cmp=True)
 class BaseWarning(Warning):
-    message: str
+    pass
 
 
 class MissingExamplesWarning(BaseWarning):
@@ -54,4 +49,6 @@ class EmptyExamplesWarning(BaseWarning):
 
 
 class NothingChanged(BaseWarning):
-    """Raised when reformatted code is the same as source."""
+    """
+    Raised when reformatted code is the same as source.
+    """

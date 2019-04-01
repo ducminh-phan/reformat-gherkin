@@ -10,3 +10,11 @@ from .feature import Feature
 class GherkinDocument:
     comments: List[Comment]
     feature: Optional[Feature] = None
+
+    def __iter__(self):
+        yield self
+
+        yield from self.comments
+
+        if self.feature is not None:
+            yield from self.feature

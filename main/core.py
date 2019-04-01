@@ -1,10 +1,11 @@
 import traceback
 from functools import partial
 from pathlib import Path
-from typing import Set, Tuple
+from typing import Iterator, Set, Tuple
 
 import click
 
+from .ast_node.gherkin_document import GherkinDocument
 from .errors import (
     BaseError,
     EquivalentError,
@@ -83,6 +84,14 @@ def assert_equivalent(src: str, dst: str) -> None:
     """
     Raise AssertionError if `src` and `dst` aren't equivalent.
     """
+
+    def _v(ast: GherkinDocument) -> Iterator[str]:
+        """
+        Simple visitor generating strings to compare ASTs by content
+        """
+        for node in ast:
+            yield str(node)
+
     src_ast = parse(src)
 
     try:
@@ -95,9 +104,11 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"This invalid output might be helpful: {log}"
         ) from None
 
-    if src_ast != dst_ast:
-        # TODO: Make comparing ASTs more clear here
-        log = dump_to_file(diff(str(src_ast), str(dst_ast), "src", "dst"))
+    src_ast_str = "\n".join(_v(src_ast))
+    dst_ast_str = "\n".join(_v(dst_ast))
+
+    if src_ast_str != dst_ast_str:
+        log = dump_to_file(diff(src_ast_str, dst_ast_str, "src", "dst"))
         raise EquivalentError(
             f"INTERNAL ERROR: Black produced code that is not equivalent to "
             f"the source. "

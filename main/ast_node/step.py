@@ -12,3 +12,9 @@ class Step:
     keyword: str
     text: str
     argument: Optional[DataTable] = None
+
+    def __iter__(self):
+        yield self
+
+        if self.argument is not None:
+            yield from self.argument

@@ -1,3 +1,4 @@
+from itertools import chain
 from typing import List, Optional, Union
 
 from attr import attrib, dataclass
@@ -18,3 +19,10 @@ class Feature:
     children: List[Union[Background, Scenario, ScenarioOutline]]
     tags: List[Tag]
     description: Optional[str] = None
+
+    def __iter__(self):
+        yield from self.tags
+
+        yield self
+
+        yield from chain.from_iterable(self.children)

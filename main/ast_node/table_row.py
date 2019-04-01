@@ -10,3 +10,8 @@ from .table_cell import TableCell
 class TableRow:
     location: Location = attrib(cmp=False)
     cells: List[TableCell]
+
+    def __iter__(self):
+        yield self
+
+        yield from self.cells

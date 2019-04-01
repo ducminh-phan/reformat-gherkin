@@ -83,10 +83,10 @@ def assert_equivalent(src: str, dst: str) -> None:
     """
     Raise AssertionError if `src` and `dst` aren't equivalent.
     """
-    src_model = parse(src)
+    src_ast = parse(src)
 
     try:
-        dst_model = parse(dst)
+        dst_ast = parse(dst)
     except BaseError as exc:
         log = dump_to_file("".join(traceback.format_tb(exc.__traceback__)), dst)
         raise InternalError(
@@ -95,9 +95,9 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"This invalid output might be helpful: {log}"
         ) from None
 
-    if src_model != dst_model:
+    if src_ast != dst_ast:
         # TODO: Make comparing ASTs more clear here
-        log = dump_to_file(diff(str(src_model), str(dst_model), "src", "dst"))
+        log = dump_to_file(diff(str(src_ast), str(dst_ast), "src", "dst"))
         raise EquivalentError(
             f"INTERNAL ERROR: Black produced code that is not equivalent to "
             f"the source. "

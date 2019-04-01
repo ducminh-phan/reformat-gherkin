@@ -4,8 +4,8 @@ from cattr.converters import Converter
 from gherkin.errors import ParserError
 from gherkin.parser import Parser
 
+from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
-from .models.gherkin_document import GherkinDocument
 from .utils import camel_to_snake_case
 
 
@@ -34,7 +34,7 @@ converter = CustomConverter()
 
 def parse(content: str) -> GherkinDocument:
     """
-    Parse the content of a file to a Gherkin document model.
+    Parse the content of a file to an AST.
     """
     parser = Parser()
 

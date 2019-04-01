@@ -10,7 +10,7 @@ class InvalidInput(BaseError):
 
 class DeserializeError(BaseError):
     """
-    Raised when the parse result cannot be deserialized to file structure models.
+    Raised when the parse result cannot be deserialized to an AST.
     """
 
 

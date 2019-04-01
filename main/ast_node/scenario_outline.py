@@ -11,7 +11,7 @@ from .tag import Tag
 
 @dataclass(slots=True)
 class ScenarioOutline:
-    location: Location = attrib(cmp=False)
+    location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
     steps: List[Step]

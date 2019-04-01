@@ -8,7 +8,7 @@ from .location import Location
 
 @dataclass(slots=True)
 class Step:
-    location: Location = attrib(cmp=False)
+    location: Location = attrib(cmp=False, repr=False)
     keyword: str
     text: str
     argument: Optional[DataTable] = None

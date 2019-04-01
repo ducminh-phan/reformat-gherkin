@@ -9,7 +9,7 @@ from .table_row import TableRow
 
 @dataclass(slots=True)
 class DataTable:
-    location: Location = attrib(cmp=False)
+    location: Location = attrib(cmp=False, repr=False)
     rows: List[TableRow]
 
     def __iter__(self):

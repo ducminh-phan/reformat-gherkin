@@ -13,7 +13,7 @@ from .tag import Tag
 @dataclass(slots=True)
 class Feature:
     language: str
-    location: Location = attrib(cmp=False)
+    location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
     children: List[Union[Background, Scenario, ScenarioOutline]]

@@ -10,7 +10,7 @@ from .tag import Tag
 
 @dataclass(slots=True)
 class Examples:
-    location: Location = attrib(cmp=False)
+    location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
     tags: List[Tag]

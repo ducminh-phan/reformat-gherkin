@@ -9,7 +9,7 @@ from .step import Step
 
 @dataclass(slots=True)
 class Background:
-    location: Location = attrib(cmp=False)
+    location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
     steps: List[Step]

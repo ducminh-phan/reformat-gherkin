@@ -1,6 +1,10 @@
 import difflib
 import re
 import tempfile
+from functools import lru_cache
+from typing import List
+
+from gherkin.dialect import Dialect
 
 _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
 _all_cap_re = re.compile(r"([a-z0-9])([A-Z])")
@@ -36,3 +40,18 @@ def diff(a: str, b: str, a_name: str, b_name: str) -> str:
     return "".join(
         difflib.unified_diff(a_lines, b_lines, fromfile=a_name, tofile=b_name, n=5)
     )
+
+
+@lru_cache()
+def get_step_keywords(dialect_name="en") -> List[str]:
+    dialect = Dialect.for_name(dialect_name)
+
+    keywords = (
+        dialect.given_keywords
+        + dialect.when_keywords
+        + dialect.then_keywords
+        + dialect.and_keywords
+        + dialect.but_keywords
+    )
+
+    return [kw.strip() for kw in keywords]

@@ -5,7 +5,7 @@ from typing import Iterator, Set, Tuple
 
 import click
 
-from .ast_node.gherkin_document import GherkinDocument
+from .ast_node import GherkinDocument
 from .errors import (
     BaseError,
     EquivalentError,

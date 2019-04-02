@@ -90,7 +90,7 @@ def assert_equivalent(src: str, dst: str) -> None:
         Simple visitor generating strings to compare ASTs by content
         """
         for node in ast:
-            yield str(node)
+            yield repr(node)
 
     src_ast = parse(src)
 

@@ -1,3 +1,5 @@
+from typing import Union
+
 from .background import Background
 from .comment import Comment
 from .data_table import DataTable
@@ -12,18 +14,18 @@ from .table_cell import TableCell
 from .table_row import TableRow
 from .tag import Tag
 
-__all__ = [
-    "Background",
-    "Comment",
-    "DataTable",
-    "Examples",
-    "Feature",
-    "GherkinDocument",
-    "Location",
-    "Scenario",
-    "ScenarioOutline",
-    "Step",
-    "TableCell",
-    "TableRow",
-    "Tag",
+Node = Union[
+    Background,
+    Comment,
+    DataTable,
+    Examples,
+    Feature,
+    GherkinDocument,
+    Location,
+    Scenario,
+    ScenarioOutline,
+    Step,
+    TableCell,
+    TableRow,
+    Tag,
 ]

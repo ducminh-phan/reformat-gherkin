@@ -10,7 +10,7 @@ from .table_cell import TableCell
 @prepare
 class TableRow:
     location: Location = attrib(cmp=False, repr=False)
-    cells: Tuple[TableCell]
+    cells: Tuple[TableCell, ...]
 
     def __len__(self):
         return len(self.cells)

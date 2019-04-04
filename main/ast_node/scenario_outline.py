@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, Optional
+from typing import Optional, Tuple
 
 from attr import attrib
 
@@ -15,9 +15,9 @@ class ScenarioOutline:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
-    steps: List[Step]
-    tags: List[Tag]
-    examples: List[Examples]
+    steps: Tuple[Step, ...]
+    tags: Tuple[Tag, ...]
+    examples: Tuple[Examples, ...]
     description: Optional[str] = None
 
     def __iter__(self):

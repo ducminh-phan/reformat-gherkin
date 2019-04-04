@@ -1,4 +1,4 @@
-from typing import List
+from typing import Tuple
 
 from attr import attrib
 
@@ -10,7 +10,7 @@ from .table_row import TableRow
 @prepare
 class DataTable:
     location: Location = attrib(cmp=False, repr=False)
-    rows: List[TableRow]
+    rows: Tuple[TableRow, ...]
 
     def __iter__(self):
         yield self

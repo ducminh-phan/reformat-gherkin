@@ -1,13 +1,14 @@
 from typing import List, Optional
 
-from attr import attrib, dataclass
+from attr import attrib
 
+from ._base import prepare
 from .location import Location
 from .table_row import TableRow
 from .tag import Tag
 
 
-@dataclass(slots=True)
+@prepare
 class Examples:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str

@@ -1,20 +1,16 @@
-from typing import List
+from typing import Tuple
 
-from attr import attrib, dataclass
+from attr import attrib
 
+from ._base import prepare
 from .location import Location
 from .table_cell import TableCell
 
 
-@dataclass(slots=True)
+@prepare
 class TableRow:
     location: Location = attrib(cmp=False, repr=False)
-    cells: List[TableCell]
-
-    def __iter__(self):
-        yield self
-
-        yield from self.cells
+    cells: Tuple[TableCell]
 
     def __len__(self):
         return len(self.cells)

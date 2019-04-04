@@ -1,14 +1,15 @@
 from itertools import chain
 from typing import List, Optional
 
-from attr import attrib, dataclass
+from attr import attrib
 
+from ._base import prepare
 from .location import Location
 from .step import Step
 from .tag import Tag
 
 
-@dataclass(slots=True)
+@prepare
 class Scenario:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str

@@ -1,4 +1,3 @@
-from itertools import chain
 from typing import List, Optional
 
 from attr import attrib, dataclass
@@ -24,7 +23,7 @@ class Examples:
         yield self
 
         if self.table_header is not None:
-            yield from self.table_header
+            yield self.table_header
 
         if self.table_body is not None:
-            yield from chain.from_iterable(self.table_body)
+            yield from self.table_body

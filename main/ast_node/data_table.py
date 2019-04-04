@@ -1,4 +1,3 @@
-from itertools import chain
 from typing import List
 
 from attr import attrib, dataclass
@@ -15,4 +14,4 @@ class DataTable:
     def __iter__(self):
         yield self
 
-        yield from chain.from_iterable(self.rows)
+        yield from self.rows

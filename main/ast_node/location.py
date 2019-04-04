@@ -1,7 +1,7 @@
-from attr import dataclass
+from ._base import prepare
 
 
-@dataclass(slots=True)
+@prepare
 class Location:
     line: int
     column: int

@@ -1,12 +1,13 @@
 from typing import Optional
 
-from attr import attrib, dataclass
+from attr import attrib
 
+from ._base import prepare
 from .data_table import DataTable
 from .location import Location
 
 
-@dataclass(slots=True)
+@prepare
 class Step:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str

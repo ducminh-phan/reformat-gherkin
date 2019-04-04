@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, Optional
+from typing import Optional, Tuple
 
 from attr import attrib
 
@@ -13,7 +13,7 @@ class Background:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
-    steps: List[Step]
+    steps: Tuple[Step, ...]
     description: Optional[str] = None
 
     def __iter__(self):

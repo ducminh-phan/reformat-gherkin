@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import List, Optional, Union
+from typing import Optional, Tuple, Union
 
 from attr import attrib
 
@@ -17,8 +17,8 @@ class Feature:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
-    children: List[Union[Background, Scenario, ScenarioOutline]]
-    tags: List[Tag]
+    children: Tuple[Union[Background, Scenario, ScenarioOutline], ...]
+    tags: Tuple[Tag, ...]
     description: Optional[str] = None
 
     def __iter__(self):

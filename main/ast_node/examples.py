@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional, Tuple
 
 from attr import attrib
 
@@ -13,9 +13,9 @@ class Examples:
     location: Location = attrib(cmp=False, repr=False)
     keyword: str
     name: str
-    tags: List[Tag]
+    tags: Tuple[Tag, ...]
     table_header: Optional[TableRow] = None
-    table_body: Optional[List[TableRow]] = None
+    table_body: Optional[Tuple[TableRow, ...]] = None
     description: Optional[str] = None
 
     def __iter__(self):

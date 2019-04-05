@@ -111,7 +111,7 @@ def assert_equivalent(src: str, dst: str) -> None:
     if src_ast_str != dst_ast_str:
         log = dump_to_file(diff(src_ast_str, dst_ast_str, "src", "dst"))
         raise EquivalentError(
-            f"INTERNAL ERROR: Black produced code that is not equivalent to "
+            f"INTERNAL ERROR: The new content produced is not equivalent to "
             f"the source. "
             f"Please report a bug on {REPORT_URL}. "
             f"This diff might be helpful: {log}"

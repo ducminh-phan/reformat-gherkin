@@ -39,6 +39,7 @@ def find_sources(src: Tuple[str]) -> Set[Path]:
     return sources
 
 
+# noinspection PyTypeChecker
 def reformat_single_file(src: Path, *, options: Options) -> bool:
     with open(src, "r", encoding="utf-8") as f:
         src_contents = f.read()

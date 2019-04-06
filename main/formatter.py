@@ -71,8 +71,6 @@ def format_step_keyword(
     """
     Insert padding to step keyword if necessary based on how we want to align them.
     """
-    keyword = keyword.strip()
-
     if keyword_alignment is AlignmentMode.NONE:
         return keyword
 
@@ -102,9 +100,7 @@ def extract_description_lines(description: Optional[str]) -> List[str]:
     if description is None:
         return []
 
-    lines = description.splitlines()
-
-    return [line.strip() for line in lines]
+    return description.splitlines()
 
 
 def generate_table_lines(rows: List[TableRow]) -> List[str]:
@@ -272,4 +268,4 @@ class LineGenerator:
         else:
             indent = INDENT * indent_level
 
-        yield f"{indent}{comment.text.strip()}"
+        yield f"{indent}{comment.text}"

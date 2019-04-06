@@ -57,8 +57,13 @@ def get_step_keywords(dialect_name="en") -> List[str]:
     return [kw.strip() for kw in keywords]
 
 
-beginning_spaces_re = re.compile(r"^(\s*).*")
+_beginning_spaces_re = re.compile(r"^(\s*).*")
 
 
-def extract_beginning_spaces(string):
-    return beginning_spaces_re.findall(string)[0]
+def extract_beginning_spaces(string: str) -> str:
+    return _beginning_spaces_re.findall(string)[0]
+
+
+def strip_spaces(string: str) -> str:
+    lines = string.splitlines()
+    return "\n".join(line.strip() for line in lines)

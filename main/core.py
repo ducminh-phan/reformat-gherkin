@@ -100,10 +100,12 @@ def assert_equivalent(src: str, dst: str) -> None:
     except BaseError as exc:
         log = dump_to_file("".join(traceback.format_tb(exc.__traceback__)), dst)
         raise InternalError(
-            f"INTERNAL ERROR: Invalid file contents are produced: {exc}. "
-            f"Please report a bug on {REPORT_URL}. "
-            f"This invalid output might be helpful: {log}"
-        ) from None
+            f"INTERNAL ERROR: Invalid file contents are produced:\n"
+            f"{exc}\n"
+            f"Please report a bug on {REPORT_URL}.\n"
+            f"This invalid output might be helpful:\n"
+            f"{log}\n"
+        ) from exc
 
     src_ast_str = "\n".join(_v(src_ast))
     dst_ast_str = "\n".join(_v(dst_ast))
@@ -112,10 +114,10 @@ def assert_equivalent(src: str, dst: str) -> None:
         log = dump_to_file(diff(src_ast_str, dst_ast_str, "src", "dst"))
         raise EquivalentError(
             f"INTERNAL ERROR: The new content produced is not equivalent to "
-            f"the source. "
-            f"Please report a bug on {REPORT_URL}. "
-            f"This diff might be helpful: {log}"
-        ) from None
+            f"the source.\n"
+            f"Please report a bug on {REPORT_URL}.\n"
+            f"This diff might be helpful: {log}\n"
+        )
 
 
 def assert_stable(src: str, dst: str, *, options: Options) -> None:

@@ -13,6 +13,7 @@ from .errors import (
     NothingChanged,
     StableError,
 )
+from .formatter import LineGenerator
 from .options import Options, WriteBackMode
 from .parser import parse
 from .utils import diff, dump_to_file
@@ -78,7 +79,12 @@ def format_file_contents(src_contents: str, *, options: Options) -> str:
 
 
 def format_str(src_contents: str, *, options: Options) -> str:
-    return ""
+    ast = parse(src_contents)
+
+    line_generator = LineGenerator(ast, options.step_keyword_alignment)
+    lines = line_generator.generate()
+
+    return "\n".join(lines)
 
 
 def assert_equivalent(src: str, dst: str) -> None:

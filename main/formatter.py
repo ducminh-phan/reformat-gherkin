@@ -212,6 +212,9 @@ class LineGenerator:
         for node in self.nodes:
             yield from self.visit(node)
 
+        # Add an empty line at the end
+        yield ""
+
     @lru_cache()
     def visit(self, node: Node) -> Iterator[str]:
         class_name = type(node).__name__

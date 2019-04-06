@@ -41,11 +41,11 @@ def parse(content: str) -> GherkinDocument:
     try:
         parse_result = parser.parse(content)
     except ParserError as e:
-        raise InvalidInput(e)
+        raise InvalidInput(e) from e
 
     try:
         result = converter.structure(parse_result, GherkinDocument)
     except Exception as e:  # pragma: no cover
-        raise DeserializeError(f"{e.__class__.__name__}: {e}")
+        raise DeserializeError(f"{e.__class__.__name__}: {e}") from e
 
     return result

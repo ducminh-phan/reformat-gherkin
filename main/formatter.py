@@ -257,10 +257,15 @@ class LineGenerator:
     def visit_comment(self, comment: Comment):
         context = self.__contexts[comment]
 
-        # Try to look for the indent level of the context in the mapping. If not
-        # successful, then we use the same amount of white spaces to indent as
-        # the next line.
-        indent_level = INDENT_LEVEL_MAP.get(type(context))
+        # Find the indent level of this comment line
+        if context is None:
+            # In this case, this comment line is the last line of the document
+            indent_level: Optional[int] = 0
+        else:
+            # Try to look for the indent level of the context in the mapping. If not
+            # successful, then we use the same amount of white spaces to indent as
+            # the next line.
+            indent_level = INDENT_LEVEL_MAP.get(type(context))
 
         if indent_level is None:
             next_line = next(self.visit(context))

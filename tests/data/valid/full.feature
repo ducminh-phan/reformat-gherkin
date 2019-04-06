@@ -1,3 +1,5 @@
+@tag-1
+@tag-2
 Feature: Some meaningful feature
 
   Some meaningful feature description
@@ -47,3 +49,6 @@ Feature: Some meaningful feature
       | Europe  | 22  |
       # We can even have a comment in the middle of a table
       | America | 3   |
+
+
+    # Some random comment at the end of the document

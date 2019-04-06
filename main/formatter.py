@@ -166,8 +166,8 @@ ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
 
 @dataclass(cmp=False)
 class LineGenerator:
-    step_keyword_alignment: AlignmentMode
     ast: GherkinDocument
+    step_keyword_alignment: AlignmentMode
     nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
 

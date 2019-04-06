@@ -161,6 +161,7 @@ def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
 
 
 ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
+Lines = Iterator[str]
 
 
 @dataclass
@@ -207,14 +208,14 @@ class LineGenerator:
 
         return contexts
 
-    def generate(self) -> Iterator[str]:
+    def generate(self) -> Lines:
         for node in self.nodes:
             yield from self.visit(node)
 
         # Add an empty line at the end
         yield ""
 
-    def visit(self, node: Node) -> Iterator[str]:
+    def visit(self, node: Node) -> Lines:
         class_name = type(node).__name__
 
         yield from getattr(
@@ -222,7 +223,7 @@ class LineGenerator:
         )(node)
 
     @staticmethod
-    def visit_default(node: Node) -> Iterator[str]:
+    def visit_default(node: Node) -> Lines:
         indent_level = INDENT_LEVEL_MAP.get(type(node), 0)
 
         if hasattr(node, "keyword") and hasattr(node, "name"):
@@ -235,13 +236,10 @@ class LineGenerator:
                 node.description, indent_level + 1  # type: ignore
             )
 
-    def visit_gherkin_document(self, document: GherkinDocument) -> Iterator[str]:
-        yield from self.visit(document.feature)
-
-    def visit_step(self, step: Step) -> Iterator[str]:
+    def visit_step(self, step: Step) -> Lines:
         yield generate_step_line(step, self.step_keyword_alignment)
 
-    def visit_tag(self, tag: Tag):
+    def visit_tag(self, tag: Tag) -> Lines:
         context = self.__contexts[tag]
 
         # Every node type containing tags is included in the indent map, so we don't
@@ -250,12 +248,12 @@ class LineGenerator:
 
         yield f"{INDENT * indent_level}{tag.name}"
 
-    def visit_table_row(self, row: TableRow):
+    def visit_table_row(self, row: TableRow) -> Lines:
         context = self.__contexts[row]
 
         yield context
 
-    def visit_comment(self, comment: Comment):
+    def visit_comment(self, comment: Comment) -> Lines:
         context = self.__contexts[comment]
 
         # Find the indent level of this comment line

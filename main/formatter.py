@@ -1,4 +1,3 @@
-from functools import lru_cache
 from itertools import zip_longest
 from typing import Any, Dict, Iterator, List, Optional, Union
 
@@ -164,7 +163,7 @@ def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
 ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
 
 
-@dataclass(cmp=False)
+@dataclass
 class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
@@ -215,7 +214,6 @@ class LineGenerator:
         # Add an empty line at the end
         yield ""
 
-    @lru_cache()
     def visit(self, node: Node) -> Iterator[str]:
         class_name = type(node).__name__
 

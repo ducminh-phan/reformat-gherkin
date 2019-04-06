@@ -6,7 +6,7 @@ from gherkin.parser import Parser
 
 from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
-from .utils import camel_to_snake_case
+from .utils import camel_to_snake_case, strip_spaces
 
 
 class CustomConverter(Converter):
@@ -22,6 +22,14 @@ class CustomConverter(Converter):
         # tableBody. Therefore, we need to convert the keys to snake_case.
         transformed_obj = {}
         for key, value in obj.items():
+            if isinstance(value, str):
+                # For some types of node, the indentation of the lines is included
+                # in the value of such nodes. Then the indentation can be changed after
+                # formatting. Therefore, we need to strips spaces around each line of
+                # the value here for consistent results. This also removes trailing
+                # spaces.
+                value = strip_spaces(value)
+
             transformed_obj[camel_to_snake_case(key)] = value
 
         return super(CustomConverter, self).structure_attrs_fromdict(

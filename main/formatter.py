@@ -168,9 +168,7 @@ class LineGenerator:
     __contexts: ContextMap = attrib(init=False)
 
     def __attrs_post_init__(self):
-        """
-        Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
-        """
+        # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
         self.nodes = sorted(list(self.ast), key=lambda node: node.location)
         self.__contexts = self.__construct_contexts()
 

@@ -6,7 +6,6 @@ import pytest
 @pytest.fixture()
 def valid_contents():
     def _valid_contents():
-        # for path in glob("./e2e/**/*.feature"):
         for path in glob("tests/data/valid/*.feature"):
             with open(path, "r", encoding="utf-8") as f:
                 yield f.read()

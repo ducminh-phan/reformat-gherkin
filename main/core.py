@@ -89,7 +89,7 @@ def format_str(src_contents: str, *, options: Options) -> str:
 
 def assert_equivalent(src: str, dst: str) -> None:
     """
-    Raise AssertionError if `src` and `dst` aren't equivalent.
+    Raise EquivalentError if `src` and `dst` aren't equivalent.
     """
 
     def _v(ast: GherkinDocument) -> Iterator[str]:
@@ -128,7 +128,7 @@ def assert_equivalent(src: str, dst: str) -> None:
 
 def assert_stable(src: str, dst: str, *, options: Options) -> None:
     """
-    Raise AssertionError if `dst` reformats differently the second time.
+    Raise StableError if `dst` reformats differently the second time.
     """
     newdst = format_str(dst, options=options)
     if dst != newdst:

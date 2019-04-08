@@ -156,6 +156,17 @@ def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
     return rows
 
 
+def normalize_comment(comment: Comment) -> str:
+    """
+    Return a consistently formatted comment from the given Comment instance.
+    All comments should have a single space between the hash sign and the content.
+    """
+    # A comment always start with a hash sign
+    comment_text = comment.text[1:].strip()
+
+    return "# " + comment_text
+
+
 ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
 Lines = Iterator[str]
 
@@ -266,4 +277,5 @@ class LineGenerator:
         else:
             indent = INDENT * indent_level
 
-        yield f"{indent}{comment.text}"
+        comment_text = normalize_comment(comment)
+        yield f"{indent}{comment_text}"

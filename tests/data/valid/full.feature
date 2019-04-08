@@ -35,7 +35,13 @@ Feature: Some meaningful feature
     # Is it helpful to put a comment here?
     Given I stand in front of the bank's vault
     And   I break the vault's door
+    """
+    Some docstring here
+    """
     Then  I enter the vault
+    ```
+    Some docstring there
+    ```
     And   I see a lot of money
 
 

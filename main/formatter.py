@@ -1,5 +1,5 @@
-from itertools import zip_longest
-from typing import Any, Dict, Iterator, List, Optional, Union
+from itertools import chain, zip_longest
+from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
 from attr import attrib, dataclass
 
@@ -94,7 +94,13 @@ def generate_description_lines(
 ) -> List[str]:
     description_lines = extract_description_lines(description)
 
-    return [f"{INDENT * indent_level}{line}" for line in description_lines]
+    lines = [f"{INDENT * indent_level}{line}" for line in description_lines]
+
+    # Add an empty line after the description, if it exists
+    if lines:
+        lines.append("")
+
+    return lines
 
 
 def extract_description_lines(description: Optional[str]) -> List[str]:
@@ -187,11 +193,13 @@ class LineGenerator:
     step_keyword_alignment: AlignmentMode
     nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
+    __nodes_with_newline: Set[Node] = attrib(init=False)
 
     def __attrs_post_init__(self):
         # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
         self.nodes = sorted(list(self.ast), key=lambda node: node.location)
         self.__contexts = self.__construct_contexts()
+        self.__nodes_with_newline = self.__find_nodes_with_newline()
 
     def __construct_contexts(self) -> ContextMap:
         """
@@ -223,12 +231,42 @@ class LineGenerator:
 
         return contexts
 
+    def __find_nodes_with_newline(self) -> Set[Node]:
+        """
+        Find all nodes in the AST that needs a new line after it.
+        """
+        nodes_with_newline: Set[Node] = set()
+        nodes = self.nodes
+
+        node: Optional[Node] = None
+
+        for node in nodes:
+            children: List[Node] = []
+
+            # Add an empty line after the last step, including its argument, if any
+            if isinstance(node, (Background, Scenario, ScenarioOutline)):
+                children = list(chain.from_iterable(node.steps))
+
+            # Add an empty line after an examples table
+            if isinstance(node, Examples):
+                children = list(node)
+
+            if children:
+                last_child = children[-1]
+                nodes_with_newline.add(last_child)
+
+        # Add the last node in the AST so that we have an empty line at the end
+        if node is not None:
+            nodes_with_newline.add(node)
+
+        return nodes_with_newline
+
     def generate(self) -> Lines:
         for node in self.nodes:
             yield from self.visit(node)
 
-        # Add an empty line at the end
-        yield ""
+            if node in self.__nodes_with_newline:
+                yield ""
 
     def visit(self, node: Node) -> Lines:
         class_name = type(node).__name__

@@ -3,6 +3,7 @@ from typing import Union
 from .background import Background
 from .comment import Comment
 from .data_table import DataTable
+from .doc_string import DocString
 from .examples import Examples
 from .feature import Feature
 from .gherkin_document import GherkinDocument
@@ -18,6 +19,7 @@ Node = Union[
     Background,
     Comment,
     DataTable,
+    DocString,
     Examples,
     Feature,
     GherkinDocument,

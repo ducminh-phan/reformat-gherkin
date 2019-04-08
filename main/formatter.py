@@ -7,6 +7,7 @@ from .ast_node import (
     Background,
     Comment,
     DataTable,
+    DocString,
     Examples,
     Feature,
     GherkinDocument,
@@ -167,6 +168,15 @@ def normalize_comment(comment: Comment) -> str:
     return "# " + comment_text
 
 
+def generate_doc_string_lines(docstring: DocString) -> List[str]:
+    raw_lines = docstring.content.splitlines()
+    raw_lines = ['"""'] + raw_lines + ['"""']
+
+    indent_level = INDENT_LEVEL_MAP[Step]
+
+    return [f"{INDENT * indent_level}{line}" for line in raw_lines]
+
+
 ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
 Lines = Iterator[str]
 
@@ -279,3 +289,7 @@ class LineGenerator:
 
         comment_text = normalize_comment(comment)
         yield f"{indent}{comment_text}"
+
+    @staticmethod
+    def visit_doc_string(docstring: DocString):
+        return generate_doc_string_lines(docstring)

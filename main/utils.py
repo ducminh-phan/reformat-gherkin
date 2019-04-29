@@ -1,10 +1,14 @@
 import difflib
 import re
 import tempfile
-from functools import lru_cache
+from functools import lru_cache, partial
 from typing import List
 
+import click
 from gherkin.dialect import Dialect
+
+out = partial(click.secho, bold=True, err=True)
+err = partial(click.secho, fg="red", err=True)
 
 _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
 _all_cap_re = re.compile(r"([a-z0-9])([A-Z])")

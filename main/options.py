@@ -21,7 +21,7 @@ class AlignmentMode(Enum):
     RIGHT = "right"
 
     @classmethod
-    def from_configuration(cls, alignment: Optional[str]):
+    def from_configuration(cls, alignment: Optional[str]) -> "AlignmentMode":
         return AlignmentMode(alignment)
 
 

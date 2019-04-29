@@ -1,9 +1,6 @@
 import traceback
-from functools import partial
 from pathlib import Path
 from typing import Iterator, Set, Tuple
-
-import click
 
 from .ast_node import GherkinDocument
 from .errors import (
@@ -16,10 +13,7 @@ from .errors import (
 from .formatter import LineGenerator
 from .options import Options, WriteBackMode
 from .parser import parse
-from .utils import diff, dump_to_file
-
-out = partial(click.secho, bold=True, err=True)
-err = partial(click.secho, fg="red", err=True)
+from .utils import diff, dump_to_file, err
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 

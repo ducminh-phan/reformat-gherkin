@@ -1,3 +1,5 @@
+import os
+import shutil
 from glob import glob
 
 import pytest
@@ -21,3 +23,13 @@ def invalid_contents():
                 yield f.read()
 
     return _invalid_contents()
+
+
+@pytest.fixture()
+def sources():
+    tmp_dir = f"tmp{os.urandom(4).hex()}"
+    shutil.copytree("tests/data/valid", tmp_dir)
+
+    yield tmp_dir, f"{tmp_dir}/full.ghk"
+
+    shutil.rmtree(tmp_dir)

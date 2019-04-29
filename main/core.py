@@ -13,6 +13,7 @@ from .errors import (
 from .formatter import LineGenerator
 from .options import Options, WriteBackMode
 from .parser import parse
+from .report import Report
 from .utils import diff, dump_to_file, err
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
@@ -32,6 +33,17 @@ def find_sources(src: Tuple[str]) -> Set[Path]:
             err(f"Invalid path: {s}")
 
     return sources
+
+
+def reformat(src: Tuple[str], report: Report, *, options: Options):
+    sources = find_sources(src)
+
+    for path in sources:
+        try:
+            changed = reformat_single_file(path, options=options)
+            report.done(path, changed)
+        except Exception as e:
+            report.failed(path, str(e))
 
 
 # noinspection PyTypeChecker

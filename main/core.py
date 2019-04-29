@@ -34,7 +34,7 @@ def find_sources(src: Tuple[str]) -> Set[Path]:
         elif path.is_file():
             # If a file was explicitly given, we don't care about its extension
             sources.add(path)
-        else:
+        else:  # pragma: no cover
             err(f"Invalid path: {s}")
 
     return sources

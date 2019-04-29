@@ -41,8 +41,8 @@ def find_sources(src: Tuple[str]) -> Set[Path]:
 
 
 # noinspection PyTypeChecker
-def reformat_single_file(src: Path, *, options: Options) -> bool:
-    with open(src, "r", encoding="utf-8") as f:
+def reformat_single_file(path: Path, *, options: Options) -> bool:
+    with open(path, "r", encoding="utf-8") as f:
         src_contents = f.read()
 
     try:
@@ -51,7 +51,7 @@ def reformat_single_file(src: Path, *, options: Options) -> bool:
         return False
 
     if options.write_back == WriteBackMode.INPLACE:
-        with open(src, "w", encoding="utf-8") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(dst_contents)
 
     return True
@@ -130,11 +130,11 @@ def assert_stable(src: str, dst: str, *, options: Options) -> None:
     """
     Raise StableError if `dst` reformats differently the second time.
     """
-    newdst = format_str(dst, options=options)
-    if dst != newdst:
+    new_dst = format_str(dst, options=options)
+    if dst != new_dst:
         log = dump_to_file(
             diff(src, dst, "source", "first pass"),
-            diff(dst, newdst, "first pass", "second pass"),
+            diff(dst, new_dst, "first pass", "second pass"),
         )
         raise StableError(
             f"INTERNAL ERROR: Different contents are produced on the second pass "

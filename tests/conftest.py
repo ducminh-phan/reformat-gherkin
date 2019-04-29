@@ -28,8 +28,8 @@ def invalid_contents():
 @pytest.fixture()
 def sources():
     tmp_dir = f"tmp{os.urandom(4).hex()}"
-    shutil.copytree("tests/data/valid", tmp_dir)
+    shutil.copytree("tests/data", tmp_dir)
 
-    yield tmp_dir, f"{tmp_dir}/full.ghk"
+    yield tmp_dir, f"{tmp_dir}/valid/full.ghk", f"{tmp_dir}/valid/empty.ghk"
 
     shutil.rmtree(tmp_dir)

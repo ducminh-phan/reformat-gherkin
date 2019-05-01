@@ -1,11 +1,9 @@
 from unittest.mock import patch
 
-import attr
 import pytest
 
 from main import core
 from main.errors import EquivalentError, InternalError, NothingChanged, StableError
-from main.report import Report
 from tests.helpers import OPTIONS, dump_to_stderr, get_content
 
 
@@ -67,14 +65,3 @@ def test_format_file_contents_no_change(options):
 
     with pytest.raises(NothingChanged):
         core.format_file_contents(formatted_content, options=options)
-
-
-@pytest.mark.parametrize("check", [True, False])
-@pytest.mark.parametrize("options", OPTIONS)
-def test_reformat(sources, check, options):
-    from main.options import WriteBackMode
-
-    report = Report(check=check)
-    options = attr.evolve(options, write_back=WriteBackMode.from_configuration(check))
-
-    core.reformat(sources(), report, options=options)

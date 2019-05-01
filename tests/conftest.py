@@ -3,6 +3,7 @@ import shutil
 from glob import glob
 
 import pytest
+from click.testing import CliRunner
 
 
 @pytest.fixture()
@@ -41,3 +42,8 @@ def sources(request):
         return base_dir, f"{tmp_dir}/valid/full.ghk", f"{tmp_dir}/valid/empty.ghk"
 
     return construct_sources
+
+
+@pytest.fixture()
+def runner():
+    return CliRunner()

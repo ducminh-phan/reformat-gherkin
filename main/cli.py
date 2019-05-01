@@ -2,7 +2,10 @@ from typing import Optional, Tuple
 
 import click
 
+from .core import reformat
 from .options import AlignmentMode, Options, WriteBackMode
+from .report import Report
+from .utils import out
 
 
 @click.command()
@@ -40,7 +43,14 @@ from .options import AlignmentMode, Options, WriteBackMode
     is_flag=True,
     help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
 )
-def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool) -> None:
+@click.pass_context
+def main(
+    ctx: click.Context,
+    src: Tuple[str],
+    check: bool,
+    alignment: Optional[str],
+    fast: bool,
+) -> None:
     """
     Reformat a Gherkin file or all files in a directory. If a directory is provided,
     the tool will reformat all files in all sub-folders recursively.
@@ -52,5 +62,10 @@ def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool) -> 
         write_back=write_back_mode, step_keyword_alignment=alignment_mode, fast=fast
     )
 
-    print(src)
-    print(options)
+    report = Report(check=check)
+    reformat(src, report, options=options)
+
+    bang = "💥 💔 💥" if report.return_code else "✨ 🍰 ✨"
+    out(f"All done! {bang}")
+    click.secho(str(report), err=True)
+    ctx.exit(report.return_code)

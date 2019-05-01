@@ -163,17 +163,6 @@ def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
     return rows
 
 
-def normalize_comment(comment: Comment) -> str:
-    """
-    Return a consistently formatted comment from the given Comment instance.
-    All comments should have a single space between the hash sign and the content.
-    """
-    # A comment always start with a hash sign
-    comment_text = comment.text[1:].strip()
-
-    return "# " + comment_text
-
-
 def generate_doc_string_lines(docstring: DocString) -> List[str]:
     raw_lines = docstring.content.splitlines()
     raw_lines = ['"""'] + raw_lines + ['"""']
@@ -325,8 +314,7 @@ class LineGenerator:
         else:
             indent = INDENT * indent_level
 
-        comment_text = normalize_comment(comment)
-        yield f"{indent}{comment_text}"
+        yield f"{indent}{comment.text}"
 
     @staticmethod
     def visit_doc_string(docstring: DocString):

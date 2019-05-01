@@ -10,7 +10,7 @@ from .utils import err, out
 class Report:
     """Provides a reformatting counter. Can be rendered with `str(report)`."""
 
-    check: bool = False
+    check: bool
     change_count: int = 0
     same_count: int = 0
     failure_count: int = 0

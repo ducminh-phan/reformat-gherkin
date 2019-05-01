@@ -74,7 +74,7 @@ def test_format_file_contents_no_change(options):
 def test_reformat(sources, check, options):
     from main.options import WriteBackMode
 
-    report = Report()
+    report = Report(check=check)
     options = attr.evolve(
         options, write_back=WriteBackMode.from_configuration(check=check)
     )

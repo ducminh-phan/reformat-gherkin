@@ -34,11 +34,7 @@ INDENT_LEVEL_MAP = {
 
 
 def generate_step_line(
-    step: Step,
-    keyword_alignment: AlignmentMode,
-    *,
-    indent_level: int = INDENT_LEVEL_MAP[Step],
-    dialect_name: str = "en",
+    step: Step, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
 ) -> str:
     """
     Generate lines for steps. The step keywords are aligned according to the parameter
@@ -59,6 +55,8 @@ def generate_step_line(
          When Do search
          Then Single result is shown for 'Cucumber'
     """
+    indent_level: int = INDENT_LEVEL_MAP[Step]
+
     formatted_keyword = format_step_keyword(
         step.keyword, keyword_alignment, dialect_name=dialect_name
     )

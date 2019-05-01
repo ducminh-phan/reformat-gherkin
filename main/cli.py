@@ -45,7 +45,7 @@ def main(src: Tuple[str], check: bool, alignment: Optional[str], fast: bool) -> 
     Reformat a Gherkin file or all files in a directory. If a directory is provided,
     the tool will reformat all files in all sub-folders recursively.
     """
-    write_back_mode = WriteBackMode.from_configuration(check=check)
+    write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)
 
     options = Options(

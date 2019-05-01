@@ -75,8 +75,6 @@ def test_reformat(sources, check, options):
     from main.options import WriteBackMode
 
     report = Report(check=check)
-    options = attr.evolve(
-        options, write_back=WriteBackMode.from_configuration(check=check)
-    )
+    options = attr.evolve(options, write_back=WriteBackMode.from_configuration(check))
 
     core.reformat(sources(), report, options=options)

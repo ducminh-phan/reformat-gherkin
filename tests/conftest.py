@@ -26,10 +26,18 @@ def invalid_contents():
 
 
 @pytest.fixture()
-def sources():
-    tmp_dir = f"tmp{os.urandom(4).hex()}"
-    shutil.copytree("tests/data", tmp_dir)
+def sources(request):
+    def construct_sources(contain_invalid=True):
+        tmp_dir = f"tmp{os.urandom(4).hex()}"
+        shutil.copytree("tests/data", tmp_dir)
 
-    yield tmp_dir, f"{tmp_dir}/valid/full.ghk", f"{tmp_dir}/valid/empty.ghk"
+        base_dir = tmp_dir + ("" if contain_invalid else "/valid")
 
-    shutil.rmtree(tmp_dir)
+        def fin():
+            shutil.rmtree(tmp_dir)
+
+        request.addfinalizer(fin)
+
+        return base_dir, f"{tmp_dir}/valid/full.ghk", f"{tmp_dir}/valid/empty.ghk"
+
+    return construct_sources

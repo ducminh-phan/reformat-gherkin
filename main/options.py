@@ -10,7 +10,7 @@ class WriteBackMode(Enum):
     CHECK = "check"
 
     @classmethod
-    def from_configuration(cls, *, check: bool) -> "WriteBackMode":
+    def from_configuration(cls, check: bool) -> "WriteBackMode":
         return WriteBackMode.CHECK if check else WriteBackMode.INPLACE
 
 

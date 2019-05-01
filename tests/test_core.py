@@ -79,4 +79,4 @@ def test_reformat(sources, check, options):
         options, write_back=WriteBackMode.from_configuration(check=check)
     )
 
-    core.reformat(sources, report, options=options)
+    core.reformat(sources(), report, options=options)

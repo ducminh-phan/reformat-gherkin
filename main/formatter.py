@@ -84,7 +84,7 @@ def format_step_keyword(
 
 
 def generate_keyword_line(keyword: str, name: str, indent_level: int) -> str:
-    return f"{INDENT * indent_level}{keyword}: {name}"
+    return f"{INDENT * indent_level}{keyword}: {name}".rstrip()
 
 
 def generate_description_lines(

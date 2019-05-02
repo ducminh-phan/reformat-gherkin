@@ -1,8 +1,5 @@
 language: python
 dist: xenial
-env:
-  global:
-    - CC_TEST_REPORTER_ID=62c7931ebe604505166b5c645a03bd79e60a1a6c4c0090aa575b1fe5ba377d7c
 python:
   - "3.6"
   - "3.7"
@@ -10,15 +7,8 @@ install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
   - pip install flake8 coveralls
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
 script:
   - flake8
   - pytest --cov=main/
-after_script:
-  - ./cc-test-reporter format-coverage ./.coverage -t coverage.py
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -t coverage.py
 after_success:
   - coveralls

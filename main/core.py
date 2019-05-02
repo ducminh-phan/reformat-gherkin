@@ -65,7 +65,8 @@ def reformat_single_file(path: Path, *, options: Options) -> bool:
 
 def format_file_contents(src_contents: str, *, options: Options) -> str:
     """
-    Reformat the contents a file and return new contents.
+    Reformat the contents of a file and return new contents. Raise NothingChanged
+    if the contents were not changed after reformatting.
 
     If `options.fast` is False, additionally confirm that the reformatted file is
     valid by calling :func:`assert_equivalent` and :func:`assert_stable` on it.
@@ -85,6 +86,9 @@ def format_file_contents(src_contents: str, *, options: Options) -> str:
 
 
 def format_str(src_contents: str, *, options: Options) -> str:
+    """
+    Reformat a string and return new contents.
+    """
     ast = parse(src_contents)
 
     line_generator = LineGenerator(ast, options.step_keyword_alignment)
@@ -144,7 +148,7 @@ def assert_stable(src: str, dst: str, *, options: Options) -> None:
         )
         raise StableError(
             f"INTERNAL ERROR: Different contents are produced on the second pass "
-            f"of the formatter. "
-            f"Please report a bug on {REPORT_URL}. "
-            f"This diff might be helpful: {log}"
+            f"of the formatter.\n"
+            f"Please report a bug on {REPORT_URL}.\n"
+            f"This diff might be helpful: {log}\n"
         ) from None

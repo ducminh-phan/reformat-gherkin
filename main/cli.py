@@ -23,7 +23,7 @@ from .utils import out
     help=(
         "Don't write the files back, just return the status. Return code 0 "
         "means nothing would change. Return code 1 means some files would be "
-        "reformatted. Return code -1 means there was an internal error."
+        "reformatted. Return code 123 means there was an internal error."
     ),
 )
 @click.option(
@@ -52,8 +52,7 @@ def main(
     fast: bool,
 ) -> None:
     """
-    Reformat a Gherkin file or all files in a directory. If a directory is provided,
-    the tool will reformat all files in all sub-folders recursively.
+    Reformat the given Gherkin files and all files in the given directories recursively.
     """
     write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)

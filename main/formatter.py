@@ -132,7 +132,9 @@ def generate_table_lines(rows: List[TableRow]) -> List[str]:
 
         for column_index in range(n_columns):
             # Left-align the content of each cell, fix the width of the cell
-            line += f" {row[column_index].value:<{column_widths[column_index]}} |"
+            content = row[column_index].value
+            width = column_widths[column_index]
+            line += f" {content:<{width}} |"
 
         lines.append(line)
 
@@ -178,13 +180,13 @@ Lines = Iterator[str]
 class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
-    nodes: List[Node] = attrib(init=False)
+    __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
 
     def __attrs_post_init__(self):
         # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
-        self.nodes = sorted(list(self.ast), key=lambda node: node.location)
+        self.__nodes = sorted(list(self.ast), key=lambda node: node.location)
         self.__contexts = self.__construct_contexts()
         self.__nodes_with_newline = self.__find_nodes_with_newline()
 
@@ -194,7 +196,7 @@ class LineGenerator:
         properly format these lines.
         """
         contexts: ContextMap = {}
-        nodes = self.nodes
+        nodes = self.__nodes
 
         for node in nodes:
             # We want tags to have the same indentation level with their parents
@@ -223,11 +225,10 @@ class LineGenerator:
         Find all nodes in the AST that needs a new line after it.
         """
         nodes_with_newline: Set[Node] = set()
-        nodes = self.nodes
 
         node: Optional[Node] = None
 
-        for node in nodes:
+        for node in self.__nodes:
             children: List[Node] = []
 
             # Add an empty line after the last step, including its argument, if any
@@ -249,7 +250,7 @@ class LineGenerator:
         return nodes_with_newline
 
     def generate(self) -> Lines:
-        for node in self.nodes:
+        for node in self.__nodes:
             yield from self.visit(node)
 
             if node in self.__nodes_with_newline:
@@ -315,5 +316,5 @@ class LineGenerator:
         yield f"{indent}{comment.text}"
 
     @staticmethod
-    def visit_doc_string(docstring: DocString):
-        return generate_doc_string_lines(docstring)
+    def visit_doc_string(docstring: DocString) -> Lines:
+        yield from generate_doc_string_lines(docstring)

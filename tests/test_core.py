@@ -52,7 +52,11 @@ def test_assert_stable_fail(options):
 @pytest.mark.parametrize("options", OPTIONS)
 def test_format_file_contents(valid_contents, options):
     for src in valid_contents:
-        core.format_file_contents(src, options=options)
+        dst = core.format_file_contents(src, options=options)
+
+        for line in dst.splitlines():
+            if line:
+                assert line[-1] != " "
 
 
 @pytest.mark.parametrize("options", OPTIONS)

@@ -54,6 +54,6 @@ def parse(content: str) -> GherkinDocument:
     try:
         result = converter.structure(parse_result, GherkinDocument)
     except Exception as e:  # pragma: no cover
-        raise DeserializeError(f"{e.__class__.__name__}: {e}") from e
+        raise DeserializeError(f"{type(e).__name__}: {e}") from e
 
     return result

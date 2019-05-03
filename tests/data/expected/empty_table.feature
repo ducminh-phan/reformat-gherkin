@@ -1,6 +1,5 @@
 Feature: search Wikipedia
 
-
   Background:
     Given Open http://en.wikipedia.org
     And Do login

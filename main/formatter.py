@@ -229,6 +229,12 @@ class LineGenerator:
         node: Optional[Node] = None
 
         for node in self.__nodes:
+            # We want to add a newline after the Feature line, even if it does not
+            # have a description. If the feature has a description, we already add
+            # a newline after each description.
+            if isinstance(node, Feature) and node.description is None:
+                nodes_with_newline.add(node)
+
             children: List[Node] = []
 
             # Add an empty line after the last step, including its argument, if any

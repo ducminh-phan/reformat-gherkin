@@ -11,5 +11,5 @@ def test_invalid_input(invalid_contents):
 
 
 def test_valid_input(valid_contents):
-    for content in valid_contents:
+    for content in valid_contents():
         parse(content)

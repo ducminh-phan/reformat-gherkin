@@ -1,4 +1,4 @@
-from main.parser import parse
+from reformat_gherkin.parser import parse
 
 
 def test_iterate(valid_contents):

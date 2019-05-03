@@ -2,8 +2,13 @@ from unittest.mock import patch
 
 import pytest
 
-from main import core
-from main.errors import EquivalentError, InternalError, NothingChanged, StableError
+from reformat_gherkin import core
+from reformat_gherkin.errors import (
+    EquivalentError,
+    InternalError,
+    NothingChanged,
+    StableError,
+)
 from tests.helpers import OPTIONS, dump_to_stderr, get_content
 
 

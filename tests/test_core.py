@@ -34,7 +34,7 @@ def test_assert_equivalent_invalid_dst(invalid_contents):
 
 @pytest.mark.parametrize("options", OPTIONS)
 def test_assert_stable(valid_contents, options):
-    for content in valid_contents:
+    for content in valid_contents():
         formatted_content = core.format_file_contents(content, options=options)
 
         core.assert_stable(content, formatted_content, options=options)
@@ -51,12 +51,15 @@ def test_assert_stable_fail(options):
 
 @pytest.mark.parametrize("options", OPTIONS)
 def test_format_file_contents(valid_contents, options):
-    for src in valid_contents:
+    for src, expected_dst in valid_contents(with_expected=True):
         dst = core.format_file_contents(src, options=options)
 
         for line in dst.splitlines():
             if line:
                 assert line[-1] != " "
+
+        if options.step_keyword_alignment.value is None:
+            assert dst == expected_dst
 
 
 @pytest.mark.parametrize("options", OPTIONS)

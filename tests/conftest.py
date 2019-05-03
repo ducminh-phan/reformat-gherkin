@@ -8,12 +8,22 @@ from click.testing import CliRunner
 
 @pytest.fixture()
 def valid_contents():
-    def _valid_contents():
+    def _valid_contents(*, with_expected=False):
         for path in glob("tests/data/valid/*.feature"):
             with open(path, "r", encoding="utf-8") as f:
-                yield f.read()
+                content = f.read()
 
-    return _valid_contents()
+                if with_expected:
+                    with open(
+                        path.replace("/valid/", "/expected/"), "r", encoding="utf-8"
+                    ) as ff:
+                        expected_content = ff.read()
+
+                    yield content, expected_content
+                else:
+                    yield content
+
+    return _valid_contents
 
 
 @pytest.fixture()

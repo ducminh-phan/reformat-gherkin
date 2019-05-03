@@ -60,7 +60,7 @@ setup(
     # https://stackoverflow.com/a/16576850
     include_package_data=True,
     entry_points={  # Optional
-        "console_scripts": ["reformat-gherkin=reformat_gherkin:main"]
+        "console_scripts": ["reformat-gherkin=reformat_gherkin.cli:main"]
     },
     # https://packaging.python.org/specifications/core-metadata/#project-url-multiple-use
     project_urls={},  # Optional

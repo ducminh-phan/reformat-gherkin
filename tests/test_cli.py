@@ -1,4 +1,4 @@
-from main.cli import main
+from reformat_gherkin.cli import main
 
 
 def test_cli_success(runner, sources):

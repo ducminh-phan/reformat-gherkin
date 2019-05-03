@@ -7,7 +7,7 @@ authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.scripts]
-reformat-gherkin = "reformat_gherkin:main"
+reformat-gherkin = "reformat_gherkin.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"

@@ -19,7 +19,7 @@ def test_assert_equivalent():
     core.assert_equivalent(login_content, login_equi_content)
 
 
-@patch("main.core.dump_to_file", dump_to_stderr)
+@patch("reformat_gherkin.core.dump_to_file", dump_to_stderr)
 def test_assert_equivalent_fail():
     login_content = get_content("login")
     login_no_equi_content = get_content("login_no_equi")
@@ -28,7 +28,7 @@ def test_assert_equivalent_fail():
         core.assert_equivalent(login_content, login_no_equi_content)
 
 
-@patch("main.core.dump_to_file", dump_to_stderr)
+@patch("reformat_gherkin.core.dump_to_file", dump_to_stderr)
 def test_assert_equivalent_invalid_dst(invalid_contents):
     login_content = get_content("login")
     invalid_content = next(invalid_contents)
@@ -46,7 +46,7 @@ def test_assert_stable(valid_contents, options):
 
 
 @pytest.mark.parametrize("options", OPTIONS)
-@patch("main.core.dump_to_file", dump_to_stderr)
+@patch("reformat_gherkin.core.dump_to_file", dump_to_stderr)
 def test_assert_stable_fail(options):
     src = dst = get_content("full")
 

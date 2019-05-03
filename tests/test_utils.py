@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from main import utils
+from reformat_gherkin import utils
 
 
 def test_camel_to_snake_case():

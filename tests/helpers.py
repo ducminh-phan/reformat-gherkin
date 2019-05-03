@@ -1,4 +1,4 @@
-from main.options import AlignmentMode, Options, WriteBackMode
+from reformat_gherkin.options import AlignmentMode, Options, WriteBackMode
 
 OPTIONS = [
     Options(

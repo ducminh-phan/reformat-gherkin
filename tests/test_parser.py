@@ -1,7 +1,7 @@
 import pytest
 
-from main.errors import InvalidInput
-from main.parser import parse
+from reformat_gherkin.errors import InvalidInput
+from reformat_gherkin.parser import parse
 
 
 def test_invalid_input(invalid_contents):

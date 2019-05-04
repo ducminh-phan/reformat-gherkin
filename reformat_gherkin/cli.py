@@ -6,6 +6,7 @@ from .core import reformat
 from .options import AlignmentMode, Options, WriteBackMode
 from .report import Report
 from .utils import out
+from .version import __version__
 
 
 @click.command()
@@ -43,6 +44,7 @@ from .utils import out
     is_flag=True,
     help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
 )
+@click.version_option(version=__version__)
 @click.pass_context
 def main(
     ctx: click.Context,

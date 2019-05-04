@@ -1,10 +1,14 @@
 [tool.poetry]
 name = "reformat-gherkin"
-version = "0.1.0"
+version = "0.2.0"
 description = "Formatter for gherkin language"
 readme = "README.md"
 authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
+homepage = "https://github.com/ducminh-phan/reformat-gherkin"
 license = "MIT"
+packages = [
+    {include = "reformat_gherkin"}
+]
 
 [tool.poetry.scripts]
 reformat-gherkin = "reformat_gherkin.cli:main"

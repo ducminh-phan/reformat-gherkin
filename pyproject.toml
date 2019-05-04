@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "reformat-gherkin"
+version = "0.2.0"
+description = "Formatter for gherkin language"
+readme = "README.md"
+authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
+homepage = "https://github.com/ducminh-phan/reformat-gherkin"
+license = "MIT"
+packages = [
+    {include = "reformat_gherkin"}
+]
+
+[tool.poetry.scripts]
+reformat-gherkin = "reformat_gherkin.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+gherkin-official = "^4.1"
+click = "^7.0"
+attrs = "^19.1"
+cattrs = "^0.9.0"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^1.14"
+pytest = "^4.3"
+coverage = "^4.5"
+pytest-cov = "^2.6"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

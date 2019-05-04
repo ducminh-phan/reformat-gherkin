@@ -9,6 +9,6 @@ install:
   - pip install flake8 coveralls
 script:
   - flake8
-  - pytest --cov=main/
+  - pytest --cov=reformat_gherkin/
 after_success:
   - coveralls

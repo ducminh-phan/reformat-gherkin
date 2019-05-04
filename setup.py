@@ -1,22 +1,39 @@
+import ast
+import re
 from pathlib import Path
 
 from setuptools import setup
 
 CURRENT_DIR = Path(__file__).parent
-# Get the long description from the README file
-with open(CURRENT_DIR / "README.md", encoding="utf-8") as f:
-    long_description = f.read()
+
+
+def get_long_description() -> str:
+    readme_md = CURRENT_DIR / "README.md"
+    with open(readme_md, encoding="utf8") as f:
+        return f.read()
+
+
+def get_version() -> str:
+    version_file = CURRENT_DIR / "reformat_gherkin" / "version.py"
+    version_re = re.compile(r"__version__\s+=\s+(?P<version>.*)")
+
+    with open(version_file, "r", encoding="utf8") as f:
+        match = version_re.search(f.read())
+        version = match.group(1) if match is not None else '"unknown"'
+
+        return str(ast.literal_eval(version))
+
 
 setup(
     # https://packaging.python.org/specifications/core-metadata/#name
     name="reformat-gherkin",  # Required
     # https://www.python.org/dev/peps/pep-0440/
     # https://packaging.python.org/en/latest/single_source_version.html
-    version="1.0.0",  # Required
+    version=get_version(),  # Required
     # https://packaging.python.org/specifications/core-metadata/#summary
     description="Formatter for gherkin language",  # Required
     # https://packaging.python.org/specifications/core-metadata/#description-optional
-    long_description=long_description,
+    long_description=get_long_description(),
     # https://packaging.python.org/specifications/core-metadata/#description-content-type-optional
     long_description_content_type="text/markdown",
     url="https://github.com/ducminh-phan/reformat-gherkin",

@@ -1,6 +1,7 @@
 import os
 import shutil
-from glob import glob
+from glob import iglob
+from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
@@ -9,13 +10,15 @@ from click.testing import CliRunner
 @pytest.fixture()
 def valid_contents():
     def _valid_contents(*, with_expected=False):
-        for path in glob("tests/data/valid/*.feature"):
+        for path_str in iglob("tests/data/valid/*.feature"):
+            path = Path(path_str)
+
             with open(path, "r", encoding="utf-8") as f:
                 content = f.read()
 
                 if with_expected:
                     with open(
-                        path.replace("/valid/", "/expected/"), "r", encoding="utf-8"
+                        path.parents[1] / "expected" / path.name, "r", encoding="utf-8"
                     ) as ff:
                         expected_content = ff.read()
 
@@ -29,7 +32,7 @@ def valid_contents():
 @pytest.fixture()
 def invalid_contents():
     def _invalid_contents():
-        for path in glob("tests/data/invalid/*.feature"):
+        for path in iglob("tests/data/invalid/*.feature"):
             with open(path, "r", encoding="utf-8") as f:
                 yield f.read()
 

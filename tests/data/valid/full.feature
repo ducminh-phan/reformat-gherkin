@@ -7,7 +7,7 @@ Feature: Some meaningful feature
   Background: A solid background
 
   Some description for this background
-  This description has multiple lines
+    This description has multiple lines
 
     Given A lot of money
       | EUR |
@@ -37,6 +37,8 @@ Feature: Some meaningful feature
     And   I break the vault's door
     """
     Some docstring here
+      A docstring can have multiple lines
+        With indentation
     """
     Then  I enter the vault
     ```

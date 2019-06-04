@@ -68,6 +68,6 @@ def extract_beginning_spaces(string: str) -> str:
     return _beginning_spaces_re.findall(string)[0]
 
 
-def strip_spaces(string: str) -> str:
+def remove_trailing_spaces(string: str) -> str:
     lines = string.splitlines()
-    return "\n".join(line.strip() for line in lines)
+    return "\n".join(line.rstrip() for line in lines)

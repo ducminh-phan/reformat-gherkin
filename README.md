@@ -1,6 +1,41 @@
 # Reformat-gherkin
 
-[![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin) [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black) [![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability) [![GitHub release](https://img.shields.io/github/release/ducminh-phan/reformat-gherkin.svg)](https://github.com/ducminh-phan/reformat-gherkin)
+[![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin) [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![PyPI](https://img.shields.io/pypi/v/reformat-gherkin.svg)](https://pypi.org/project/reformat-gherkin/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black) [![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability)
+
+## Table of Contents
+
+- [About](#about)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Pre-commit hook](#pre-commit-hook)
+
+## About
+
+This tool is a formatter for Gherkin files. It ensures consistent look regardless of the project and authors.
+
+`reformat-gherkin` can be used either as a command-line tool, or a `pre-commit` hook.
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+- [Python 3.6+](https://www.python.org/downloads/)
+- [Poetry](https://poetry.eustace.io/)
+
+### Installing
+
+- Clone this repository
+  ```bash
+  git clone https://github.com/ducminh-phan/reformat-gherkin.git
+  ```
+
+- Install dependencies
+  ```bash
+  poetry install
+  ```
+
 
 ## Usage
 
@@ -33,9 +68,9 @@
 Once you have installed [pre-commit](https://pre-commit.com/), add this to the `.pre-commit-config.yaml` in your repository:
 
     repos:
-    -   repo: https://github.com/ducminh-phan/reformat-gherkin
+      - repo: https://github.com/ducminh-phan/reformat-gherkin
         rev: stable
         hooks:
-        - id: reformat-gherkin
+          - id: reformat-gherkin
 
 Then run `pre-commit install` and you're ready to go.

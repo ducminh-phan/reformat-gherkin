@@ -1,13 +1,25 @@
 [tool.poetry]
 name = "reformat-gherkin"
-version = "0.2.0"
-description = "Formatter for gherkin language"
+version = "0.2.3"
+description = "Formatter for Gherkin language"
 readme = "README.md"
 authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
 homepage = "https://github.com/ducminh-phan/reformat-gherkin"
 license = "MIT"
 packages = [
     {include = "reformat_gherkin"}
+]
+classifiers=[
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Software Development :: Quality Assurance",
 ]
 
 [tool.poetry.scripts]

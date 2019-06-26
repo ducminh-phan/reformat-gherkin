@@ -1,5 +1,6 @@
 # Reformat-gherkin
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/74ac6fde707c4e1faf250a083ea537fd)](https://app.codacy.com/app/ducminh-phan/reformat-gherkin?utm_source=github.com&utm_medium=referral&utm_content=ducminh-phan/reformat-gherkin&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin) [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![PyPI](https://img.shields.io/pypi/v/reformat-gherkin.svg)](https://pypi.org/project/reformat-gherkin/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black) [![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability)
 
 ## Table of Contents

@@ -17,7 +17,7 @@ script:
 after_success:
   - coveralls
 before_deploy:
-  - poetry config http-basic.pypi $PYPI_USER $MYPYPI_PASSWORD
+  - poetry config http-basic.pypi $PYPI_USER $PYPI_PASSWORD
   - poetry build
 deploy:
   provider: script
@@ -25,3 +25,4 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+    python: "3.7"

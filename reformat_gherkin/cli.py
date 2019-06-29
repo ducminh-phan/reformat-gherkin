@@ -3,6 +3,7 @@ from typing import Optional, Tuple
 import click
 
 from .core import reformat
+from .errors import EmptySources
 from .options import AlignmentMode, Options, WriteBackMode
 from .report import Report
 from .utils import out
@@ -64,7 +65,11 @@ def main(
     )
 
     report = Report(check=check)
-    reformat(src, report, options=options)
+    try:
+        reformat(src, report, options=options)
+    except EmptySources:
+        out("No paths given. Nothing to do 😴")
+        ctx.exit(0)
 
     bang = "💥 💔 💥" if report.return_code else "✨ 🍰 ✨"
     out(f"All done! {bang}")

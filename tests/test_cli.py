@@ -17,3 +17,9 @@ def test_cli_failed(runner, sources):
     result = runner.invoke(main, [*sources(), "--check"])
 
     assert result.exit_code == 123
+
+
+def test_cli_empty_sources(runner):
+    result = runner.invoke(main)
+
+    assert result.exit_code == 0

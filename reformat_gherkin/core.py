@@ -5,6 +5,7 @@ from typing import Iterator, Set, Tuple
 from .ast_node import GherkinDocument
 from .errors import (
     BaseError,
+    EmptySources,
     EquivalentError,
     InternalError,
     NothingChanged,
@@ -37,6 +38,9 @@ def find_sources(src: Tuple[str]) -> Set[Path]:
 
 def reformat(src: Tuple[str], report: Report, *, options: Options):
     sources = find_sources(src)
+
+    if not sources:
+        raise EmptySources
 
     for path in sources:
         try:

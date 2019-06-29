@@ -60,8 +60,22 @@ These instructions will get you a copy of the project up and running on your loc
                                     statement.
       --fast / --safe               If --fast given, skip the sanity checks of
                                     file contents. [default: --safe]
+      --config FILE                 Read configuration from FILE.
       --version                     Show the version and exit.
       --help                        Show this message and exit.
+      
+### Config file
+
+The tool is able to read project-specific default values for its command line options from a `.reformat-gherkin.yaml` file.
+
+By default, `reformat-gherkin` looks for the config file starting from the common base directory of all files and directories passed on the command line. If it's not there, it looks in parent directories. It stops looking when it finds the file, or a .git directory, or a .hg directory, or the root of the file system, whichever comes first.
+
+Example config file
+
+```yaml
+check: False
+alignment: left
+```
 
 ## Pre-commit hook
 

@@ -32,6 +32,12 @@ class StableError(InternalError):
     """
 
 
+class EmptySources(BaseError):
+    """
+    Raised when there is no file to reformat.
+    """
+
+
 class BaseWarning(Warning):
     pass
 

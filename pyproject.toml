@@ -31,6 +31,7 @@ gherkin-official = "^4.1"
 click = "^7.0"
 attrs = "^19.1"
 cattrs = "^0.9.0"
+pyyaml = "^5.1"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^1.14"

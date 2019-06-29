@@ -1,6 +1,5 @@
 import os
 import shutil
-from glob import iglob
 from pathlib import Path
 
 import pytest
@@ -8,13 +7,14 @@ from click.testing import CliRunner
 
 from reformat_gherkin.config import CONFIG_FILE
 
+TEST_DIR = Path("tests")
 
-@pytest.fixture()
+
+@pytest.fixture
 def valid_contents():
     def _valid_contents(*, with_expected=False):
-        for path_str in iglob("tests/data/valid/*.feature"):
-            path = Path(path_str)
-
+        for path in (TEST_DIR / "data" / "valid").rglob("*.feature"):
+            # noinspection PyTypeChecker
             with open(path, "r", encoding="utf-8") as f:
                 content = f.read()
 
@@ -31,17 +31,18 @@ def valid_contents():
     return _valid_contents
 
 
-@pytest.fixture()
+@pytest.fixture
 def invalid_contents():
     def _invalid_contents():
-        for path in iglob("tests/data/invalid/*.feature"):
+        for path in (TEST_DIR / "data" / "invalid").rglob("*.feature"):
+            # noinspection PyTypeChecker
             with open(path, "r", encoding="utf-8") as f:
                 yield f.read()
 
     return _invalid_contents()
 
 
-@pytest.fixture()
+@pytest.fixture
 def sources(request):
     def construct_sources(
         contain_invalid=True,
@@ -50,7 +51,7 @@ def sources(request):
         empty_config=False,
     ):
         tmp_dir = Path(f"tmp{os.urandom(4).hex()}")
-        shutil.copytree("tests/data", tmp_dir)
+        shutil.copytree(TEST_DIR / "data", tmp_dir)
 
         base_dir = tmp_dir
         if not contain_invalid:
@@ -64,7 +65,8 @@ def sources(request):
                 file_name = "empty"
 
             shutil.copyfile(
-                "tests/config_files/{}.yaml".format(file_name), tmp_dir / CONFIG_FILE
+                TEST_DIR / "config_files" / "{}.yaml".format(file_name),
+                tmp_dir / CONFIG_FILE,
             )
 
         def fin():
@@ -81,6 +83,6 @@ def sources(request):
     return construct_sources
 
 
-@pytest.fixture()
+@pytest.fixture
 def runner():
     return CliRunner()

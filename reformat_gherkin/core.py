@@ -15,7 +15,7 @@ from .formatter import LineGenerator
 from .options import Options, WriteBackMode
 from .parser import parse
 from .report import Report
-from .utils import diff, dump_to_file, err
+from .utils import decode_bytes, diff, dump_to_file, err
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
@@ -52,8 +52,8 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 
 # noinspection PyTypeChecker
 def reformat_single_file(path: Path, *, options: Options) -> bool:
-    with open(path, "r", encoding="utf-8") as f:
-        src_contents = f.read()
+    with open(path, "rb") as buf:
+        src_contents, encoding, newline = decode_bytes(buf.read())
 
     try:
         dst_contents = format_file_contents(src_contents, options=options)
@@ -61,7 +61,7 @@ def reformat_single_file(path: Path, *, options: Options) -> bool:
         return False
 
     if options.write_back == WriteBackMode.INPLACE:
-        with open(path, "w", encoding="utf-8") as f:
+        with open(path, "w", encoding=encoding, newline=newline) as f:
             f.write(dst_contents)
 
     return True

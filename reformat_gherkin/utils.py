@@ -16,6 +16,7 @@ _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
 _all_cap_re = re.compile(r"([a-z0-9])([A-Z])")
 
 
+@lru_cache()
 def camel_to_snake_case(name: str) -> str:
     """
     Convert camelCase to snake_case.

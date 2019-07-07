@@ -1,4 +1,5 @@
 import os
+from io import BytesIO, StringIO
 
 import pytest
 
@@ -46,3 +47,18 @@ def test_remove_trailing_spaces():
     assert f("asd") == "asd"
     assert f("  asd  ") == "  asd"
     assert f(" a s d \n  def  ") == " a s d\n  def"
+
+
+def test_decode_bytes():
+    f = utils.decode_bytes
+    lines = "Lorem ipsum dolor sit amet".replace(" ", "\n")
+
+    for newline in ("\n", "\r\n"):
+        tmp_file = StringIO(lines, newline=newline)
+
+        tmp_buf = BytesIO(tmp_file.read().encode())
+
+        contents, _, _newline = f(tmp_buf.read())
+
+        assert contents == lines
+        assert _newline == newline

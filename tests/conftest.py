@@ -84,5 +84,26 @@ def sources(request):
 
 
 @pytest.fixture
+def source_with_newline(request):
+    def construct_source_with_newline(newline):
+        tmp_file = Path(f"tmp{os.urandom(4).hex()}.feature")
+
+        with open(TEST_DIR / "data" / "valid" / "full.feature", "r") as f:
+            content = f.read()
+
+        with open(tmp_file, "w", newline=newline) as f:
+            f.write(content)
+
+        def fin():
+            os.remove(tmp_file)
+
+        request.addfinalizer(fin)
+
+        return tmp_file
+
+    return construct_source_with_newline
+
+
+@pytest.fixture
 def runner():
     return CliRunner()

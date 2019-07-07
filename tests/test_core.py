@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+import attr
 import pytest
 
 from reformat_gherkin import core
@@ -77,3 +78,36 @@ def test_format_file_contents_no_change(options):
 
     with pytest.raises(NothingChanged):
         core.format_file_contents(formatted_content, options=options)
+
+
+@pytest.mark.parametrize("newline_mode", core.NEWLINE_FROM_OPTION.keys())
+@pytest.mark.parametrize("newline", core.NEWLINE_FROM_OPTION.values())
+def test_line_separators_changed(source_with_newline, newline_mode, newline):
+    options = OPTIONS[0]
+    options = attr.evolve(
+        options, write_back=core.WriteBackMode.INPLACE, newline=newline_mode
+    )
+
+    source = source_with_newline(newline)
+
+    core.reformat_single_file(source, options=options)
+
+    with open(source, "rb") as buf:
+        _newline = core.decode_bytes(buf.read())[2]
+
+        assert _newline == core.NEWLINE_FROM_OPTION[newline_mode]
+
+
+@pytest.mark.parametrize("newline", core.NEWLINE_FROM_OPTION.values())
+def test_line_separators_preserved(source_with_newline, newline):
+    options = OPTIONS[0]
+    options = attr.evolve(options, write_back=core.WriteBackMode.INPLACE)
+
+    source = source_with_newline(newline)
+
+    core.reformat_single_file(source, options=options)
+
+    with open(source, "rb") as buf:
+        _newline = core.decode_bytes(buf.read())[2]
+
+        assert _newline == newline

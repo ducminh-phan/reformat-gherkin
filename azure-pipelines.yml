@@ -9,8 +9,8 @@ jobs:
 - job: Test
   strategy:
     matrix:
-      ${{ each py in $(pythonVersions) }}:
-        ${{ each image in $(images) }}:
+      ${{ each py in variables.pythonVersions }}:
+        ${{ each image in variables.images }}:
           ${{ format('{0}{1}', py, os) }}:
             imageName: ${{ image }}
             pythonVersion: ${{ py }}

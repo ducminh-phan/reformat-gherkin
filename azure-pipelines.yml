@@ -1,40 +1,39 @@
 trigger:
 - master
 
-strategy:
-  matrix:
-    linux:
-      imageName: 'ubuntu-16.04'
-    mac:
-      imageName: 'macos-10.13'
-    windows:
-      imageName: 'vs2017-win2016'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
+parameters:
+  pythonVersions: ["3.6", "3.7"]
+  images: ["ubuntu-16.04", "macos-10.13", "vs2017-win2016"]
 
-pool:
-  vmImage: $(imageName)
+jobs:
+- job: Test
+  strategy:
+    matrix:
+      ${{ each py in parameters.pythonVersions }}:
+        ${{ each image in parameters.images }}:
+          ${{ format('{0}{1}', py, os) }}:
+            imageName: ${{ image }}
+            pythonVersion: ${{ py }}
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(pythonVersion)'
+      architecture: 'x64'
+    displayName: 'Use Python $(pythonVersion)'
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install poetry
-    poetry install
-  displayName: 'Install dependencies'
+  - script: |
+      python -m pip install --upgrade pip
+      pip install poetry
+      poetry install
+    displayName: 'Install dependencies'
 
-- script: |
-    pip install flake8
-    flake8
-  displayName: 'Run lint tests'
+  - script: |
+      pip install flake8
+      flake8
+    displayName: 'Run lint tests'
 
-- script: |
-    pip install pytest pytest-azurepipelines
-    pytest --cov=reformat_gherkin/
-  displayName: 'Test with pytest'
+  - script: |
+      pip install pytest pytest-azurepipelines
+      pytest --cov=reformat_gherkin/
+    displayName: 'Test with pytest'

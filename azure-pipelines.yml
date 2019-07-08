@@ -1,7 +1,7 @@
 trigger:
 - master
 
-variables:
+parameters:
   pythonVersions: ["3.6", "3.7"]
   images: ["ubuntu-16.04", "macos-10.13", "vs2017-win2016"]
 
@@ -9,9 +9,9 @@ jobs:
 - job: Test
   strategy:
     matrix:
-      ${{ each py in variables.pythonVersions }}:
-        ${{ each image in variables.images }}:
-          ${{ format('{0}{1}', py, os) }}:
+      ${{ each py in parameters.pythonVersions }}:
+        ${{ each image in parameters.images }}:
+          ${{ format('{0}{1}', py, image) }}:
             imageName: ${{ image }}
             pythonVersion: ${{ py }}
 
@@ -21,7 +21,7 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: $(pythonVersion)
+      versionSpec: '$(pythonVersion)'
       architecture: 'x64'
     displayName: 'Use Python $(pythonVersion)'
 

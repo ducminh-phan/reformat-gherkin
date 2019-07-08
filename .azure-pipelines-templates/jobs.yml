@@ -35,5 +35,5 @@ jobs:
 
   - script: |
       poetry run pip install pytest-azurepipelines
-      poetry run pytest --cov=reformat_gherkin/
+      poetry run pytest --cov=reformat_gherkin/ --cov-report=xml
     displayName: 'Test with pytest'

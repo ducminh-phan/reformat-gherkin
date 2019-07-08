@@ -1,0 +1,40 @@
+
+parameters:
+  pythonVersions: []
+  images: []
+
+jobs:
+- job: Test
+  strategy:
+    matrix:
+      ${{ each py in parameters.pythonVersions }}:
+        ${{ each image in parameters.images }}:
+          ${{ format('{0}{1}', py, image) }}:
+            imageName: ${{ image }}
+            pythonVersion: ${{ py }}
+
+  pool:
+    vmImage: $(imageName)
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(pythonVersion)'
+      architecture: 'x64'
+    displayName: 'Use Python $(pythonVersion)'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install poetry
+      poetry install
+    displayName: 'Install dependencies'
+
+  - script: |
+      pip install flake8
+      flake8
+    displayName: 'Run lint tests'
+
+  - script: |
+      pip install pytest pytest-azurepipelines
+      pytest --cov=reformat_gherkin/
+    displayName: 'Test with pytest'

@@ -15,10 +15,13 @@ jobs:
             imageName: ${{ image }}
             pythonVersion: ${{ py }}
 
+  pool:
+    vmImage: $(imageName)
+
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(pythonVersion)'
+      versionSpec: $(pythonVersion)
       architecture: 'x64'
     displayName: 'Use Python $(pythonVersion)'
 

@@ -29,10 +29,11 @@ jobs:
     displayName: 'Install dependencies'
 
   - script: |
-      pip install flake8
-      flake8
+      poetry install flake8
+      poetry run flake8
     displayName: 'Run lint tests'
 
   - script: |
-      pytest --cov=reformat_gherkin/
+      poetry install pytest-azurepipelines
+      poetry run pytest --cov=reformat_gherkin/
     displayName: 'Test with pytest'

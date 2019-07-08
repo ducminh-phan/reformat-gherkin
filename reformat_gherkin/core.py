@@ -55,13 +55,20 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 # noinspection PyTypeChecker
 def reformat_single_file(path: Path, *, options: Options) -> bool:
     with open(path, "rb") as buf:
-        src_contents, encoding, newline = decode_bytes(buf.read())
+        src_contents, encoding, existing_newline = decode_bytes(buf.read())
 
-    newline = NEWLINE_FROM_OPTION.get(options.newline, newline)
+    newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
 
+    content_changed = True
     try:
         dst_contents = format_file_contents(src_contents, options=options)
     except NothingChanged:
+        content_changed = False
+        dst_contents = src_contents
+
+    # We reformat the file if either the content is changed, or the line separators
+    # need to be changed.
+    if not content_changed and newline == existing_newline:
         return False
 
     if options.write_back == WriteBackMode.INPLACE:

@@ -34,6 +34,5 @@ jobs:
     displayName: 'Run lint tests'
 
   - script: |
-      pip install pytest pytest-azurepipelines
       pytest --cov=reformat_gherkin/
     displayName: 'Test with pytest'

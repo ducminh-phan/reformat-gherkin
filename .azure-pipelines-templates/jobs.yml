@@ -8,7 +8,7 @@ jobs:
     matrix:
       ${{ each py in parameters.pythonVersions }}:
         ${{ each image in parameters.images }}:
-          ${{ format('{0}{1}', py, image) }}:
+          ${{ format('{0}-{1}', py, image) }}:
             imageName: ${{ image }}
             pythonVersion: ${{ py }}
 

@@ -29,11 +29,6 @@ jobs:
         displayName: 'Install dependencies'
 
       - script: |
-          poetry run pre-commit install
-          poetry run pre-commit run --all-files
-        displayName: 'Lint'
-
-      - script: |
           poetry run pip install pytest-azurepipelines
           poetry run pytest --cov=reformat_gherkin/ --cov-report=xml
         displayName: 'Run unit tests'

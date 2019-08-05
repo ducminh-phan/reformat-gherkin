@@ -5,7 +5,7 @@ import click
 from .config import read_config_file
 from .core import reformat
 from .errors import EmptySources
-from .options import AlignmentMode, Options, WriteBackMode
+from .options import AlignmentMode, NewlineMode, Options, WriteBackMode
 from .report import Report
 from .utils import out
 from .version import __version__
@@ -42,6 +42,15 @@ from .version import __version__
     ),
 )
 @click.option(
+    "-n",
+    "--newline",
+    type=click.Choice([NewlineMode.LF.value, NewlineMode.CRLF.value]),
+    help=(
+        "Specify the line separators when formatting files inplace. "
+        "If not specified, line separators are preserved."
+    ),
+)
+@click.option(
     "--fast/--safe",
     is_flag=True,
     help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
@@ -62,6 +71,7 @@ def main(
     src: Tuple[str],
     check: bool,
     alignment: Optional[str],
+    newline: Optional[str],
     fast: bool,
     config: Optional[str],
 ) -> None:
@@ -73,9 +83,13 @@ def main(
 
     write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)
+    newline_mode = NewlineMode.from_configuration(newline)
 
     options = Options(
-        write_back=write_back_mode, step_keyword_alignment=alignment_mode, fast=fast
+        write_back=write_back_mode,
+        step_keyword_alignment=alignment_mode,
+        newline=newline_mode,
+        fast=fast,
     )
 
     report = Report(check=check)

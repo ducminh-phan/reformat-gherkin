@@ -25,8 +25,20 @@ class AlignmentMode(Enum):
         return AlignmentMode(alignment)
 
 
-@dataclass(frozen=True, kw_only=True)
+@unique
+class NewlineMode(Enum):
+    KEEP = None
+    LF = "LF"
+    CRLF = "CRLF"
+
+    @classmethod
+    def from_configuration(cls, newline: Optional[str]) -> "NewlineMode":
+        return NewlineMode(newline)
+
+
+@dataclass(frozen=True)
 class Options:
     write_back: WriteBackMode
     step_keyword_alignment: AlignmentMode
+    newline: NewlineMode
     fast: bool

@@ -58,12 +58,15 @@ These instructions will get you a copy of the project up and running on your loc
                                     keywords are left-aligned, and there is a
                                     single space between the step keyword and the
                                     statement.
+      -n, --newline [LF|CRLF]       Specify the line separators when formatting
+                                    files inplace. If not specified, line
+                                    separators are preserved.
       --fast / --safe               If --fast given, skip the sanity checks of
                                     file contents. [default: --safe]
       --config FILE                 Read configuration from FILE.
       --version                     Show the version and exit.
       --help                        Show this message and exit.
-      
+
 ### Config file
 
 The tool is able to read project-specific default values for its command line options from a `.reformat-gherkin.yaml` file.

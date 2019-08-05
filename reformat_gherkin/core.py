@@ -12,12 +12,14 @@ from .errors import (
     StableError,
 )
 from .formatter import LineGenerator
-from .options import Options, WriteBackMode
+from .options import NewlineMode, Options, WriteBackMode
 from .parser import parse
 from .report import Report
-from .utils import diff, dump_to_file, err
+from .utils import decode_bytes, diff, dump_to_file, err
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
+
+NEWLINE_FROM_OPTION = {NewlineMode.CRLF: "\r\n", NewlineMode.LF: "\n"}
 
 
 def find_sources(src: Tuple[str]) -> Set[Path]:
@@ -52,16 +54,25 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 
 # noinspection PyTypeChecker
 def reformat_single_file(path: Path, *, options: Options) -> bool:
-    with open(path, "r", encoding="utf-8") as f:
-        src_contents = f.read()
+    with open(path, "rb") as buf:
+        src_contents, encoding, existing_newline = decode_bytes(buf.read())
 
+    newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
+
+    content_changed = True
     try:
         dst_contents = format_file_contents(src_contents, options=options)
     except NothingChanged:
+        content_changed = False
+        dst_contents = src_contents
+
+    # We reformat the file if either the content is changed, or the line separators
+    # need to be changed.
+    if not content_changed and newline == existing_newline:
         return False
 
     if options.write_back == WriteBackMode.INPLACE:
-        with open(path, "w", encoding="utf-8") as f:
+        with open(path, "w", encoding=encoding, newline=newline) as f:
             f.write(dst_contents)
 
     return True

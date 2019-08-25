@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reformat-gherkin"
-version = "0.3.2"
+version = "1.0.0"
 description = "Formatter for Gherkin language"
 readme = "README.md"
 authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
@@ -10,7 +10,7 @@ packages = [
     {include = "reformat_gherkin"}
 ]
 classifiers=[
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",

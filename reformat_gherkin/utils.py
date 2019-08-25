@@ -1,8 +1,10 @@
 import difflib
+import io
 import re
 import tempfile
+import tokenize
 from functools import lru_cache, partial
-from typing import List
+from typing import List, Tuple
 
 import click
 from gherkin.dialect import Dialect
@@ -14,6 +16,7 @@ _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
 _all_cap_re = re.compile(r"([a-z0-9])([A-Z])")
 
 
+@lru_cache()
 def camel_to_snake_case(name: str) -> str:
     """
     Convert camelCase to snake_case.
@@ -68,6 +71,24 @@ def extract_beginning_spaces(string: str) -> str:
     return _beginning_spaces_re.findall(string)[0]
 
 
-def strip_spaces(string: str) -> str:
+def remove_trailing_spaces(string: str) -> str:
     lines = string.splitlines()
-    return "\n".join(line.strip() for line in lines)
+    return "\n".join(line.rstrip() for line in lines)
+
+
+def decode_bytes(src: bytes) -> Tuple[str, str, str]:
+    """
+    Return a tuple of (decoded_contents, encoding, newline).
+
+    `newline` is either CRLF or LF but `decoded_contents` is decoded with
+    universal newlines (i.e. only contains LF).
+    """
+    srcbuf = io.BytesIO(src)
+    encoding, lines = tokenize.detect_encoding(srcbuf.readline)
+    if not lines:
+        return "", encoding, "\n"
+
+    newline = "\r\n" if b"\r\n" == lines[0][-2:] else "\n"
+    srcbuf.seek(0)
+    with io.TextIOWrapper(srcbuf, encoding) as tiow:
+        return tiow.read(), encoding, newline

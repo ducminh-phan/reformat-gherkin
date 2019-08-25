@@ -1,3 +1,4 @@
+import textwrap
 from typing import Any, Dict, Type
 
 from cattr.converters import Converter
@@ -6,7 +7,7 @@ from gherkin.parser import Parser
 
 from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
-from .utils import camel_to_snake_case, strip_spaces
+from .utils import camel_to_snake_case, remove_trailing_spaces
 
 
 class CustomConverter(Converter):
@@ -25,10 +26,10 @@ class CustomConverter(Converter):
             if isinstance(value, str):
                 # For some types of node, the indentation of the lines is included
                 # in the value of such nodes. Then the indentation can be changed after
-                # formatting. Therefore, we need to strips spaces around each line of
-                # the value here for consistent results. This also removes trailing
-                # spaces.
-                value = strip_spaces(value)
+                # formatting. Therefore, we need to dedent the value here for consistent
+                # results. We also need to remove trailing spaces.
+                value = remove_trailing_spaces(value)
+                value = textwrap.dedent(value)
 
             transformed_obj[camel_to_snake_case(key)] = value
 

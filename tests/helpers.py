@@ -1,9 +1,10 @@
-from reformat_gherkin.options import AlignmentMode, Options, WriteBackMode
+from reformat_gherkin.options import AlignmentMode, NewlineMode, Options, WriteBackMode
 
 OPTIONS = [
     Options(
         write_back=WriteBackMode.CHECK,
         step_keyword_alignment=alignment_mode,
+        newline=NewlineMode.KEEP,
         fast=False,
     )
     for alignment_mode in AlignmentMode

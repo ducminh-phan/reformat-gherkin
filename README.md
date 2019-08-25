@@ -1,6 +1,10 @@
 # Reformat-gherkin
 
-[![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin) [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![PyPI](https://img.shields.io/pypi/v/reformat-gherkin.svg)](https://pypi.org/project/reformat-gherkin/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black) [![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability)
+[![Build Status](https://dev.azure.com/alephvn/reformat-gherkin/_apis/build/status/ducminh-phan.reformat-gherkin?branchName=master)](https://dev.azure.com/alephvn/reformat-gherkin/_build/latest?definitionId=1&branchName=master) &nbsp; [![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin) &nbsp; [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master)
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability) &nbsp; [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e675ca51b6ac436a980facbcf04b8e5a)](https://www.codacy.com/app/ducminh-phan/reformat-gherkin)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) &nbsp; [![PyPI](https://img.shields.io/pypi/v/reformat-gherkin.svg)](https://pypi.org/project/reformat-gherkin/) &nbsp; [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 ## Table of Contents
 
@@ -8,6 +12,7 @@
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [Pre-commit hook](#pre-commit-hook)
+- [Acknowledgements](#acknowledgements)
 
 ## About
 
@@ -26,16 +31,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-- Clone this repository
-  ```bash
-  git clone https://github.com/ducminh-phan/reformat-gherkin.git
-  ```
+1.  Clone this repository
+    ```bash
+    git clone https://github.com/ducminh-phan/reformat-gherkin.git
+    ```
 
-- Install dependencies
-  ```bash
-  poetry install
-  ```
-
+2.  Install dependencies
+    ```bash
+    cd reformat-gherkin
+    poetry install
+    ```
 
 ## Usage
 
@@ -91,3 +96,7 @@ Once you have installed [pre-commit](https://pre-commit.com/), add this to the `
           - id: reformat-gherkin
 
 Then run `pre-commit install` and you're ready to go.
+
+## Acknowledgements
+
+This project is inspired by [black](https://github.com/psf/black). Some functions are taken from `black`'s source code.

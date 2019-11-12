@@ -106,7 +106,7 @@ def format_str(src_contents: str, *, options: Options) -> str:
     """
     ast = parse(src_contents)
 
-    line_generator = LineGenerator(ast, options.step_keyword_alignment)
+    line_generator = LineGenerator(ast, options.step_keyword_alignment, options.tag_line_mode)
     lines = line_generator.generate()
 
     return "\n".join(lines)

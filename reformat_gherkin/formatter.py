@@ -18,7 +18,7 @@ from .ast_node import (
     TableRow,
     Tag,
 )
-from .options import AlignmentMode
+from .options import AlignmentMode, TagLineMode
 from .utils import camel_to_snake_case, extract_beginning_spaces, get_step_keywords
 
 INDENT = "  "
@@ -180,6 +180,7 @@ Lines = Iterator[str]
 class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
+    tag_line_mode: TagLineMode
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
@@ -256,7 +257,22 @@ class LineGenerator:
         return nodes_with_newline
 
     def generate(self) -> Lines:
-        for node in self.__nodes:
+        i = 0
+        if self.tag_line_mode == TagLineMode.SINGLELINE:
+            tags = []
+            for i, node in enumerate(self.__nodes):
+                if type(node).__name__ == "Tag":
+                    tags.append(node)
+                elif type(node).__name__ == "Comment":
+                    yield from self.visit_tags(tags)
+                    yield from self.visit(node)
+                    tags.clear()
+                else:
+                    break
+
+            yield from self.visit_tags(tags)
+
+        for node in self.__nodes[i:]:
             yield from self.visit(node)
 
             if node in self.__nodes_with_newline:
@@ -285,6 +301,18 @@ class LineGenerator:
 
     def visit_step(self, step: Step) -> Lines:
         yield generate_step_line(step, self.step_keyword_alignment)
+
+    def visit_tags(self, tags: List[Tag]) -> Lines:
+        if not tags:
+            return
+
+        context = self.__contexts[tags[0]]
+
+        # Every node type containing tags is included in the indent map, so we don't
+        # have to worry about KeyError here
+        indent_level = INDENT_LEVEL_MAP[type(context)]
+
+        yield f"{INDENT * indent_level}{' '.join([tag.name for tag in tags])}"
 
     def visit_tag(self, tag: Tag) -> Lines:
         context = self.__contexts[tag]

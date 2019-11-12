@@ -5,7 +5,7 @@ import click
 from .config import read_config_file
 from .core import reformat
 from .errors import EmptySources
-from .options import AlignmentMode, NewlineMode, Options, WriteBackMode
+from .options import AlignmentMode, NewlineMode, TagLineMode, Options, WriteBackMode
 from .report import Report
 from .utils import out
 from .version import __version__
@@ -51,6 +51,15 @@ from .version import __version__
     ),
 )
 @click.option(
+    "-t",
+    "--taglines",
+    type=click.Choice([TagLineMode.SINGLELINE.value, TagLineMode.MULTILINE.value]),
+    help=(
+        "Specify whether tags should be placed on a single line or spaced "
+        "across multiple lines."
+    ),
+)
+@click.option(
     "--fast/--safe",
     is_flag=True,
     help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
@@ -72,6 +81,7 @@ def main(
     check: bool,
     alignment: Optional[str],
     newline: Optional[str],
+    taglines: Optional[str],
     fast: bool,
     config: Optional[str],
 ) -> None:
@@ -84,11 +94,13 @@ def main(
     write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)
     newline_mode = NewlineMode.from_configuration(newline)
+    tag_line_mode = TagLineMode.from_configuration(taglines)
 
     options = Options(
         write_back=write_back_mode,
         step_keyword_alignment=alignment_mode,
         newline=newline_mode,
+        tag_line_mode=tag_line_mode,
         fast=fast,
     )
 

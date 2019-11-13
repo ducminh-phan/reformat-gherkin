@@ -258,25 +258,23 @@ class LineGenerator:
 
     def generate(self) -> Lines:
         i = 0
-        if self.tag_line_mode == TagLineMode.SINGLELINE:
-            tags = []
-            for i, node in enumerate(self.__nodes):
-                if type(node).__name__ == "Tag":
-                    tags.append(node)
-                elif type(node).__name__ == "Comment":
-                    yield from self.visit_tags(tags)
-                    yield from self.visit(node)
-                    tags.clear()
-                else:
-                    break
+        while i < len(self.__nodes):
+            node = self.__nodes[i]
+            if self.tag_line_mode == TagLineMode.SINGLELINE and type(node).__name__ == "Tag":
+                tags = []
+                for n, node in enumerate(self.__nodes[i:]):
+                    if type(node).__name__ == "Tag":
+                        tags.append(node)
+                    else:
+                        yield from self.visit_tags(tags)
+                        break
+                i += n - 1
+            else:
+                yield from self.visit(node)
 
-            yield from self.visit_tags(tags)
-
-        for node in self.__nodes[i:]:
-            yield from self.visit(node)
-
-            if node in self.__nodes_with_newline:
-                yield ""
+                if node in self.__nodes_with_newline:
+                    yield ""
+            i += 1
 
     def visit(self, node: Node) -> Lines:
         class_name = type(node).__name__

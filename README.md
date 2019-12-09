@@ -31,46 +31,56 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-1.  Clone this repository
-    ```bash
-    git clone https://github.com/ducminh-phan/reformat-gherkin.git
-    ```
+1. Clone this repository
 
-2.  Install dependencies
-    ```bash
-    cd reformat-gherkin
-    poetry install
-    ```
+   ```bash
+   git clone https://github.com/ducminh-phan/reformat-gherkin.git
+   ```
+
+2. Install dependencies
+
+   ```bash
+   cd reformat-gherkin
+   poetry install
+   ```
+
+3. Install `pre-commit` hooks (if you want to contribute)
+
+   ```bash
+   pre-commit install
+   ```
 
 ## Usage
 
-    Usage: reformat-gherkin [OPTIONS] [SRC]...
-    
-      Reformat the given Gherkin files and all files in the given directories
-      recursively.
-    
-    Options:
-      --check                       Don't write the files back, just return the
-                                    status. Return code 0 means nothing would
-                                    change. Return code 1 means some files would
-                                    be reformatted. Return code 123 means there
-                                    was an internal error.
-      -a, --alignment [left|right]  Specify the alignment of step keywords (Given,
-                                    When, Then,...). If specified, all statements
-                                    after step keywords are left-aligned, spaces
-                                    are inserted before/after the keywords to
-                                    right/left align them. By default, step
-                                    keywords are left-aligned, and there is a
-                                    single space between the step keyword and the
-                                    statement.
-      -n, --newline [LF|CRLF]       Specify the line separators when formatting
-                                    files inplace. If not specified, line
-                                    separators are preserved.
-      --fast / --safe               If --fast given, skip the sanity checks of
-                                    file contents. [default: --safe]
-      --config FILE                 Read configuration from FILE.
-      --version                     Show the version and exit.
-      --help                        Show this message and exit.
+```text
+Usage: reformat-gherkin [OPTIONS] [SRC]...
+
+  Reformat the given Gherkin files and all files in the given directories
+  recursively.
+
+Options:
+  --check                       Don't write the files back, just return the
+                                status. Return code 0 means nothing would
+                                change. Return code 1 means some files would
+                                be reformatted. Return code 123 means there
+                                was an internal error.
+  -a, --alignment [left|right]  Specify the alignment of step keywords (Given,
+                                When, Then,...). If specified, all statements
+                                after step keywords are left-aligned, spaces
+                                are inserted before/after the keywords to
+                                right/left align them. By default, step
+                                keywords are left-aligned, and there is a
+                                single space between the step keyword and the
+                                statement.
+  -n, --newline [LF|CRLF]       Specify the line separators when formatting
+                                files inplace. If not specified, line
+                                separators are preserved.
+  --fast / --safe               If --fast given, skip the sanity checks of
+                                file contents. [default: --safe]
+  --config FILE                 Read configuration from FILE.
+  --version                     Show the version and exit.
+  --help                        Show this message and exit.
+```
 
 ### Config file
 
@@ -89,11 +99,13 @@ alignment: left
 
 Once you have installed [pre-commit](https://pre-commit.com/), add this to the `.pre-commit-config.yaml` in your repository:
 
-    repos:
-      - repo: https://github.com/ducminh-phan/reformat-gherkin
-        rev: stable
-        hooks:
-          - id: reformat-gherkin
+```text
+repos:
+  - repo: https://github.com/ducminh-phan/reformat-gherkin
+    rev: stable
+    hooks:
+      - id: reformat-gherkin
+```
 
 Then run `pre-commit install` and you're ready to go.
 

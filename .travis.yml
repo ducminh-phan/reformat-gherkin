@@ -6,8 +6,12 @@ python:
 jobs:
   include:
     - python: "3.6"
-      script:
+      env:
+        - JOB=linting
+      install:
+        - pip install pre-commit
         - pre-commit install
+      script:
         - pre-commit run --all-files
 env:
   global:

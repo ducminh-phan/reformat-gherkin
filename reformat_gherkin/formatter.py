@@ -11,6 +11,7 @@ from .ast_node import (
     Examples,
     Feature,
     GherkinDocument,
+    Location,
     Node,
     Scenario,
     ScenarioOutline,
@@ -31,6 +32,10 @@ INDENT_LEVEL_MAP = {
     Examples: 2,
     TableRow: 3,
 }
+
+
+def generate_language_header(language: str) -> Comment:
+    return Comment(Location(1, 1), f"# language: {language}")
 
 
 def generate_step_line(
@@ -189,6 +194,7 @@ class LineGenerator:
         self.__nodes = sorted(list(self.ast), key=lambda node: node.location)
         self.__contexts = self.__construct_contexts()
         self.__nodes_with_newline = self.__find_nodes_with_newline()
+        self.__add_language_header()
 
     def __construct_contexts(self) -> ContextMap:
         """
@@ -254,6 +260,22 @@ class LineGenerator:
             nodes_with_newline.add(node)
 
         return nodes_with_newline
+
+    def __add_language_header(self) -> None:
+        """Add a language header if the Feature language is not English."""
+        # Exit if the language is English or if there is no Feature node
+        feature = self.ast.feature
+        if not feature:
+            return
+        language = feature.language
+        if language == "en":
+            return
+
+        # Register the language header
+        language_header = generate_language_header(language)
+        self.__nodes.insert(0, language_header)
+        self.__nodes_with_newline.add(language_header)
+        self.__contexts[language_header] = self.ast.feature
 
     def generate(self) -> Lines:
         for node in self.__nodes:

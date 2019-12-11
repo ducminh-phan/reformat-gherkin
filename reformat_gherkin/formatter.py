@@ -35,7 +35,7 @@ INDENT_LEVEL_MAP = {
 
 
 def generate_language_header(language: str) -> Comment:
-    return Comment(Location(1, 1), f"# language: {language}")
+    return Comment(Location(1, 1), f"# language: {language}")  # type: ignore
 
 
 def generate_step_line(

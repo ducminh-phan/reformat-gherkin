@@ -3,6 +3,16 @@ dist: xenial
 python:
   - "3.6"
   - "3.7"
+jobs:
+  include:
+    - python: "3.6"
+      env:
+        - JOB=linting
+      install:
+        - pip install pre-commit
+        - pre-commit install
+      script:
+        - pre-commit run --all-files
 env:
   global:
     - secure: UYrFiynXTsYj9BfjY3scnI8E1f+j721RzHGf/jXoUJIgs7QGW7hN5sRbmdm8u57SY1cs+HHV36R6wOIvI3/7cm+wbugWt31fqCwbynaNdIbBkNu0hkZuOMJv63I8OcD/HDELsrtCTA1OtWaZU27CvnmIbIhmRYvIUVwA6MQrShGH6Lc68ST6yhBb+z8I2IMEv/C2Tx2CbzIJsxUJVSvurwgzvH3vS1M0z4f4cpDQLimZaa81GKkisq9gEzDzOmpK3Bj/zryrI7ZXO+4V9CXFuH0b6YXZOob/GzXw73jlOYoh3Q4z8A7qvgVw+Tk+PsVds26c7l5mdkX8iHTVWqZm5EouEkaVowm8SloHl0HA32bNxvN/t5pGmghgwOMTJrbwoMdBIt0gOUg+Na2R9u9M3G7D/t2KDSF6uthT4uwbJrlSZpKFcWZE75Nr6xGKrI7o/uzQShAA2oay9H3bkibTdp6Zcxl6C/RVVMTYPH2gyLDgNl6m8ZFKq0I4ENyYmGkTPWVzcBgetNKU0sjPCJnpnrbez+14dWJTYJ6SEa/1yLzIKCzmZpk4NV7aXrZkOCqc8Cq3hmMWIVV8TUpdARxlIoMj5TP+a41IWhQfVf6cuvwN6wN8NpfT3NzcwI5tLwTlpnRA1xsv7wIUDqceRKaZEh0K+cpZ1PO1W93aLKLgrvs=
@@ -10,9 +20,8 @@ env:
 install:
   - pip install poetry
   - poetry install
-  - pip install flake8 coveralls
+  - pip install coveralls
 script:
-  - flake8
   - pytest --cov=reformat_gherkin/
 after_success:
   - coveralls

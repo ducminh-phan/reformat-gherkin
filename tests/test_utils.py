@@ -62,3 +62,25 @@ def test_decode_bytes():
 
         assert contents == lines
         assert _newline == newline
+
+
+@pytest.mark.parametrize(
+    ["text", "width"],
+    [
+        ("abc", 3),
+        ("あああ", 6),
+        ("1.5倍", 5),
+        ("😍", 2),
+        ("１２３", 6),
+        ("ááá", 3),  # Combining diacritics
+        ("ááá", 3),  # Single-character diacritics
+        ("aaa\b", 4),
+        ("\t", 1),
+        ("", 0),
+        ("\\|", 2),  # Gherkin pipe escape sequence
+        ("\u202f", 1),  # Narrow no-break space
+        ("\u200d", 0),  # Zero width joiner
+    ],
+)
+def test_get_display_width(text, width):
+    assert utils.get_display_width(text) == width

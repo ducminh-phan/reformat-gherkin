@@ -17,5 +17,5 @@ def normalize_comment_text(text: str) -> str:
 
 @prepare
 class Comment:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     text: str = attrib(converter=normalize_comment_text)

@@ -9,7 +9,7 @@ from .table_cell import TableCell
 
 @prepare
 class TableRow:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     cells: Tuple[TableCell, ...]
 
     def __len__(self):

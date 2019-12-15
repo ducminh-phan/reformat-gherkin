@@ -10,7 +10,7 @@ from .tag import Tag
 
 @prepare
 class Examples:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     keyword: str
     name: str
     tags: Tuple[Tag, ...]

@@ -6,7 +6,7 @@ from .location import Location
 
 @prepare
 class DocString:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     content: str
 
     def __iter__(self):

@@ -11,7 +11,7 @@ from .tag import Tag
 
 @prepare
 class Scenario:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     keyword: str
     name: str
     steps: Tuple[Step, ...]

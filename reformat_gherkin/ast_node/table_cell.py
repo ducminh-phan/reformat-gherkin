@@ -6,5 +6,5 @@ from .location import Location
 
 @prepare
 class TableCell:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     value: str

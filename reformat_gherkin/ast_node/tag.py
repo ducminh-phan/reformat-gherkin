@@ -6,5 +6,5 @@ from .location import Location
 
 @prepare
 class Tag:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     name: str

@@ -10,7 +10,7 @@ from .location import Location
 
 @prepare
 class Step:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     keyword: str
     text: str
     argument: Optional[Union[DataTable, DocString]] = None

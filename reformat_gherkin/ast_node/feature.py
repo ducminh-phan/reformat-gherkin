@@ -14,7 +14,7 @@ from .tag import Tag
 @prepare
 class Feature:
     language: str
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     keyword: str
     name: str
     children: Tuple[Union[Background, Scenario, ScenarioOutline], ...]

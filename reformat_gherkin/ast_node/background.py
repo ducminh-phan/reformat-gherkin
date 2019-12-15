@@ -10,7 +10,7 @@ from .step import Step
 
 @prepare
 class Background:
-    location: Location = attrib(cmp=False, repr=False)
+    location: Location = attrib(eq=False, repr=False)
     keyword: str
     name: str
     steps: Tuple[Step, ...]

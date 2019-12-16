@@ -1,18 +1,15 @@
 from itertools import chain
 from typing import Optional, Tuple
 
-from attr import attrib
-
 from ._base import prepare
 from .examples import Examples
-from .location import Location
+from .location import LocationMixin
 from .step import Step
 from .tag import Tag
 
 
 @prepare
-class ScenarioOutline:
-    location: Location = attrib(cmp=False, repr=False)
+class ScenarioOutline(LocationMixin):
     keyword: str
     name: str
     steps: Tuple[Step, ...]

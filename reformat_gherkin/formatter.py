@@ -1,5 +1,5 @@
 from itertools import chain, zip_longest
-from typing import Any, Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Union
 
 from attr import attrib, dataclass
 
@@ -23,7 +23,7 @@ from .options import AlignmentMode
 from .utils import camel_to_snake_case, extract_beginning_spaces, get_step_keywords
 
 INDENT = "  "
-INDENT_LEVEL_MAP = {
+INDENT_LEVEL_MAP: Mapping[Any, int] = {
     Feature: 0,
     Background: 1,
     Scenario: 1,

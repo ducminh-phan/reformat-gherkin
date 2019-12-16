@@ -1,15 +1,12 @@
 from typing import Tuple
 
-from attr import attrib
-
 from ._base import prepare
-from .location import Location
+from .location import LocationMixin
 from .table_cell import TableCell
 
 
 @prepare
-class TableRow:
-    location: Location = attrib(eq=False, repr=False)
+class TableRow(LocationMixin):
     cells: Tuple[TableCell, ...]
 
     def __len__(self):

@@ -1,7 +1,7 @@
 from attr import attrib
 
 from ._base import prepare
-from .location import Location
+from .location import LocationMixin
 
 
 def normalize_comment_text(text: str) -> str:
@@ -16,6 +16,5 @@ def normalize_comment_text(text: str) -> str:
 
 
 @prepare
-class Comment:
-    location: Location = attrib(eq=False, repr=False)
+class Comment(LocationMixin):
     text: str = attrib(converter=normalize_comment_text)

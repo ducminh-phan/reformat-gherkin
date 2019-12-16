@@ -1,3 +1,5 @@
+from attr import attrib
+
 from ._base import prepare
 
 
@@ -5,3 +7,8 @@ from ._base import prepare
 class Location:
     line: int
     column: int
+
+
+@prepare
+class LocationMixin:
+    location: Location = attrib(eq=False, repr=False)

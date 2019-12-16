@@ -1,16 +1,13 @@
 from itertools import chain
 from typing import Optional, Tuple
 
-from attr import attrib
-
 from ._base import prepare
-from .location import Location
+from .location import LocationMixin
 from .step import Step
 
 
 @prepare
-class Background:
-    location: Location = attrib(eq=False, repr=False)
+class Background(LocationMixin):
     keyword: str
     name: str
     steps: Tuple[Step, ...]

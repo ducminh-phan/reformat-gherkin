@@ -1,15 +1,12 @@
 from typing import Tuple
 
-from attr import attrib
-
 from ._base import prepare
-from .location import Location
+from .location import LocationMixin
 from .table_row import TableRow
 
 
 @prepare
-class DataTable:
-    location: Location = attrib(eq=False, repr=False)
+class DataTable(LocationMixin):
     rows: Tuple[TableRow, ...]
 
     def __iter__(self):

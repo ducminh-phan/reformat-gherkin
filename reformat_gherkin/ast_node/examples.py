@@ -1,16 +1,13 @@
 from typing import Optional, Tuple
 
-from attr import attrib
-
 from ._base import prepare
-from .location import Location
+from .location import LocationMixin
 from .table_row import TableRow
 from .tag import Tag
 
 
 @prepare
-class Examples:
-    location: Location = attrib(eq=False, repr=False)
+class Examples(LocationMixin):
     keyword: str
     name: str
     tags: Tuple[Tag, ...]

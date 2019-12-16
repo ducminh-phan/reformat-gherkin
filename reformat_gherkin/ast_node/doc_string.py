@@ -1,12 +1,9 @@
-from attr import attrib
-
 from ._base import prepare
-from .location import Location
+from .location import LocationMixin
 
 
 @prepare
-class DocString:
-    location: Location = attrib(eq=False, repr=False)
+class DocString(LocationMixin):
     content: str
 
     def __iter__(self):

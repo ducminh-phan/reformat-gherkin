@@ -8,6 +8,7 @@ from typing import List, Tuple
 
 import click
 from gherkin.dialect import Dialect
+from wcwidth import wcswidth
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -92,3 +93,23 @@ def decode_bytes(src: bytes) -> Tuple[str, str, str]:
     srcbuf.seek(0)
     with io.TextIOWrapper(srcbuf, encoding) as tiow:
         return tiow.read(), encoding, newline
+
+
+def get_display_width(text: str) -> int:
+    """
+    Get the display width of a string.
+
+    When displayed in a console, some characters can have a width of 2 (for
+    example, East Asian characters) or a width of 0 (for example, combining
+    diacritic characters). Use the wcwidth package to find the correct display
+    width for strings including these characters.
+
+    Some characters do not have a width (for example, control characters like
+    the bell character). If a string contains any such characters, then
+    wcwidth.wcswidth returns -1. In this case, use the number of code points as
+    a fallback.
+    """
+    width = wcswidth(text)
+    if width < 0:
+        width = len(text)
+    return width

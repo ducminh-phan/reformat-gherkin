@@ -20,7 +20,12 @@ from .ast_node import (
     Tag,
 )
 from .options import AlignmentMode
-from .utils import camel_to_snake_case, extract_beginning_spaces, get_step_keywords
+from .utils import (
+    camel_to_snake_case,
+    extract_beginning_spaces,
+    get_display_width,
+    get_step_keywords,
+)
 
 INDENT = "  "
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
@@ -127,7 +132,7 @@ def generate_table_lines(rows: List[TableRow]) -> List[str]:
     # Find the max width of a cell in a column, so that every cell in the same column
     # has the same width
     column_widths = [
-        max(len(row[column_index].value) for row in rows)
+        max(get_display_width(row[column_index].value) for row in rows)
         for column_index in range(n_columns)
     ]
 
@@ -138,8 +143,10 @@ def generate_table_lines(rows: List[TableRow]) -> List[str]:
         for column_index in range(n_columns):
             # Left-align the content of each cell, fix the width of the cell
             content = row[column_index].value
-            width = column_widths[column_index]
-            line += f" {content:<{width}} |"
+            column_width = column_widths[column_index]
+            content_width = get_display_width(content)
+            padding = " " * (column_width - content_width)
+            line += f" {content}{padding} |"
 
         lines.append(line)
 

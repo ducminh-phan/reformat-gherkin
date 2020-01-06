@@ -53,5 +53,7 @@ Feature: Some meaningful feature
       | Europe  | 22  |
       # We can even have a comment in the middle of a table
       | America | 3   |
+      # Pipe characters in table cells need to be escaped
+      | a \| b  | 4   |
 
 # Some random comment at the end of the document

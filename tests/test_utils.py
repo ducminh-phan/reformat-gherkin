@@ -33,14 +33,6 @@ def test_dump_to_file(output, content):
     os.remove(name)
 
 
-def test_extract_beginning_spaces():
-    f = utils.extract_beginning_spaces
-
-    assert f("asd") == ""
-    assert f("   asd") == "   "
-    assert f(" asd  ") == " "
-
-
 def test_remove_trailing_spaces():
     f = utils.remove_trailing_spaces
 

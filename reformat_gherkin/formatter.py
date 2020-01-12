@@ -1,5 +1,5 @@
-from itertools import chain, zip_longest
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Union
+from itertools import chain
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Sequence, Set, Union
 
 from attr import attrib, dataclass
 
@@ -19,13 +19,8 @@ from .ast_node import (
     TableRow,
     Tag,
 )
-from .options import AlignmentMode
-from .utils import (
-    camel_to_snake_case,
-    extract_beginning_spaces,
-    get_display_width,
-    get_step_keywords,
-)
+from .options import AlignmentMode, TagLineMode
+from .utils import camel_to_snake_case, get_display_width, get_step_keywords
 
 INDENT = "  "
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
@@ -192,6 +187,7 @@ Lines = Iterator[str]
 class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
+    tag_line_mode: TagLineMode
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
@@ -209,9 +205,9 @@ class LineGenerator:
         properly format these lines.
         """
         contexts: ContextMap = {}
-        nodes = self.__nodes
+        comment_parent = None
 
-        for node in nodes:
+        for node in reversed(self.__nodes):
             # We want tags to have the same indentation level with their parents
             for tag in getattr(node, "tags", []):
                 contexts[tag] = node
@@ -226,10 +222,12 @@ class LineGenerator:
                 for row, line in zip(rows, lines):
                     contexts[row] = line
 
-        for node, next_node in zip_longest(nodes, nodes[1:], fillvalue=None):
             if isinstance(node, Comment):
-                # We want comments to have the same indentation level with the next line
-                contexts[node] = next_node
+                # We want comments to have the same indentation level as the nearest
+                # node that has an entry in the indent level map.
+                contexts[node] = comment_parent
+            elif type(node) in INDENT_LEVEL_MAP:
+                comment_parent = node
 
         return contexts
 
@@ -285,11 +283,25 @@ class LineGenerator:
         self.__contexts[language_header] = self.ast.feature
 
     def generate(self) -> Lines:
-        for node in self.__nodes:
-            yield from self.visit(node)
-
-            if node in self.__nodes_with_newline:
-                yield ""
+        i = 0
+        while i < len(self.__nodes):
+            node = self.__nodes[i]
+            if isinstance(node, (Tag, Comment)):
+                # We need to treat comments and tags specially; if we are using
+                # TagLineMode.SINGLELINE then we might only yield one line for
+                # several tag nodes, and the order of the tags and comments may
+                # change.
+                comments_and_tags = []
+                for node in self.__nodes[i:]:
+                    if isinstance(node, (Tag, Comment)):
+                        comments_and_tags.append(node)
+                        i += 1
+                    else:
+                        break
+                yield from self.generate_comment_and_tag_lines(comments_and_tags)
+            else:
+                yield from self.visit(node)
+                i += 1
 
     def visit(self, node: Node) -> Lines:
         class_name = type(node).__name__
@@ -297,6 +309,8 @@ class LineGenerator:
         yield from getattr(
             self, f"visit_{camel_to_snake_case(class_name)}", self.visit_default
         )(node)
+        if node in self.__nodes_with_newline:
+            yield ""
 
     @staticmethod
     def visit_default(node: Node) -> Lines:
@@ -324,32 +338,76 @@ class LineGenerator:
 
         yield f"{INDENT * indent_level}{tag.name}"
 
-    def visit_table_row(self, row: TableRow) -> Lines:
-        context = self.__contexts[row]
-
-        yield context
-
     def visit_comment(self, comment: Comment) -> Lines:
         context = self.__contexts[comment]
 
         # Find the indent level of this comment line
         if context is None:
-            # In this case, this comment line is the last line of the document
-            indent_level: Optional[int] = 0
+            # In this case, this comment line at the end of the document
+            indent_level = 0
         else:
-            # Try to look for the indent level of the context in the mapping. If not
-            # successful, then we use the same amount of white spaces to indent as
-            # the next line.
-            indent_level = INDENT_LEVEL_MAP.get(type(context))
+            # Look up the indent level of the context in the indent level map.
+            # All contexts for comments have an entry in the map, so we don't
+            # have to worry about KeyError here.
+            indent_level = INDENT_LEVEL_MAP[type(context)]
 
-        if indent_level is None:
-            next_line = next(self.visit(context))
-            indent = extract_beginning_spaces(next_line)
-        else:
-            indent = INDENT * indent_level
+        yield f"{INDENT * indent_level}{comment.text}"
 
-        yield f"{indent}{comment.text}"
+    def visit_table_row(self, row: TableRow) -> Lines:
+        context = self.__contexts[row]
+
+        yield context
 
     @staticmethod
     def visit_doc_string(docstring: DocString) -> Lines:
         yield from generate_doc_string_lines(docstring)
+
+    def generate_comment_and_tag_lines(
+        self, comments_and_tags: Sequence[Union[Comment, Tag]]
+    ):
+        if self.tag_line_mode == TagLineMode.MULTILINE:
+            for node in comments_and_tags:
+                yield from self.visit(node)
+        else:
+            # For single-line tags, the order of the tags and comments can be
+            # switched. For example:
+            #
+            #   # Comment 1
+            #   @tag1 @tag2
+            #   # Comment 2
+            #   @tag3
+            #   # Comment 3
+            #
+            # is rendered as:
+            #
+            #   # Comment 1
+            #   # Comment 2
+            #   @tag1 @tag2 @tag3
+            #   # Comment 3
+            #
+            # To enable reordering, we split our input nodes into three
+            # categories: comments that go before the tags, the tags, and
+            # comments that go after the tags. Once we have separated the nodes,
+            # we then render each of the categories in turn.
+            comments_before: List[Comment] = []
+            tags: List[Tag] = []
+            comments_after: List[Comment] = []
+            for node in reversed(comments_and_tags):
+                if isinstance(node, Comment):
+                    if tags:
+                        comments_before.append(node)
+                    else:
+                        comments_after.append(node)
+                else:
+                    tags.append(node)
+
+            for comment in reversed(comments_before):
+                yield from self.visit(comment)
+            if tags:
+                context = self.__contexts[tags[0]]
+                indent_level = INDENT_LEVEL_MAP[type(context)]
+                yield f"{INDENT * indent_level}" + " ".join(
+                    tag.name for tag in reversed(tags)
+                )
+            for comment in reversed(comments_after):
+                yield from self.visit(comment)

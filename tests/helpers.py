@@ -1,11 +1,20 @@
-from reformat_gherkin.options import AlignmentMode, NewlineMode, Options, WriteBackMode
+from reformat_gherkin.options import (
+    AlignmentMode,
+    NewlineMode,
+    Options,
+    TagLineMode,
+    WriteBackMode,
+)
 
 
-def make_options(alignment_mode):
+def make_options(
+    alignment_mode=AlignmentMode.NONE, tag_line_mode=TagLineMode.MULTILINE
+):
     return Options(
         write_back=WriteBackMode.CHECK,
         step_keyword_alignment=alignment_mode,
         newline=NewlineMode.KEEP,
+        tag_line_mode=tag_line_mode,
         fast=False,
     )
 
@@ -14,9 +23,10 @@ OPTIONS = [make_options(alignment_mode) for alignment_mode in AlignmentMode]
 
 
 filename_option_map = {
-    "expected_default": make_options(AlignmentMode.NONE),
-    "expected_left_aligned": make_options(AlignmentMode.LEFT),
-    "expected_right_aligned": make_options(AlignmentMode.RIGHT),
+    "expected_default": make_options(),
+    "expected_left_aligned": make_options(alignment_mode=AlignmentMode.LEFT),
+    "expected_right_aligned": make_options(alignment_mode=AlignmentMode.RIGHT),
+    "expected_single_line_tags": make_options(tag_line_mode=TagLineMode.SINGLELINE),
 }
 
 

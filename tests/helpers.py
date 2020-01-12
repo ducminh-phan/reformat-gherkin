@@ -1,14 +1,23 @@
 from reformat_gherkin.options import AlignmentMode, NewlineMode, Options, WriteBackMode
 
-OPTIONS = [
-    Options(
+
+def make_options(alignment_mode):
+    return Options(
         write_back=WriteBackMode.CHECK,
         step_keyword_alignment=alignment_mode,
         newline=NewlineMode.KEEP,
         fast=False,
     )
-    for alignment_mode in AlignmentMode
-]
+
+
+OPTIONS = [make_options(alignment_mode) for alignment_mode in AlignmentMode]
+
+
+filename_option_map = {
+    "expected_default": make_options(AlignmentMode.NONE),
+    "expected_left_aligned": make_options(AlignmentMode.LEFT),
+    "expected_right_aligned": make_options(AlignmentMode.RIGHT),
+}
 
 
 def get_content(dir_name):

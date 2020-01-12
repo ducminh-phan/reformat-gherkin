@@ -6,24 +6,29 @@ import pytest
 from click.testing import CliRunner
 
 from reformat_gherkin.config import CONFIG_FILE
+from tests.helpers import filename_option_map
 
 TEST_DIR = Path("tests")
 
 
 @pytest.fixture
 def valid_contents():
-    def _valid_contents(*, with_expected=False):
+    def _valid_contents(*, with_expected=False, with_options=False):
         for feature_dir in (TEST_DIR / "data" / "valid").iterdir():
             if not feature_dir.is_dir():
                 continue
             content = (feature_dir / "input.feature").read_text(encoding="utf-8")
-            if with_expected:
-                expected_content = (feature_dir / "expected.feature").read_text(
-                    encoding="utf-8"
-                )
-                yield content, expected_content
-            else:
-                yield content
+            for expected in feature_dir.glob("expected_*.feature"):
+                result = [content]
+                if with_expected:
+                    result.append(expected.read_text(encoding="utf-8"))
+                if with_options:
+                    options = filename_option_map[expected.stem]
+                    result.append(options)
+                if len(result) <= 1:
+                    yield result[0]
+                else:
+                    yield tuple(result)
 
     return _valid_contents
 

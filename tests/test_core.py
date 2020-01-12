@@ -55,17 +55,17 @@ def test_assert_stable_fail(options):
         core.assert_stable(src, dst, options=options)
 
 
-@pytest.mark.parametrize("options", OPTIONS)
-def test_format_file_contents(valid_contents, options):
-    for src, expected_dst in valid_contents(with_expected=True):
+def test_format_file_contents(valid_contents):
+    for src, expected_dst, options in valid_contents(
+        with_expected=True, with_options=True
+    ):
         dst = core.format_file_contents(src, options=options)
 
         for line in dst.splitlines():
             if line:
                 assert line[-1] != " "
 
-        if options.step_keyword_alignment.value is None:
-            assert dst == expected_dst
+        assert dst == expected_dst
 
 
 @pytest.mark.parametrize("options", OPTIONS)

@@ -11,8 +11,8 @@ OPTIONS = [
 ]
 
 
-def get_content(file_name):
-    with open(f"tests/data/valid/{file_name}.feature") as f:
+def get_content(dir_name):
+    with open(f"tests/data/valid/{dir_name}/input.feature") as f:
         return f.read()
 
 

@@ -4,10 +4,9 @@ import re
 import tempfile
 import tokenize
 from functools import lru_cache, partial
-from typing import List, Tuple
+from typing import Tuple
 
 import click
-from gherkin.dialect import Dialect
 from wcwidth import wcswidth
 
 out = partial(click.secho, bold=True, err=True)
@@ -50,21 +49,6 @@ def diff(a: str, b: str, a_name: str, b_name: str) -> str:
     )
 
 
-@lru_cache()
-def get_step_keywords(dialect_name="en") -> List[str]:
-    dialect = Dialect.for_name(dialect_name)
-
-    keywords = (
-        dialect.given_keywords
-        + dialect.when_keywords
-        + dialect.then_keywords
-        + dialect.and_keywords
-        + dialect.but_keywords
-    )
-
-    return [kw.strip() for kw in keywords]
-
-
 _beginning_spaces_re = re.compile(r"^(\s*).*")
 
 
@@ -95,6 +79,7 @@ def decode_bytes(src: bytes) -> Tuple[str, str, str]:
         return tiow.read(), encoding, newline
 
 
+@lru_cache()
 def get_display_width(text: str) -> int:
     """
     Get the display width of a string.

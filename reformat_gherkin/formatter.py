@@ -1,3 +1,4 @@
+from functools import lru_cache
 from itertools import chain, zip_longest
 from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Union
 
@@ -20,12 +21,7 @@ from .ast_node import (
     Tag,
 )
 from .options import AlignmentMode
-from .utils import (
-    camel_to_snake_case,
-    extract_beginning_spaces,
-    get_display_width,
-    get_step_keywords,
-)
+from .utils import camel_to_snake_case, extract_beginning_spaces, get_display_width
 
 INDENT = "  "
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
@@ -44,7 +40,7 @@ def generate_language_header(language: str) -> Comment:
 
 
 def generate_step_line(
-    step: Step, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
+    step: Step, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Generate lines for steps. The step keywords are aligned according to the parameter
@@ -68,29 +64,32 @@ def generate_step_line(
     indent_level: int = INDENT_LEVEL_MAP[Step]
 
     formatted_keyword = format_step_keyword(
-        step.keyword, keyword_alignment, dialect_name=dialect_name
+        step.keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
     )
 
     return f"{INDENT * indent_level}{formatted_keyword} {step.text}"
 
 
 def format_step_keyword(
-    keyword: str, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
+    keyword: str, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Insert padding to step keyword if necessary based on how we want to align them.
     """
-    if keyword_alignment is AlignmentMode.NONE:
+    if keyword_alignment is AlignmentMode.NONE or keyword_padding_width <= 0:
         return keyword
 
-    all_keywords = get_step_keywords(dialect_name)
-    max_keyword_length = max(map(len, all_keywords))
-    padding = " " * (max_keyword_length - len(keyword))
+    padding = " " * (keyword_padding_width - get_display_width(keyword))
 
     if keyword_alignment is AlignmentMode.LEFT:
         return keyword + padding
     else:
         return padding + keyword
+
+
+@lru_cache()
+def find_max_step_keyword_length(scenario: Union[Scenario, ScenarioOutline]) -> int:
+    return max(get_display_width(step.keyword.strip()) for step in scenario.steps)
 
 
 def generate_keyword_line(keyword: str, name: str, indent_level: int) -> str:
@@ -184,7 +183,7 @@ def generate_doc_string_lines(docstring: DocString) -> List[str]:
     return [f"{INDENT * indent_level}{line}" for line in raw_lines]
 
 
-ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
+ContextMap = Dict[Union[Comment, Tag, TableRow, Step], Any]
 Lines = Iterator[str]
 
 
@@ -215,6 +214,11 @@ class LineGenerator:
             # We want tags to have the same indentation level with their parents
             for tag in getattr(node, "tags", []):
                 contexts[tag] = node
+
+            # We need to keep track of all steps in a scenario so that we can
+            # align them correctly.
+            for step in getattr(node, "steps", []):
+                contexts[step] = node
 
             if isinstance(node, (DataTable, Examples)):
                 # We need to know all rows in a table, so that the columns can be padded
@@ -313,7 +317,16 @@ class LineGenerator:
             )
 
     def visit_step(self, step: Step) -> Lines:
-        yield generate_step_line(step, self.step_keyword_alignment)
+        if self.step_keyword_alignment == AlignmentMode.NONE:
+            yield generate_step_line(step, self.step_keyword_alignment)
+        else:
+            scenario = self.__contexts[step]
+            max_keyword_width = find_max_step_keyword_length(scenario)
+            yield generate_step_line(
+                step,
+                self.step_keyword_alignment,
+                keyword_padding_width=max_keyword_width,
+            )
 
     def visit_tag(self, tag: Tag) -> Lines:
         context = self.__contexts[tag]

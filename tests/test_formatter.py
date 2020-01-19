@@ -1,6 +1,6 @@
 from reformat_gherkin.ast_node import GherkinDocument
 from reformat_gherkin.formatter import INDENT_LEVEL_MAP, LineGenerator
-from reformat_gherkin.options import AlignmentMode
+from reformat_gherkin.options import AlignmentMode, TagLineMode
 
 
 def verify_indent_level_map():
@@ -20,8 +20,10 @@ def verify_indent_level_map():
             assert node_type in INDENT_LEVEL_MAP
 
 
-def format_ast(ast, alignment_mode=AlignmentMode.LEFT):
-    line_generator = LineGenerator(ast, alignment_mode)
+def format_ast(
+    ast, alignment_mode=AlignmentMode.LEFT, tag_line_mode=TagLineMode.MULTILINE
+):
+    line_generator = LineGenerator(ast, alignment_mode, tag_line_mode)
     lines = line_generator.generate()
     return "\n".join(lines)
 

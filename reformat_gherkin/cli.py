@@ -5,7 +5,7 @@ import click
 from .config import read_config_file
 from .core import reformat
 from .errors import EmptySources
-from .options import AlignmentMode, NewlineMode, Options, WriteBackMode
+from .options import AlignmentMode, NewlineMode, Options, TagLineMode, WriteBackMode
 from .report import Report
 from .utils import out
 from .version import __version__
@@ -56,6 +56,16 @@ from .version import __version__
     help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
 )
 @click.option(
+    "--single-line-tags/--multi-line-tags",
+    is_flag=True,
+    default=False,
+    help=(
+        "If --single-line-tags given, output consecutive tags on one line. "
+        "If --multi-line-tags given, output one tag per line. "
+        "[default: --multi-line-tags]"
+    ),
+)
+@click.option(
     "--config",
     type=click.Path(
         exists=True, file_okay=True, dir_okay=False, readable=True, allow_dash=False
@@ -73,6 +83,7 @@ def main(
     alignment: Optional[str],
     newline: Optional[str],
     fast: bool,
+    single_line_tags: bool,
     config: Optional[str],
 ) -> None:
     """
@@ -84,12 +95,14 @@ def main(
     write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)
     newline_mode = NewlineMode.from_configuration(newline)
+    tag_line_mode = TagLineMode.from_configuration(single_line_tags)
 
     options = Options(
         write_back=write_back_mode,
         step_keyword_alignment=alignment_mode,
         newline=newline_mode,
         fast=fast,
+        tag_line_mode=tag_line_mode,
     )
 
     report = Report(check=check)

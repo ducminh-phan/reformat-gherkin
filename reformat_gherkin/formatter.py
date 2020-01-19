@@ -1,5 +1,5 @@
 from itertools import chain, zip_longest
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Tuple, Union
 
 from attr import attrib, dataclass
 
@@ -18,8 +18,9 @@ from .ast_node import (
     Step,
     TableRow,
     Tag,
+    TagGroup,
 )
-from .options import AlignmentMode
+from .options import AlignmentMode, TagLineMode
 from .utils import (
     camel_to_snake_case,
     extract_beginning_spaces,
@@ -184,7 +185,7 @@ def generate_doc_string_lines(docstring: DocString) -> List[str]:
     return [f"{INDENT * indent_level}{line}" for line in raw_lines]
 
 
-ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
+ContextMap = Dict[Union[Comment, Tag, TagGroup, TableRow], Any]
 Lines = Iterator[str]
 
 
@@ -192,16 +193,41 @@ Lines = Iterator[str]
 class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
+    tag_line_mode: TagLineMode
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
+    __tag_groups: List[TagGroup] = attrib(factory=list)
 
     def __attrs_post_init__(self):
         # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
-        self.__nodes = sorted(list(self.ast), key=lambda node: node.location)
+
+        if self.tag_line_mode is TagLineMode.SINGLELINE:
+            self.__group_tags()
+
+        self.__nodes = sorted(
+            list(self.ast) + self.__tag_groups, key=lambda node: node.location
+        )
+
         self.__contexts = self.__construct_contexts()
         self.__nodes_with_newline = self.__find_nodes_with_newline()
         self.__add_language_header()
+
+    def __group_tags(self):
+        """
+        Group the tags of a node, so that we can render them on a single line.
+        """
+        node: Node
+        for node in self.ast:
+            if hasattr(node, "tags"):
+                tags: Tuple[Tag, ...] = node.tags
+
+                if tags:
+                    # The tag group should be placed at the position of the last tag
+                    tag_group = TagGroup(
+                        members=tags, context=node, location=tags[-1].location
+                    )
+                    self.__tag_groups.append(tag_group)
 
     def __construct_contexts(self) -> ContextMap:
         """
@@ -212,6 +238,9 @@ class LineGenerator:
         nodes = self.__nodes
 
         for node in nodes:
+            if hasattr(node, "context"):
+                contexts[node] = node.context  # type: ignore
+
             # We want tags to have the same indentation level with their parents
             for tag in getattr(node, "tags", []):
                 contexts[tag] = node
@@ -286,6 +315,9 @@ class LineGenerator:
 
     def generate(self) -> Lines:
         for node in self.__nodes:
+            if self.tag_line_mode is TagLineMode.SINGLELINE and isinstance(node, Tag):
+                continue
+
             yield from self.visit(node)
 
             if node in self.__nodes_with_newline:
@@ -323,6 +355,15 @@ class LineGenerator:
         indent_level = INDENT_LEVEL_MAP[type(context)]
 
         yield f"{INDENT * indent_level}{tag.name}"
+
+    def visit_tag_group(self, tag_group: TagGroup) -> Lines:
+        context = self.__contexts[tag_group]
+
+        indent_level = INDENT_LEVEL_MAP[type(context)]
+
+        line_content = " ".join(tag.name for tag in tag_group.members)
+
+        yield f"{INDENT * indent_level}{line_content}"
 
     def visit_table_row(self, row: TableRow) -> Lines:
         context = self.__contexts[row]

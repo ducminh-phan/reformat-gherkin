@@ -56,4 +56,8 @@ Feature: Some meaningful feature
       # Pipe characters in table cells need to be escaped
       | a \| b  | 4   |
 
+  Scenario: Escaping the bank
+     When I exit the bank
+     Then the police will start to chase me
+
 # Some random comment at the end of the document

@@ -197,17 +197,16 @@ class LineGenerator:
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
-    __tag_groups: List[TagGroup] = attrib(factory=list)
 
     def __attrs_post_init__(self):
         # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
 
+        self.__nodes = list(self.ast)
+
         if self.tag_line_mode is TagLineMode.SINGLELINE:
             self.__group_tags()
 
-        self.__nodes = sorted(
-            list(self.ast) + self.__tag_groups, key=lambda node: node.location
-        )
+        self.__nodes.sort(key=lambda node: node.location)
 
         self.__contexts = self.__construct_contexts()
         self.__nodes_with_newline = self.__find_nodes_with_newline()
@@ -217,6 +216,8 @@ class LineGenerator:
         """
         Group the tags of a node, so that we can render them on a single line.
         """
+
+        tag_groups: List[TagGroup] = []
         node: Node
         for node in self.ast:
             if hasattr(node, "tags"):
@@ -227,7 +228,13 @@ class LineGenerator:
                     tag_group = TagGroup(
                         members=tags, context=node, location=tags[-1].location
                     )
-                    self.__tag_groups.append(tag_group)
+                    tag_groups.append(tag_group)
+
+        # After grouping the tags, we need to include the tag groups into
+        # the list of nodes and remove the tags from the list.
+        self.__nodes = [
+            node for node in self.__nodes if not isinstance(node, Tag)
+        ] + tag_groups
 
     def __construct_contexts(self) -> ContextMap:
         """
@@ -315,9 +322,6 @@ class LineGenerator:
 
     def generate(self) -> Lines:
         for node in self.__nodes:
-            if self.tag_line_mode is TagLineMode.SINGLELINE and isinstance(node, Tag):
-                continue
-
             yield from self.visit(node)
 
             if node in self.__nodes_with_newline:

@@ -21,12 +21,7 @@ from .ast_node import (
     TagGroup,
 )
 from .options import AlignmentMode, TagLineMode
-from .utils import (
-    camel_to_snake_case,
-    extract_beginning_spaces,
-    get_display_width,
-    get_step_keywords,
-)
+from .utils import camel_to_snake_case, extract_beginning_spaces, get_display_width
 
 INDENT = "  "
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
@@ -45,7 +40,7 @@ def generate_language_header(language: str) -> Comment:
 
 
 def generate_step_line(
-    step: Step, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
+    step: Step, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Generate lines for steps. The step keywords are aligned according to the parameter
@@ -69,24 +64,22 @@ def generate_step_line(
     indent_level: int = INDENT_LEVEL_MAP[Step]
 
     formatted_keyword = format_step_keyword(
-        step.keyword, keyword_alignment, dialect_name=dialect_name
+        step.keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
     )
 
     return f"{INDENT * indent_level}{formatted_keyword} {step.text}"
 
 
 def format_step_keyword(
-    keyword: str, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
+    keyword: str, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Insert padding to step keyword if necessary based on how we want to align them.
     """
-    if keyword_alignment is AlignmentMode.NONE:
+    if keyword_alignment is AlignmentMode.NONE or keyword_padding_width <= 0:
         return keyword
 
-    all_keywords = get_step_keywords(dialect_name)
-    max_keyword_length = max(map(len, all_keywords))
-    padding = " " * (max_keyword_length - len(keyword))
+    padding = " " * (keyword_padding_width - get_display_width(keyword))
 
     if keyword_alignment is AlignmentMode.LEFT:
         return keyword + padding
@@ -197,6 +190,7 @@ class LineGenerator:
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
+    __max_step_keyword_width: int = attrib(init=False)
 
     def __attrs_post_init__(self):
         # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
@@ -210,6 +204,7 @@ class LineGenerator:
 
         self.__contexts = self.__construct_contexts()
         self.__nodes_with_newline = self.__find_nodes_with_newline()
+        self.__max_step_keyword_width = self.__find_max_step_keyword_width()
         self.__add_language_header()
 
     def __group_tags(self):
@@ -304,6 +299,25 @@ class LineGenerator:
 
         return nodes_with_newline
 
+    def __find_max_step_keyword_width(self) -> int:
+        """
+        Find the length of the longest step keyword in the document. This is
+        used for aligning step keywords.
+        """
+        if self.step_keyword_alignment is AlignmentMode.NONE:
+            # We don't need to align step keywords in this case.
+            return 0
+
+        step_keyword_widths = [
+            get_display_width(node.keyword.strip())
+            for node in self.ast
+            if isinstance(node, Step)
+        ]
+        if not step_keyword_widths:
+            return 0
+
+        return max(step_keyword_widths)
+
     def __add_language_header(self) -> None:
         """Add a language header if the Feature language is not English."""
         # Exit if the language is English or if there is no Feature node
@@ -349,7 +363,11 @@ class LineGenerator:
             )
 
     def visit_step(self, step: Step) -> Lines:
-        yield generate_step_line(step, self.step_keyword_alignment)
+        yield generate_step_line(
+            step,
+            self.step_keyword_alignment,
+            keyword_padding_width=self.__max_step_keyword_width,
+        )
 
     def visit_tag(self, tag: Tag) -> Lines:
         context = self.__contexts[tag]

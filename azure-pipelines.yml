@@ -1,5 +1,11 @@
 jobs:
   - template: .azure-pipelines-templates/jobs.yml
     parameters:
-      pythonVersions: ['3.6', '3.7', '3.8']
-      images: ['ubuntu-16.04', 'macos-10.13', 'vs2017-win2016']
+      pythonVersions:
+        - '3.6'
+        - '3.7'
+        - '3.8'
+      images:
+        - 'ubuntu-latest'
+        - 'macOS-latest'
+        - 'windows-latest'

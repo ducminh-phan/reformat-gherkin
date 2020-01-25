@@ -14,6 +14,7 @@ from .step import Step
 from .table_cell import TableCell
 from .table_row import TableRow
 from .tag import Tag
+from .tag_group import TagGroup
 
 Node = Union[
     Background,
@@ -30,4 +31,5 @@ Node = Union[
     TableCell,
     TableRow,
     Tag,
+    TagGroup,
 ]

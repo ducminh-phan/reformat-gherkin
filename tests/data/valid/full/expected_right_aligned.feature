@@ -19,7 +19,7 @@ Feature: Some meaningful feature
     This is a description for this scenario
 
     Given I go to the bank
-    Then I rob the bank
+     Then I rob the bank
 
   @tag-no-2
   @decorate-2
@@ -32,17 +32,17 @@ Feature: Some meaningful feature
 
     # Is it helpful to put a comment here?
     Given I stand in front of the bank's vault
-    And I break the vault's door
+      And I break the vault's door
     """
     Some docstring here
       A docstring can have multiple lines
         With indentation
     """
-    Then I enter the vault
+     Then I enter the vault
     """
     Some docstring there
     """
-    And I see a lot of money
+      And I see a lot of money
 
     # Examples can have tags? Hmmm...
     @test-examples-tags
@@ -55,5 +55,9 @@ Feature: Some meaningful feature
       | America | 3   |
       # Pipe characters in table cells need to be escaped
       | a \| b  | 4   |
+
+  Scenario: Escaping the bank
+     When I exit the bank
+     Then the police will start to chase me
 
 # Some random comment at the end of the document

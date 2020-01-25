@@ -36,9 +36,20 @@ class NewlineMode(Enum):
         return NewlineMode(newline)
 
 
+@unique
+class TagLineMode(Enum):
+    SINGLELINE = "singleline"
+    MULTILINE = "multiline"
+
+    @classmethod
+    def from_configuration(cls, single_line_tags: bool) -> "TagLineMode":
+        return TagLineMode.SINGLELINE if single_line_tags else TagLineMode.MULTILINE
+
+
 @dataclass(frozen=True)
 class Options:
     write_back: WriteBackMode
     step_keyword_alignment: AlignmentMode
     newline: NewlineMode
+    tag_line_mode: TagLineMode
     fast: bool

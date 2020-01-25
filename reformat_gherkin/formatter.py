@@ -1,5 +1,5 @@
 from itertools import chain, zip_longest
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Tuple, Union
 
 from attr import attrib, dataclass
 
@@ -18,14 +18,10 @@ from .ast_node import (
     Step,
     TableRow,
     Tag,
+    TagGroup,
 )
-from .options import AlignmentMode
-from .utils import (
-    camel_to_snake_case,
-    extract_beginning_spaces,
-    get_display_width,
-    get_step_keywords,
-)
+from .options import AlignmentMode, TagLineMode
+from .utils import camel_to_snake_case, extract_beginning_spaces, get_display_width
 
 INDENT = "  "
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
@@ -44,7 +40,7 @@ def generate_language_header(language: str) -> Comment:
 
 
 def generate_step_line(
-    step: Step, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
+    step: Step, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Generate lines for steps. The step keywords are aligned according to the parameter
@@ -68,24 +64,22 @@ def generate_step_line(
     indent_level: int = INDENT_LEVEL_MAP[Step]
 
     formatted_keyword = format_step_keyword(
-        step.keyword, keyword_alignment, dialect_name=dialect_name
+        step.keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
     )
 
     return f"{INDENT * indent_level}{formatted_keyword} {step.text}"
 
 
 def format_step_keyword(
-    keyword: str, keyword_alignment: AlignmentMode, *, dialect_name: str = "en"
+    keyword: str, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Insert padding to step keyword if necessary based on how we want to align them.
     """
-    if keyword_alignment is AlignmentMode.NONE:
+    if keyword_alignment is AlignmentMode.NONE or keyword_padding_width <= 0:
         return keyword
 
-    all_keywords = get_step_keywords(dialect_name)
-    max_keyword_length = max(map(len, all_keywords))
-    padding = " " * (max_keyword_length - len(keyword))
+    padding = " " * (keyword_padding_width - get_display_width(keyword))
 
     if keyword_alignment is AlignmentMode.LEFT:
         return keyword + padding
@@ -184,7 +178,7 @@ def generate_doc_string_lines(docstring: DocString) -> List[str]:
     return [f"{INDENT * indent_level}{line}" for line in raw_lines]
 
 
-ContextMap = Dict[Union[Comment, Tag, TableRow], Any]
+ContextMap = Dict[Union[Comment, Tag, TagGroup, TableRow], Any]
 Lines = Iterator[str]
 
 
@@ -192,16 +186,50 @@ Lines = Iterator[str]
 class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
+    tag_line_mode: TagLineMode
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
+    __max_step_keyword_width: int = attrib(init=False)
 
     def __attrs_post_init__(self):
         # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
-        self.__nodes = sorted(list(self.ast), key=lambda node: node.location)
+
+        self.__nodes = list(self.ast)
+
+        if self.tag_line_mode is TagLineMode.SINGLELINE:
+            self.__group_tags()
+
+        self.__nodes.sort(key=lambda node: node.location)
+
         self.__contexts = self.__construct_contexts()
         self.__nodes_with_newline = self.__find_nodes_with_newline()
+        self.__max_step_keyword_width = self.__find_max_step_keyword_width()
         self.__add_language_header()
+
+    def __group_tags(self):
+        """
+        Group the tags of a node, so that we can render them on a single line.
+        """
+
+        tag_groups: List[TagGroup] = []
+        node: Node
+        for node in self.ast:
+            if hasattr(node, "tags"):
+                tags: Tuple[Tag, ...] = node.tags
+
+                if tags:
+                    # The tag group should be placed at the position of the last tag
+                    tag_group = TagGroup(
+                        members=tags, context=node, location=tags[-1].location
+                    )
+                    tag_groups.append(tag_group)
+
+        # After grouping the tags, we need to include the tag groups into
+        # the list of nodes and remove the tags from the list.
+        self.__nodes = [
+            node for node in self.__nodes if not isinstance(node, Tag)
+        ] + tag_groups
 
     def __construct_contexts(self) -> ContextMap:
         """
@@ -212,6 +240,9 @@ class LineGenerator:
         nodes = self.__nodes
 
         for node in nodes:
+            if hasattr(node, "context"):
+                contexts[node] = node.context  # type: ignore
+
             # We want tags to have the same indentation level with their parents
             for tag in getattr(node, "tags", []):
                 contexts[tag] = node
@@ -268,6 +299,25 @@ class LineGenerator:
 
         return nodes_with_newline
 
+    def __find_max_step_keyword_width(self) -> int:
+        """
+        Find the length of the longest step keyword in the document. This is
+        used for aligning step keywords.
+        """
+        if self.step_keyword_alignment is AlignmentMode.NONE:
+            # We don't need to align step keywords in this case.
+            return 0
+
+        step_keyword_widths = [
+            get_display_width(node.keyword.strip())
+            for node in self.ast
+            if isinstance(node, Step)
+        ]
+        if not step_keyword_widths:
+            return 0
+
+        return max(step_keyword_widths)
+
     def __add_language_header(self) -> None:
         """Add a language header if the Feature language is not English."""
         # Exit if the language is English or if there is no Feature node
@@ -313,7 +363,11 @@ class LineGenerator:
             )
 
     def visit_step(self, step: Step) -> Lines:
-        yield generate_step_line(step, self.step_keyword_alignment)
+        yield generate_step_line(
+            step,
+            self.step_keyword_alignment,
+            keyword_padding_width=self.__max_step_keyword_width,
+        )
 
     def visit_tag(self, tag: Tag) -> Lines:
         context = self.__contexts[tag]
@@ -323,6 +377,15 @@ class LineGenerator:
         indent_level = INDENT_LEVEL_MAP[type(context)]
 
         yield f"{INDENT * indent_level}{tag.name}"
+
+    def visit_tag_group(self, tag_group: TagGroup) -> Lines:
+        context = self.__contexts[tag_group]
+
+        indent_level = INDENT_LEVEL_MAP[type(context)]
+
+        line_content = " ".join(tag.name for tag in tag_group.members)
+
+        yield f"{INDENT * indent_level}{line_content}"
 
     def visit_table_row(self, row: TableRow) -> Lines:
         context = self.__contexts[row]

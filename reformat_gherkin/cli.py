@@ -58,11 +58,11 @@ from .version import __version__
 @click.option(
     "--single-line-tags/--multi-line-tags",
     is_flag=True,
-    default=False,
+    default=True,
     help=(
         "If --single-line-tags given, output consecutive tags on one line. "
         "If --multi-line-tags given, output one tag per line. "
-        "[default: --multi-line-tags]"
+        "[default: --single-line-tags]"
     ),
 )
 @click.option(

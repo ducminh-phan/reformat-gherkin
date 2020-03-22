@@ -8,7 +8,7 @@ from reformat_gherkin.options import (
 
 
 def make_options(
-    *, step_keyword_alignment=AlignmentMode.NONE, tag_line_mode=TagLineMode.MULTILINE
+    *, step_keyword_alignment=AlignmentMode.NONE, tag_line_mode=TagLineMode.SINGLELINE
 ):
     return Options(
         write_back=WriteBackMode.CHECK,
@@ -28,7 +28,7 @@ FILENAME_OPTION_MAP = {
     "expected_default": make_options(step_keyword_alignment=AlignmentMode.NONE),
     "expected_left_aligned": make_options(step_keyword_alignment=AlignmentMode.LEFT),
     "expected_right_aligned": make_options(step_keyword_alignment=AlignmentMode.RIGHT),
-    "expected_single_line_tags": make_options(tag_line_mode=TagLineMode.SINGLELINE),
+    "expected_multi_line_tags": make_options(tag_line_mode=TagLineMode.MULTILINE),
 }
 
 

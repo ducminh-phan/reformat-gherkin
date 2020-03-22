@@ -3,7 +3,7 @@ from reformat_gherkin.formatter import INDENT_LEVEL_MAP, LineGenerator
 from reformat_gherkin.options import AlignmentMode, TagLineMode
 
 
-def verify_indent_level_map():
+def test_indent_level_map():
     """
     Make sure that all node types with tags are included in the indent map.
     """

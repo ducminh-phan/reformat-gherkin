@@ -60,4 +60,6 @@ Feature: Some meaningful feature
     When I exit the bank
     Then the police will start to chase me
 
+# The next line is a comment with spaces only, it should be stripped
+#
 # Some random comment at the end of the document

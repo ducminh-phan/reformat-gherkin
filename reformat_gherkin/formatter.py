@@ -1,4 +1,4 @@
-from itertools import chain, zip_longest
+from itertools import chain, groupby
 from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Tuple, Union
 
 from attr import attrib, dataclass
@@ -257,10 +257,41 @@ class LineGenerator:
                 for row, line in zip(rows, lines):
                     contexts[row] = line
 
-        for node, next_node in zip_longest(nodes, nodes[1:], fillvalue=None):
-            if isinstance(node, Comment):
-                # We want comments to have the same indentation level with the next line
-                contexts[node] = next_node
+        contexts.update(self.__construct_contexts_for_comments(nodes))
+
+        return contexts
+
+    @staticmethod
+    def __construct_contexts_for_comments(nodes: List[Node]) -> ContextMap:
+        # The context of each comment line is the next non-comment line.
+        #
+        # The steps of the algorithm:
+        # 1. Group the nodes into comments and non-comments
+        # 2. The first node in each group of non-comments is the context of every node
+        #    in the previous group, which consists of comments only.
+        #
+        # We start with a context of None, this lets us know if the document ends
+        # with a block of comments.
+        #
+        # In the original algorithm, we simply set the context of each comment line
+        # to be the next line. This leads to a RecursionError if there are too many
+        # consecutive comments.
+
+        contexts: ContextMap = {}
+        current_context = None
+
+        groups = groupby(reversed(nodes), lambda n: isinstance(n, Comment))
+
+        for key, group in groups:
+            if key is False:
+                # The current group consists of non-comments, we set the current context
+                # to be the last node in the group, since we grouped in the reverse order
+                current_context = list(group)[-1]
+            else:
+                # The current group consists of comments. These comments should have the
+                # same indent level, which is the indent level of the current context.
+                for node in group:
+                    contexts[node] = current_context  # type: ignore
 
         return contexts
 

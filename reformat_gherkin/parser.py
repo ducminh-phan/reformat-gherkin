@@ -1,6 +1,6 @@
 import io
 import textwrap
-from typing import Any, Dict, Type
+from typing import Any, Dict, Type, TypeVar
 
 from cattr.converters import Converter
 from gherkin.errors import ParserError
@@ -11,9 +11,11 @@ from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
 from .utils import camel_to_snake_case, remove_trailing_spaces
 
+T = TypeVar("T")
+
 
 class CustomConverter(Converter):
-    def structure_attrs_fromdict(self, obj: Dict[str, Any], cls: Type) -> Any:
+    def structure_attrs_fromdict(self, obj: Dict[str, Any], cls: Type[T]) -> T:
         # Make sure the type in the parsed object matches the class we use
         # to structure the object
         if "type" in obj:

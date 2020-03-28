@@ -1,9 +1,11 @@
+import io
 import textwrap
 from typing import Any, Dict, Type
 
 from cattr.converters import Converter
 from gherkin.errors import ParserError
 from gherkin.parser import Parser
+from gherkin.token_scanner import TokenScanner
 
 from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
@@ -41,6 +43,19 @@ class CustomConverter(Converter):
 converter = CustomConverter()
 
 
+class StringOnlyTokenScanner(TokenScanner):
+    """
+    A replacement for Gherkin's TokenScanner that doesn't load from files.
+
+    This is necessary to prevent "path too long for Windows" errors when Windows
+    treats large feature files as paths on the file system (bug #34).
+    """
+
+    def __init__(self, content):
+        self.io = io.StringIO(content)
+        self.line_number = 0
+
+
 def parse(content: str) -> GherkinDocument:
     """
     Parse the content of a file to an AST.
@@ -48,7 +63,7 @@ def parse(content: str) -> GherkinDocument:
     parser = Parser()
 
     try:
-        parse_result = parser.parse(content)
+        parse_result = parser.parse(StringOnlyTokenScanner(content))
     except ParserError as e:
         raise InvalidInput(e) from e
 

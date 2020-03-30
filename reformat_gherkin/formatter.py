@@ -23,7 +23,6 @@ from .ast_node import (
 from .options import AlignmentMode, TagLineMode
 from .utils import camel_to_snake_case, extract_beginning_spaces, get_display_width
 
-INDENT = "  "
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
     Feature: 0,
     Background: 1,
@@ -40,7 +39,11 @@ def generate_language_header(language: str) -> Comment:
 
 
 def generate_step_line(
-    step: Step, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
+    step: Step,
+    keyword_alignment: AlignmentMode,
+    indent: str,
+    *,
+    keyword_padding_width: int = 0,
 ) -> str:
     """
     Generate lines for steps. The step keywords are aligned according to the parameter
@@ -67,7 +70,7 @@ def generate_step_line(
         step.keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
     )
 
-    return f"{INDENT * indent_level}{formatted_keyword} {step.text}"
+    return f"{indent * indent_level}{formatted_keyword} {step.text}"
 
 
 def format_step_keyword(
@@ -87,16 +90,18 @@ def format_step_keyword(
         return padding + keyword
 
 
-def generate_keyword_line(keyword: str, name: str, indent_level: int) -> str:
-    return f"{INDENT * indent_level}{keyword}: {name}".rstrip()
+def generate_keyword_line(
+    keyword: str, name: str, indent: str, indent_level: int
+) -> str:
+    return f"{indent * indent_level}{keyword}: {name}".rstrip()
 
 
 def generate_description_lines(
-    description: Optional[str], indent_level: int
+    description: Optional[str], indent: str, indent_level: int
 ) -> List[str]:
     description_lines = extract_description_lines(description)
 
-    lines = [f"{INDENT * indent_level}{line}" for line in description_lines]
+    lines = [f"{indent * indent_level}{line}" for line in description_lines]
 
     # Add an empty line after the description, if it exists
     if lines:
@@ -112,7 +117,7 @@ def extract_description_lines(description: Optional[str]) -> List[str]:
     return description.splitlines()
 
 
-def generate_table_lines(rows: List[TableRow]) -> List[str]:
+def generate_table_lines(rows: List[TableRow], indent: str) -> List[str]:
     """
     Generate lines for table. The columns in a table need to have the same width.
     """
@@ -144,7 +149,7 @@ def generate_table_lines(rows: List[TableRow]) -> List[str]:
 
         lines.append(line)
 
-    return [f"{INDENT * indent_level}{line}" for line in lines]
+    return [f"{indent * indent_level}{line}" for line in lines]
 
 
 def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
@@ -169,13 +174,13 @@ def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
     return rows
 
 
-def generate_doc_string_lines(docstring: DocString) -> List[str]:
+def generate_doc_string_lines(docstring: DocString, indent: str) -> List[str]:
     raw_lines = docstring.content.splitlines()
     raw_lines = ['"""'] + raw_lines + ['"""']
 
     indent_level = INDENT_LEVEL_MAP[Step]
 
-    return [f"{INDENT * indent_level}{line}" for line in raw_lines]
+    return [f"{indent * indent_level}{line}" for line in raw_lines]
 
 
 ContextMap = Dict[Union[Comment, Tag, TagGroup, TableRow], Any]
@@ -187,6 +192,7 @@ class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
     tag_line_mode: TagLineMode
+    indent: str
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
@@ -252,7 +258,7 @@ class LineGenerator:
                 # to have the same widths across all rows. The context of a row is its
                 # reformatted line.
                 rows = extract_rows(node)
-                lines = generate_table_lines(rows)
+                lines = generate_table_lines(rows, self.indent)
 
                 for row, line in zip(rows, lines):
                     contexts[row] = line
@@ -379,24 +385,24 @@ class LineGenerator:
             self, f"visit_{camel_to_snake_case(class_name)}", self.visit_default
         )(node)
 
-    @staticmethod
-    def visit_default(node: Node) -> Lines:
+    def visit_default(self, node: Node) -> Lines:
         indent_level = INDENT_LEVEL_MAP.get(type(node), 0)
 
         if hasattr(node, "keyword") and hasattr(node, "name"):
             yield generate_keyword_line(
-                node.keyword, node.name, indent_level  # type: ignore
+                node.keyword, node.name, self.indent, indent_level  # type: ignore
             )
 
         if hasattr(node, "description"):
             yield from generate_description_lines(
-                node.description, indent_level + 1  # type: ignore
+                node.description, self.indent, indent_level + 1  # type: ignore
             )
 
     def visit_step(self, step: Step) -> Lines:
         yield generate_step_line(
             step,
             self.step_keyword_alignment,
+            self.indent,
             keyword_padding_width=self.__max_step_keyword_width,
         )
 
@@ -407,7 +413,7 @@ class LineGenerator:
         # have to worry about KeyError here
         indent_level = INDENT_LEVEL_MAP[type(context)]
 
-        yield f"{INDENT * indent_level}{tag.name}"
+        yield f"{self.indent * indent_level}{tag.name}"
 
     def visit_tag_group(self, tag_group: TagGroup) -> Lines:
         context = self.__contexts[tag_group]
@@ -416,7 +422,7 @@ class LineGenerator:
 
         line_content = " ".join(tag.name for tag in tag_group.members)
 
-        yield f"{INDENT * indent_level}{line_content}"
+        yield f"{self.indent * indent_level}{line_content}"
 
     def visit_table_row(self, row: TableRow) -> Lines:
         context = self.__contexts[row]
@@ -440,10 +446,9 @@ class LineGenerator:
             next_line = next(self.visit(context))
             indent = extract_beginning_spaces(next_line)
         else:
-            indent = INDENT * indent_level
+            indent = self.indent * indent_level
 
         yield f"{indent}{comment.text}"
 
-    @staticmethod
-    def visit_doc_string(docstring: DocString) -> Lines:
-        yield from generate_doc_string_lines(docstring)
+    def visit_doc_string(self, docstring: DocString) -> Lines:
+        yield from generate_doc_string_lines(docstring, self.indent)

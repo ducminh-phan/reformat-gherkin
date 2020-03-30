@@ -46,6 +46,10 @@ class TagLineMode(Enum):
         return TagLineMode.SINGLELINE if single_line_tags else TagLineMode.MULTILINE
 
 
+def get_indent_from_configuration(tab_width: int, use_tabs: bool):
+    return "\t" if use_tabs else " " * tab_width
+
+
 @dataclass(frozen=True)
 class Options:
     write_back: WriteBackMode
@@ -53,3 +57,4 @@ class Options:
     newline: NewlineMode
     tag_line_mode: TagLineMode
     fast: bool
+    indent: str

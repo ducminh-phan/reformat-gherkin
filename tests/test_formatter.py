@@ -21,9 +21,12 @@ def test_indent_level_map():
 
 
 def format_ast(
-    ast, alignment_mode=AlignmentMode.LEFT, tag_line_mode=TagLineMode.MULTILINE
+    ast,
+    alignment_mode=AlignmentMode.LEFT,
+    tag_line_mode=TagLineMode.MULTILINE,
+    indent="  ",
 ):
-    line_generator = LineGenerator(ast, alignment_mode, tag_line_mode)
+    line_generator = LineGenerator(ast, alignment_mode, tag_line_mode, indent)
     lines = line_generator.generate()
     return "\n".join(lines)
 

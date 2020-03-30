@@ -44,6 +44,7 @@ def invalid_contents():
 
 @pytest.fixture
 def sources(request):
+    # noinspection PyTypeChecker
     def construct_sources(
         contain_invalid=True,
         with_config_file=False,

@@ -45,6 +45,7 @@ class CustomConverter(Converter):
 converter = CustomConverter()
 
 
+# noinspection PyMissingConstructor
 class StringOnlyTokenScanner(TokenScanner):
     """
     A replacement for Gherkin's TokenScanner that doesn't load from files.

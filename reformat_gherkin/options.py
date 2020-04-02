@@ -40,10 +40,11 @@ class NewlineMode(Enum):
 class TagLineMode(Enum):
     SINGLELINE = "singleline"
     MULTILINE = "multiline"
+    CUSTOM = "custom"
 
     @classmethod
-    def from_configuration(cls, single_line_tags: bool) -> "TagLineMode":
-        return TagLineMode.SINGLELINE if single_line_tags else TagLineMode.MULTILINE
+    def from_configuration(cls, line_tags: str) -> "TagLineMode":
+        return line_tags
 
 
 @dataclass(frozen=True)

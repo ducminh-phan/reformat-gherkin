@@ -1,56 +1,56 @@
 # Reformat-gherkin
 
-[![Build Status](https://dev.azure.com/alephvn/reformat-gherkin/_apis/build/status/ducminh-phan.reformat-gherkin?branchName=master)](https://dev.azure.com/alephvn/reformat-gherkin/_build/latest?definitionId=1&branchName=master) &nbsp; [![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin) &nbsp; [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master)
+[![Build Status](https://dev.azure.com/alephvn/reformat-gherkin/_apis/build/status/ducminh-phan.reformat-gherkin?branchName=master)](https://dev.azure.com/alephvn/reformat-gherkin/_build/latest?definitionId=1&branchName=master)
+&nbsp; [![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin)
+&nbsp; [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability) &nbsp; [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e675ca51b6ac436a980facbcf04b8e5a)](https://www.codacy.com/app/ducminh-phan/reformat-gherkin)
+[![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability)
+&nbsp; [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e675ca51b6ac436a980facbcf04b8e5a)](https://www.codacy.com/app/ducminh-phan/reformat-gherkin)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) &nbsp; [![PyPI](https://img.shields.io/pypi/v/reformat-gherkin.svg)](https://pypi.org/project/reformat-gherkin/) &nbsp; [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+&nbsp; [![PyPI](https://img.shields.io/pypi/v/reformat-gherkin.svg)](https://pypi.org/project/reformat-gherkin/)
+&nbsp; [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 ## Table of Contents
 
 - [About](#about)
-- [Getting Started](#getting-started)
+- [Installation](#installation)
 - [Usage](#usage)
-- [Pre-commit hook](#pre-commit-hook)
+- [Version control integration](#version-control-integration)
 - [Acknowledgements](#acknowledgements)
 
 ## About
 
-This tool is a formatter for Gherkin files. It ensures consistent look regardless of the project and authors.
+Reformat-gherkin automatically formats Gherkin files. It ensures a consistent
+look regardless of who wrote the file.
 
-`reformat-gherkin` can be used either as a command-line tool, or a `pre-commit` hook.
+It can be used either as a command-line tool, or a
+[pre-commit](https://pre-commit.com/) hook.
 
-## Getting Started
+## Installation
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+Install reformat-gherkin using [pip](https://pypi.org/project/pip/).
 
-### Prerequisites
+```bash
+pip install reformat-gherkin
+```
 
-- [Python 3.6+](https://www.python.org/downloads/)
-- [Poetry](https://poetry.eustace.io/)
-
-### Installing
-
-1. Clone this repository
-
-   ```bash
-   git clone https://github.com/ducminh-phan/reformat-gherkin.git
-   ```
-
-2. Install dependencies
-
-   ```bash
-   cd reformat-gherkin
-   poetry install
-   ```
-
-3. Install `pre-commit` hooks (if you want to contribute)
-
-   ```bash
-   pre-commit install
-   ```
+It requires [Python 3.6+](https://www.python.org/downloads/) to run.
 
 ## Usage
+
+To get started straight away:
+
+```bash
+reformat-gherkin {source_file_or_directory}
+```
+
+You should get good results without specifying any options, as reformat-gherkin
+uses sensible defaults.
+
+### Command-line options
+
+You can list the available options by running `reformat-gherkin --help`.
 
 ```text
 Usage: reformat-gherkin [OPTIONS] [SRC]...
@@ -81,28 +81,45 @@ Options:
                                   If --single-line-tags given, output
                                   consecutive tags on one line. If --multi-
                                   line-tags given, output one tag per line.
-                                  [default: --multi-line-tags]
+                                  [default: --single-line-tags]
+  --tab-width INTEGER             Specify the number of spaces per
+                                  indentation-level. [default: 2]
+  --use-tabs                      Indent lines with tabs instead of spaces.
   --config FILE                   Read configuration from FILE.
   --version                       Show the version and exit.
   --help                          Show this message and exit.
 ```
 
+Reformat-gherkin is a well-behaved Unix-style command-line tool:
+
+- it does nothing if no sources are passed to it;
+- it only outputs messages to users on standard error;
+- it exits with code 0 unless an internal error occurred (or --check was used).
+
 ### Config file
 
-The tool is able to read project-specific default values for its command line options from a `.reformat-gherkin.yaml` file.
+Reformat-gherkin can read project-specific default values for its command line
+options from a `.reformat-gherkin.yaml` file.
 
-By default, `reformat-gherkin` looks for the config file starting from the common base directory of all files and directories passed on the command line. If it's not there, it looks in parent directories. It stops looking when it finds the file, or a .git directory, or a .hg directory, or the root of the file system, whichever comes first.
+By default, `reformat-gherkin` looks for the config file starting from the
+common base directory of all files and directories passed on the command line.
+If it's not there, it looks in parent directories. It stops looking when it
+finds the file, or a .git directory, or a .hg directory, or the root of the file
+system, whichever comes first.
 
-Example config file
+Example config file:
 
 ```yaml
 check: False
 alignment: left
+tab_width: 4
 ```
 
-## Pre-commit hook
+## Version control integration
 
-Once you have installed [pre-commit](https://pre-commit.com/), add this to the `.pre-commit-config.yaml` in your repository:
+You can integrate reformat-gherkin into your version control workflow by using
+[pre-commit](https://pre-commit.com/). Once you have installed pre-commit, add
+this to the `.pre-commit-config.yaml` file in your repository:
 
 ```text
 repos:
@@ -116,4 +133,5 @@ Then run `pre-commit install` and you're ready to go.
 
 ## Acknowledgements
 
-This project is inspired by [black](https://github.com/psf/black). Some functions are taken from `black`'s source code.
+This project is inspired by [black](https://github.com/psf/black). Some
+functions are taken from `black`'s source code.

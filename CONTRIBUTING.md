@@ -1,17 +1,22 @@
-# Contributing to `reformat-gherkin`
+# Contributing
 
-Thank you for taking the time to contribute!
+Welcome to the reformat-gherkin project! Thank you for taking the time to
+contribute. We welcome all contributions, whether that's reporting a bug,
+requesting a new feature, submitting a fix, or adding documentation.
 
-## Getting Started
+## Reporting bugs and requesting features
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+To report a bug or request a new feature,
+[create a new issue on GitHub](https://github.com/ducminh-phan/reformat-gherkin/issues/new).
+
+## Contributing code
 
 ### Prerequisites
 
 - [Python 3.6+](https://www.python.org/downloads/)
 - [Poetry](https://poetry.eustace.io/)
 
-### Installing
+### Setting up a development environment
 
 1. Clone this repository
 
@@ -26,17 +31,23 @@ These instructions will get you a copy of the project up and running on your loc
    poetry install
    ```
 
-3. Install `pre-commit` hooks (if you want to contribute)
+3. Install `pre-commit` hooks
 
    ```bash
-   pre-commit install
+   poetry run pre-commit install
    ```
 
-## Testing
+### Running tests
 
-We use `pytest` for unit and integration tests. Please add/update the tests along with your contribution.
+The tests are run with `pytest`.
 
-## Submitting Changes
+```bash
+poetry run pytest tests
+```
+
+Please add/update the tests along with your contribution.
+
+### Pull requests
 
 - Please create a GitHub Pull Request with the base branch of `develop`.
 - Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.

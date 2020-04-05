@@ -81,7 +81,10 @@ Options:
                                   If --single-line-tags given, output
                                   consecutive tags on one line. If --multi-
                                   line-tags given, output one tag per line.
-                                  [default: --multi-line-tags]
+                                  [default: --single-line-tags]
+  --tab-width INTEGER             Specify the number of spaces per
+                                  indentation-level. [default: 2]
+  --use-tabs                      Indent lines with tabs instead of spaces.
   --config FILE                   Read configuration from FILE.
   --version                       Show the version and exit.
   --help                          Show this message and exit.

@@ -9,7 +9,7 @@
 ## Table of Contents
 
 - [About](#about)
-- [Getting Started](#getting-started)
+- [Install](#Install)
 - [Usage](#usage)
 - [Pre-commit hook](#pre-commit-hook)
 - [Acknowledgements](#acknowledgements)
@@ -20,35 +20,13 @@ This tool is a formatter for Gherkin files. It ensures consistent look regardles
 
 `reformat-gherkin` can be used either as a command-line tool, or a `pre-commit` hook.
 
-## Getting Started
+## Install
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+`reformat-gherkin` only supports Python 3.6+. The command line tool can be installed using `pip`:
 
-### Prerequisites
-
-- [Python 3.6+](https://www.python.org/downloads/)
-- [Poetry](https://poetry.eustace.io/)
-
-### Installing
-
-1. Clone this repository
-
-   ```bash
-   git clone https://github.com/ducminh-phan/reformat-gherkin.git
-   ```
-
-2. Install dependencies
-
-   ```bash
-   cd reformat-gherkin
-   poetry install
-   ```
-
-3. Install `pre-commit` hooks (if you want to contribute)
-
-   ```bash
-   pre-commit install
-   ```
+```bash
+pip install reformat-gherkin
+```
 
 ## Usage
 

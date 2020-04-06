@@ -12,7 +12,7 @@ def normalize_comment_text(text: str) -> str:
     # A comment always start with a hash sign
     normalized_text = text[1:].strip()
 
-    return "# " + normalized_text
+    return ("# " + normalized_text).strip()
 
 
 @prepare

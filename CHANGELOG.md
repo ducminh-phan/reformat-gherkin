@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2020-04-06
+
+### Added
+
+- Make indentation configurable ([#35](https://github.com/ducminh-phan/reformat-gherkin/issues/35))
+
+### Changed
+
+- Make single-line tags the default option to format tags ([#22](https://github.com/ducminh-phan/reformat-gherkin/issues/22))
+
+### Fixed
+
+- A RecursionError raised if there is a block of many consecutive comments ([#33](https://github.com/ducminh-phan/reformat-gherkin/issues/33))
+
+- An error when formatting a file larger than 32 KB on Windows ([#34](https://github.com/ducminh-phan/reformat-gherkin/issues/34))
+
 ## [1.1.0] - 2020-01-25 - Lunar New Year
 
 ### Added
@@ -39,7 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.1.0...develop
+[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.0...develop
+[2.0.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.0.0...v1.0.1

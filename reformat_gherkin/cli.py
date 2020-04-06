@@ -5,7 +5,14 @@ import click
 from .config import read_config_file
 from .core import reformat
 from .errors import EmptySources
-from .options import AlignmentMode, NewlineMode, Options, TagLineMode, WriteBackMode
+from .options import (
+    AlignmentMode,
+    NewlineMode,
+    Options,
+    TagLineMode,
+    WriteBackMode,
+    get_indent_from_configuration,
+)
 from .report import Report
 from .utils import out
 from .version import __version__
@@ -58,12 +65,24 @@ from .version import __version__
 @click.option(
     "--single-line-tags/--multi-line-tags",
     is_flag=True,
-    default=False,
+    default=True,
     help=(
         "If --single-line-tags given, output consecutive tags on one line. "
         "If --multi-line-tags given, output one tag per line. "
-        "[default: --multi-line-tags]"
+        "[default: --single-line-tags]"
     ),
+)
+@click.option(
+    "--tab-width",
+    type=int,
+    default=2,
+    help="Specify the number of spaces per indentation-level. [default: 2]",
+)
+@click.option(
+    "--use-tabs",
+    is_flag=True,
+    default=False,
+    help="Indent lines with tabs instead of spaces.",
 )
 @click.option(
     "--config",
@@ -84,6 +103,8 @@ def main(
     newline: Optional[str],
     fast: bool,
     single_line_tags: bool,
+    tab_width: int,
+    use_tabs: bool,
     config: Optional[str],
 ) -> None:
     """
@@ -96,6 +117,7 @@ def main(
     alignment_mode = AlignmentMode.from_configuration(alignment)
     newline_mode = NewlineMode.from_configuration(newline)
     tag_line_mode = TagLineMode.from_configuration(single_line_tags)
+    indent = get_indent_from_configuration(tab_width, use_tabs)
 
     options = Options(
         write_back=write_back_mode,
@@ -103,6 +125,7 @@ def main(
         newline=newline_mode,
         fast=fast,
         tag_line_mode=tag_line_mode,
+        indent=indent,
     )
 
     report = Report(check=check)

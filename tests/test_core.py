@@ -142,3 +142,11 @@ def test_change_line_separators(
         _newline = core.decode_bytes(buf.read())[2]
 
         assert _newline == core.NEWLINE_FROM_OPTION[new_newline_mode]
+
+
+def test_format_comments():
+    # This should be enough to exceed the maximum recursion depth
+    number_of_comments = 1001
+
+    dst = core.format_file_contents("#   \n" * number_of_comments, options=OPTIONS[0])
+    assert dst == "#\n" * number_of_comments

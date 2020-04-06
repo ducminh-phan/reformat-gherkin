@@ -1,5 +1,4 @@
-@tag-1
-@tag-2
+@tag-1 @tag-2
 Feature: Some meaningful feature
   Some meaningful feature description
 
@@ -12,20 +11,15 @@ Feature: Some meaningful feature
       | USD |
       | VND |
 
-  @tag-no-1
-  @decorate-1
-  @fixture-1
+  @tag-no-1 @decorate-1 @fixture-1
   Scenario: Gain a lot of money
     This is a description for this scenario
 
     Given I go to the bank
     Then  I rob the bank
 
-  @tag-no-2
-  @decorate-2
   # Some comment here...
-  @prepare-2
-  @fixture-2
+  @tag-no-2 @decorate-2 @prepare-2 @fixture-2
   # Another comment...
   Scenario Outline: Break the bank's vault
     A description for this scenario outline
@@ -60,4 +54,6 @@ Feature: Some meaningful feature
     When  I exit the bank
     Then  the police will start to chase me
 
+# The next line is a comment with spaces only, it should be stripped
+#
 # Some random comment at the end of the document

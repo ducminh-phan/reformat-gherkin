@@ -3,7 +3,7 @@ from reformat_gherkin.formatter import INDENT_LEVEL_MAP, LineGenerator
 from reformat_gherkin.options import AlignmentMode, TagLineMode
 
 
-def verify_indent_level_map():
+def test_indent_level_map():
     """
     Make sure that all node types with tags are included in the indent map.
     """
@@ -21,9 +21,12 @@ def verify_indent_level_map():
 
 
 def format_ast(
-    ast, alignment_mode=AlignmentMode.LEFT, tag_line_mode=TagLineMode.MULTILINE
+    ast,
+    alignment_mode=AlignmentMode.LEFT,
+    tag_line_mode=TagLineMode.MULTILINE,
+    indent="  ",
 ):
-    line_generator = LineGenerator(ast, alignment_mode, tag_line_mode)
+    line_generator = LineGenerator(ast, alignment_mode, tag_line_mode, indent)
     lines = line_generator.generate()
     return "\n".join(lines)
 

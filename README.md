@@ -117,3 +117,20 @@ Then run `pre-commit install` and you're ready to go.
 ## Acknowledgements
 
 This project is inspired by [black](https://github.com/psf/black). Some functions are taken from `black`'s source code.
+
+
+# Custom tags
+
+- Identification tags
+pattern: @TL.<id>
+- Organizational tags
+all tags that do not fall into other categories, example: @f22 @f22s04 @loquequieras @entorno
+- Functional tags: tags that execute some kind of function before or after a scenario or functionality
+    - pattern before: @before.<func>.(param1,param..)
+    - pattern after: @after.<func>.(param1,param2,...)
+- Especial tags
+    - @wip @manual @working @deprecated
+       
+Execution example:
+    
+    reformat-gherkin --line-tags custom ../luca-comms/test/features/acceptance/web/3000-login.feature

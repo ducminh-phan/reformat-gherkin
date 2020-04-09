@@ -241,16 +241,22 @@ class LineGenerator:
                 tags: Tuple[Tag, ...] = node.tags
 
                 if tags:
-                    especial_tag_values = ['@wip', '@working', '@manual']
+                    especial_tag_values = ['@wip', '@working', '@manual' '@deprecated']
                     tl_tags = tuple(
                         filter(lambda tag: tag.name.startswith('@TL.'), tags)
                     )
                     no_tl_tags = tuple(
                         filter(
-                            lambda tag: not tag.name.startswith('@TL.') and tag.name not in especial_tag_values,
+                            lambda tag: not tag.name.startswith('@TL.') and tag.name not in especial_tag_values and
+                            not tag.name.startswith('@after.') and not tag.name.startswith('@before.'),
                             tags
                         )
                     )
+                    funcional_tags = filter(
+                            lambda tag: tag.name.startswith('@after.') or tag.name.startswith('@before.'),
+                            tags
+                        )
+
                     especials = tuple(
                         filter(lambda tag: tag.name in especial_tag_values, tags)
                     )
@@ -262,6 +268,12 @@ class LineGenerator:
                             )
                         )
                     if no_tl_tags:
+                        tag_groups.append(
+                            TagGroup(
+                                members=funcional_tags, context=node, location=tags[-1].location
+                            )
+                        )
+                    if funcional_tags:
                         tag_groups.append(
                             TagGroup(
                                 members=no_tl_tags, context=node, location=tags[-1].location

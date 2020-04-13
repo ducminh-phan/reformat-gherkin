@@ -60,7 +60,7 @@ from .version import __version__
 @click.option(
     "--line-tags",
     type=click.Choice([TagLineMode.SINGLELINE.value, TagLineMode.MULTILINE.value, TagLineMode.CUSTOM.value]),
-    default='multiline',
+    default= TagLineMode.CUSTOM.value,
     help=(
         "If 'singleline', output consecutive tags on one line. "
         "If 'multiline', output one tag per line. "

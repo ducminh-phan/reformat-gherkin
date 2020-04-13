@@ -33,6 +33,7 @@ from .version import __version__
     "-a",
     "--alignment",
     type=click.Choice([AlignmentMode.LEFT.value, AlignmentMode.RIGHT.value]),
+    default=AlignmentMode.RIGHT.value,
     help=(
         "Specify the alignment of step keywords (Given, When, Then,...). "
         "If specified, all statements after step keywords are left-aligned, "
@@ -53,16 +54,18 @@ from .version import __version__
 @click.option(
     "--fast/--safe",
     is_flag=True,
-    help="If --fast given, skip the sanity checks of file contents. [default: --safe]",
+    help="If --fast given, skip the sanity checks of file contents. [default: --safe]"
+         "Note: if you use custom --line-tags fast value is True",
 )
 @click.option(
-    "--single-line-tags/--multi-line-tags",
-    is_flag=True,
-    default=False,
+    "--line-tags",
+    type=click.Choice([TagLineMode.SINGLELINE.value, TagLineMode.MULTILINE.value, TagLineMode.CUSTOM.value]),
+    default= TagLineMode.CUSTOM.value,
     help=(
-        "If --single-line-tags given, output consecutive tags on one line. "
-        "If --multi-line-tags given, output one tag per line. "
-        "[default: --multi-line-tags]"
+        "If 'singleline', output consecutive tags on one line. "
+        "If 'multiline', output one tag per line. "
+        "If 'custom', output custom tag per line. "
+        "[default:custom]"
     ),
 )
 @click.option(
@@ -83,7 +86,7 @@ def main(
     alignment: Optional[str],
     newline: Optional[str],
     fast: bool,
-    single_line_tags: bool,
+    line_tags: Optional[str],
     config: Optional[str],
 ) -> None:
     """
@@ -95,13 +98,13 @@ def main(
     write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)
     newline_mode = NewlineMode.from_configuration(newline)
-    tag_line_mode = TagLineMode.from_configuration(single_line_tags)
+    tag_line_mode = TagLineMode.from_configuration(line_tags)
 
     options = Options(
         write_back=write_back_mode,
         step_keyword_alignment=alignment_mode,
         newline=newline_mode,
-        fast=fast,
+        fast=True if tag_line_mode == TagLineMode.CUSTOM.value else fast,
         tag_line_mode=tag_line_mode,
     )
 

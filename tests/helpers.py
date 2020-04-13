@@ -28,7 +28,10 @@ FILENAME_OPTION_MAP = {
     "expected_default": make_options(step_keyword_alignment=AlignmentMode.NONE),
     "expected_left_aligned": make_options(step_keyword_alignment=AlignmentMode.LEFT),
     "expected_right_aligned": make_options(step_keyword_alignment=AlignmentMode.RIGHT),
-    "expected_single_line_tags": make_options(tag_line_mode=TagLineMode.SINGLELINE),
+    "expected_default_line_tags": make_options(tag_line_mode=TagLineMode.SINGLELINE),
+    "expected_singleline_line_tags": make_options(tag_line_mode=TagLineMode.SINGLELINE),
+    "expected_multiline_line_tags": make_options(tag_line_mode=TagLineMode.MULTILINE),
+    "expected_custom_line_tags": make_options(tag_line_mode=TagLineMode.CUSTOM),
 }
 
 

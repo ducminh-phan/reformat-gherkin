@@ -197,8 +197,10 @@ class LineGenerator:
 
         self.__nodes = list(self.ast)
 
-        if self.tag_line_mode is TagLineMode.SINGLELINE:
+        if self.tag_line_mode is TagLineMode.SINGLELINE.value:
             self.__group_tags()
+        elif self.tag_line_mode is TagLineMode.CUSTOM.value:
+            self.__custom_group_tags()
 
         self.__nodes.sort(key=lambda node: node.location)
 
@@ -230,6 +232,65 @@ class LineGenerator:
         self.__nodes = [
             node for node in self.__nodes if not isinstance(node, Tag)
         ] + tag_groups
+
+    def __custom_group_tags(self):
+        tag_groups: List[TagGroup] = []
+        node: Node
+        for node in self.ast:
+            if hasattr(node, "tags"):
+                tags: Tuple[Tag, ...] = node.tags
+
+                if tags:
+                    especial_tag_values = ['@wip', '@working', '@manual' '@deprecated']
+                    tl_tags = tuple(
+                        filter(lambda tag: tag.name.startswith('@TL.'), tags)
+                    )
+                    no_tl_tags = tuple(
+                        filter(
+                            lambda tag: not tag.name.startswith('@TL.') and tag.name not in especial_tag_values and
+                            not tag.name.startswith('@after.') and not tag.name.startswith('@before.'),
+                            tags
+                        )
+                    )
+                    funcional_tags = filter(
+                            lambda tag: tag.name.startswith('@after.') or tag.name.startswith('@before.'),
+                            tags
+                        )
+
+                    especials = tuple(
+                        filter(lambda tag: tag.name in especial_tag_values, tags)
+                    )
+                    # The tag group should be placed at the position of the last tag
+                    if tl_tags:
+                        tag_groups.append(
+                            TagGroup(
+                                members=tl_tags, context=node, location=tags[-1].location
+                            )
+                        )
+                    if no_tl_tags:
+                        tag_groups.append(
+                            TagGroup(
+                                members=funcional_tags, context=node, location=tags[-1].location
+                            )
+                        )
+                    if funcional_tags:
+                        tag_groups.append(
+                            TagGroup(
+                                members=no_tl_tags, context=node, location=tags[-1].location
+                            )
+                        )
+                    if especials:
+                        tag_groups.append(
+                            TagGroup(
+                                members=especials, context=node, location=tags[-1].location
+                            )
+                        )
+
+        # After grouping the tags, we need to include the tag groups into
+        # the list of nodes and remove the tags from the list.
+        self.__nodes = [
+                           node for node in self.__nodes if not isinstance(node, Tag)
+                       ] + tag_groups
 
     def __construct_contexts(self) -> ContextMap:
         """

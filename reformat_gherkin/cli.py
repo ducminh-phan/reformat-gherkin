@@ -65,7 +65,7 @@ from .version import __version__
         "If 'singleline', output consecutive tags on one line. "
         "If 'multiline', output one tag per line. "
         "If 'custom', output custom tag per line. "
-        "[default:CUSTOM"
+        "[default:custom]"
     ),
 )
 @click.option(

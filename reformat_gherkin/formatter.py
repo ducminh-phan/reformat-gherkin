@@ -252,11 +252,12 @@ class LineGenerator:
                             tags
                         )
                     )
-                    funcional_tags = filter(
+                    funcional_tags = tuple(
+                        filter(
                             lambda tag: tag.name.startswith('@after.') or tag.name.startswith('@before.'),
                             tags
                         )
-
+                    )
                     especials = tuple(
                         filter(lambda tag: tag.name in especial_tag_values, tags)
                     )
@@ -270,13 +271,13 @@ class LineGenerator:
                     if no_tl_tags:
                         tag_groups.append(
                             TagGroup(
-                                members=funcional_tags, context=node, location=tags[-1].location
+                                members=no_tl_tags, context=node, location=tags[-1].location
                             )
                         )
                     if funcional_tags:
                         tag_groups.append(
                             TagGroup(
-                                members=no_tl_tags, context=node, location=tags[-1].location
+                                members=funcional_tags, context=node, location=tags[-1].location
                             )
                         )
                     if especials:
@@ -288,9 +289,7 @@ class LineGenerator:
 
         # After grouping the tags, we need to include the tag groups into
         # the list of nodes and remove the tags from the list.
-        self.__nodes = [
-                           node for node in self.__nodes if not isinstance(node, Tag)
-                       ] + tag_groups
+        self.__nodes = [node for node in self.__nodes if not isinstance(node, Tag)] + tag_groups
 
     def __construct_contexts(self) -> ContextMap:
         """

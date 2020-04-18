@@ -40,7 +40,7 @@ def generate_language_header(language: str) -> Comment:
 
 
 def generate_step_line(
-    step: Step, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
+    step: Step, step_keyword: str, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
 ) -> str:
     """
     Generate lines for steps. The step keywords are aligned according to the parameter
@@ -64,7 +64,7 @@ def generate_step_line(
     indent_level: int = INDENT_LEVEL_MAP[Step]
 
     formatted_keyword = format_step_keyword(
-        step.keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
+        step_keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
     )
 
     return f"{INDENT * indent_level}{formatted_keyword} {step.text}"
@@ -187,6 +187,7 @@ class LineGenerator:
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
     tag_line_mode: TagLineMode
+    __last_step: str = attrib(init=False)
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
     __nodes_with_newline: Set[Node] = attrib(init=False)
@@ -208,6 +209,7 @@ class LineGenerator:
         self.__nodes_with_newline = self.__find_nodes_with_newline()
         self.__max_step_keyword_width = self.__find_max_step_keyword_width()
         self.__add_language_header()
+        self.__last_step = ""
 
     def __group_tags(self):
         """
@@ -423,11 +425,27 @@ class LineGenerator:
             )
 
     def visit_step(self, step: Step) -> Lines:
+        # Modify keyword to change repeated Given/When/Thens
+        keyword = step.keyword
+        if step.keyword != "And" and step.keyword != self.__last_step:
+            self.__last_step = step.keyword
+        elif step.keyword == self.__last_step:
+            keyword = "And"
+
         yield generate_step_line(
             step,
+            keyword,
             self.step_keyword_alignment,
             keyword_padding_width=self.__max_step_keyword_width,
         )
+
+    def visit_scenario(self, scenario: Scenario) -> Lines:
+        self.__last_step = ""
+        return self.visit_default(scenario)
+
+    def visit_scenario_outline(self, scenario: ScenarioOutline) -> Lines:
+        self.__last_step = ""
+        return self.visit_default(scenario)
 
     def visit_tag(self, tag: Tag) -> Lines:
         context = self.__contexts[tag]

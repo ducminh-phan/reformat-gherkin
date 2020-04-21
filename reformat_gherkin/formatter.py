@@ -243,7 +243,7 @@ class LineGenerator:
                 tags: Tuple[Tag, ...] = node.tags
 
                 if tags:
-                    especial_tag_values = ['@wip', '@working', '@manual' '@deprecated']
+                    especial_tag_values = ['@wip', '@working', '@manual', '@deprecated']
                     tl_tags = tuple(
                         filter(lambda tag: tag.name.startswith('@TL.'), tags)
                     )
@@ -288,7 +288,11 @@ class LineGenerator:
                                 members=especials, context=node, location=tags[-1].location
                             )
                         )
-
+                    print(tags)
+                    print(tl_tags)
+                    print(no_tl_tags)
+                    print(funcional_tags)
+                    print(especials)
         # After grouping the tags, we need to include the tag groups into
         # the list of nodes and remove the tags from the list.
         self.__nodes = [node for node in self.__nodes if not isinstance(node, Tag)] + tag_groups

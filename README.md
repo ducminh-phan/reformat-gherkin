@@ -86,6 +86,28 @@ Options:
   --version                       Show the version and exit.
   --help                          Show this message and exit.
 ```
+### Use in Pycharm
+   Add reformat-gherkin to pycharm with keymap.
+   
+   * Add External Tool:
+   ```text
+      - Get the path where reformat-gherkin is installed (which reformat-gherkin)
+      - Open PyCharm / Preferences / Tools / External Tools
+      - Click on +
+      - Fill:
+         * Name
+         * Program with path
+         * Arguments: "$FilePath$"
+         * Working Directory: $ProjectFileDir$
+      - Apply changes
+  ```
+  * Add keymap:
+  ```text
+   - Open Pycharm / Preferences / Keymap / External Tools / External Tools
+      * Double click on the name of our external tool.
+      * Click on your own keymap.
+   - Apply changes
+   ```
 
 ### Config file
 

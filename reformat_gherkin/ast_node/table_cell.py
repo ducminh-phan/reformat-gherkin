@@ -10,7 +10,7 @@ def escape_table_cell_value(text: str) -> str:
     are used to separate cells in a row, we need to replace them by `\\|`.
     """
 
-    return text.replace("|", "\\|")
+    return text.replace("|", "\\|").replace('\\\"', '\\\\\"')
 
 
 @prepare

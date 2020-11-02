@@ -2,9 +2,9 @@ jobs:
   - template: .azure-pipelines-templates/jobs.yml
     parameters:
       pythonVersions:
-        - '3.6'
         - '3.7'
         - '3.8'
+        - '3.9'
       images:
         - 'ubuntu-latest'
         - 'macOS-latest'

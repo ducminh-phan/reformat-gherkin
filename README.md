@@ -35,7 +35,7 @@ Install reformat-gherkin using [pip](https://pypi.org/project/pip/).
 pip install reformat-gherkin
 ```
 
-It requires [Python 3.6+](https://www.python.org/downloads/) to run.
+It requires [Python 3.7+](https://www.python.org/downloads/) to run.
 
 ## Usage
 

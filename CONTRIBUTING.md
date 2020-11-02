@@ -13,7 +13,7 @@ To report a bug or request a new feature,
 
 ### Prerequisites
 
-- [Python 3.6+](https://www.python.org/downloads/)
+- [Python 3.7+](https://www.python.org/downloads/)
 - [Poetry](https://poetry.eustace.io/)
 
 ### Setting up a development environment

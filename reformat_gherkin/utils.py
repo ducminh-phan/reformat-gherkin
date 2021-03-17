@@ -4,7 +4,7 @@ import re
 import tempfile
 import tokenize
 from functools import lru_cache, partial
-from typing import Tuple
+from typing import BinaryIO, Tuple
 
 import click
 from wcwidth import wcswidth
@@ -61,21 +61,20 @@ def remove_trailing_spaces(string: str) -> str:
     return "\n".join(line.rstrip() for line in lines)
 
 
-def decode_bytes(src: bytes) -> Tuple[str, str, str]:
+def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
     """
     Return a tuple of (decoded_contents, encoding, newline).
 
     `newline` is either CRLF or LF but `decoded_contents` is decoded with
     universal newlines (i.e. only contains LF).
     """
-    srcbuf = io.BytesIO(src)
-    encoding, lines = tokenize.detect_encoding(srcbuf.readline)
+    encoding, lines = tokenize.detect_encoding(src.readline)
     if not lines:
         return "", encoding, "\n"
 
     newline = "\r\n" if b"\r\n" == lines[0][-2:] else "\n"
-    srcbuf.seek(0)
-    with io.TextIOWrapper(srcbuf, encoding) as tiow:
+    src.seek(0)
+    with io.TextIOWrapper(src, encoding) as tiow:
         return tiow.read(), encoding, newline
 
 

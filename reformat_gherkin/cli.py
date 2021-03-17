@@ -23,7 +23,12 @@ from .version import __version__
     "src",
     nargs=-1,
     type=click.Path(
-        exists=True, file_okay=True, dir_okay=True, readable=True, resolve_path=True
+        exists=True,
+        file_okay=True,
+        dir_okay=True,
+        readable=True,
+        resolve_path=True,
+        allow_dash=True,
     ),
     is_eager=True,
 )

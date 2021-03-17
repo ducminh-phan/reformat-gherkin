@@ -93,7 +93,7 @@ def test_line_separators_changed(source_with_newline, newline_mode, newline):
     core.reformat_single_file(source, options=options)
 
     with open(source, "rb") as buf:
-        _newline = core.decode_bytes(buf.read())[2]
+        _newline = core.decode_stream(buf)[2]
 
         assert _newline == core.NEWLINE_FROM_OPTION[newline_mode]
 
@@ -108,7 +108,7 @@ def test_line_separators_preserved(source_with_newline, newline):
     core.reformat_single_file(source, options=options)
 
     with open(source, "rb") as buf:
-        _newline = core.decode_bytes(buf.read())[2]
+        _newline = core.decode_stream(buf)[2]
 
         assert _newline == newline
 
@@ -139,7 +139,7 @@ def test_change_line_separators(
     core.reformat_single_file(source, options=options)
 
     with open(source, "rb") as buf:
-        _newline = core.decode_bytes(buf.read())[2]
+        _newline = core.decode_stream(buf)[2]
 
         assert _newline == core.NEWLINE_FROM_OPTION[new_newline_mode]
 

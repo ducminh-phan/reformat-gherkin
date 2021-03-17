@@ -15,7 +15,7 @@ from .formatter import LineGenerator
 from .options import NewlineMode, Options, WriteBackMode
 from .parser import parse
 from .report import Report
-from .utils import decode_bytes, diff, dump_to_file, err
+from .utils import decode_stream, diff, dump_to_file, err
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
@@ -55,7 +55,7 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 # noinspection PyTypeChecker
 def reformat_single_file(path: Path, *, options: Options) -> bool:
     with open(path, "rb") as buf:
-        src_contents, encoding, existing_newline = decode_bytes(buf.read())
+        src_contents, encoding, existing_newline = decode_stream(buf)
 
     newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
 

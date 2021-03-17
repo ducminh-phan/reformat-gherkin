@@ -49,8 +49,8 @@ def test_remove_trailing_spaces():
     assert f(" a s d \n  def  ") == " a s d\n  def"
 
 
-def test_decode_bytes():
-    f = utils.decode_bytes
+def test_decode_stream():
+    f = utils.decode_stream
     lines = "Lorem ipsum dolor sit amet".replace(" ", "\n")
 
     for newline in ("\n", "\r\n"):
@@ -58,7 +58,7 @@ def test_decode_bytes():
 
         tmp_buf = BytesIO(tmp_file.read().encode())
 
-        contents, _, _newline = f(tmp_buf.read())
+        contents, _, _newline = f(tmp_buf)
 
         assert contents == lines
         assert _newline == newline

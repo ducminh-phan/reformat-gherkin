@@ -23,7 +23,7 @@ def make_options(
     )
 
 
-def options_to_cli(options):
+def options_to_cli_args(options):
     return [
         "" if options.write_back == WriteBackMode.INPLACE else "--check",
         ""

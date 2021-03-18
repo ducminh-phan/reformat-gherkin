@@ -80,9 +80,9 @@ def reformat_single_file(path: Path, *, options: Options) -> bool:
 
 
 def reformat_streams(
-    input: BinaryIO, output: Optional[BinaryIO], *, options: Options
+    in_stream: BinaryIO, out_stream: Optional[BinaryIO], *, options: Options
 ) -> bool:
-    src_contents, encoding, existing_newline = decode_stream(input)
+    src_contents, encoding, existing_newline = decode_stream(in_stream)
 
     newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
 
@@ -98,8 +98,8 @@ def reformat_streams(
     if not content_changed and newline == existing_newline:
         return False
 
-    if output is not None:
-        tiow = TextIOWrapper(output, encoding=encoding, newline=newline)
+    if out_stream is not None:
+        tiow = TextIOWrapper(out_stream, encoding=encoding, newline=newline)
         tiow.write(dst_contents)
         # Ensures that the underlying stream is not closed when the
         # TextIOWrapper is garbage collected, which wouldn't be good for stdout

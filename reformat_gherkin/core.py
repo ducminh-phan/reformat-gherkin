@@ -99,7 +99,11 @@ def reformat_streams(
         return False
 
     if output is not None:
-        TextIOWrapper(output, encoding=encoding, newline=newline).write(dst_contents)
+        tiow = TextIOWrapper(output, encoding=encoding, newline=newline)
+        tiow.write(dst_contents)
+        # Ensures that the underlying stream is not closed when the
+        # TextIOWrapper is garbage collected, which wouldn't be good for stdout
+        tiow.detach()
 
     return True
 

@@ -1,5 +1,7 @@
 from reformat_gherkin.cli import main
 
+from .helpers import options_to_cli
+
 
 def test_cli_success(runner, sources):
     result = runner.invoke(main, [*sources(contain_invalid=False)])
@@ -8,11 +10,33 @@ def test_cli_success(runner, sources):
     assert result.exit_code == 0
 
 
+def test_cli_stdin_success(runner, valid_contents):
+    for content, expected, options in valid_contents(
+        with_expected=True, with_options=True
+    ):
+        args = options_to_cli(options) + ["-"]
+        args.remove("--check")
+        args = " ".join(args)
+        result = runner.invoke(main, args=args, input=content)
+
+        assert result.stdout == expected
+        assert result.exit_code == 0
+
+
 def test_cli_check(runner, sources):
     result = runner.invoke(main, [*sources(contain_invalid=False), "--check"])
 
     assert len(result.stdout) == 0
     assert result.exit_code == 1
+
+
+def test_cli_stdin_check(runner, valid_contents):
+    for content in valid_contents():
+        args = " ".join(["-", "--check"])
+        result = runner.invoke(main, args=args, input=content)
+
+        assert len(result.stdout) == 0
+        assert result.exit_code == 1
 
 
 def test_cli_failed(runner, sources):

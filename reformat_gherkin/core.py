@@ -1,8 +1,9 @@
 import sys
 import traceback
+from contextlib import nullcontext
 from io import BytesIO, TextIOWrapper
 from pathlib import Path
-from typing import BinaryIO, Iterable, Iterator, Optional, Set, Tuple
+from typing import BinaryIO, ContextManager, Iterable, Iterator, Optional, Set, Tuple
 
 from .ast_node import GherkinDocument
 from .errors import (
@@ -68,15 +69,14 @@ def reformat_single_file(path: Path, *, options: Options) -> bool:
     with open(path, "rb") as f:
         in_stream = BytesIO(f.read())
 
-    out_stream = (
-        open(path, "wb") if options.write_back == WriteBackMode.INPLACE else None
-    )
+    out_stream_cm: ContextManager[Optional[BinaryIO]]
+    if options.write_back == WriteBackMode.INPLACE:
+        out_stream_cm = open(path, "wb")
+    else:
+        out_stream_cm = nullcontext(None)
 
-    try:
+    with out_stream_cm as out_stream:
         return reformat_streams(in_stream, out_stream, options=options)
-    finally:
-        if out_stream is not None:
-            out_stream.close()
 
 
 def reformat_streams(

@@ -1,9 +1,8 @@
 import sys
 import traceback
-from contextlib import nullcontext
-from io import BytesIO, TextIOWrapper
+from io import TextIOWrapper
 from pathlib import Path
-from typing import BinaryIO, ContextManager, Iterable, Iterator, Optional, Set, Tuple
+from typing import BinaryIO, Iterable, Iterator, Set, Tuple, Union
 
 from .ast_node import GherkinDocument
 from .errors import (
@@ -18,7 +17,7 @@ from .formatter import LineGenerator
 from .options import NewlineMode, Options, WriteBackMode
 from .parser import parse
 from .report import Report
-from .utils import decode_stream, diff, dump_to_file, err
+from .utils import decode_stream, diff, dump_to_file, err, open_stream_or_path
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
@@ -62,27 +61,22 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 
 def reformat_stdin(*, options: Options) -> bool:
     output = sys.stdout.buffer if options.write_back == WriteBackMode.INPLACE else None
-    return reformat_streams(sys.stdin.buffer, output, options=options)
+    return reformat_stream_or_path(sys.stdin.buffer, output, options=options)
 
 
 def reformat_single_file(path: Path, *, options: Options) -> bool:
-    with open(path, "rb") as f:
-        in_stream = BytesIO(f.read())
-
-    out_stream_cm: ContextManager[Optional[BinaryIO]]
-    if options.write_back == WriteBackMode.INPLACE:
-        out_stream_cm = open(path, "wb")
-    else:
-        out_stream_cm = nullcontext(None)
-
-    with out_stream_cm as out_stream:
-        return reformat_streams(in_stream, out_stream, options=options)
+    out_path = path if options.write_back == WriteBackMode.INPLACE else None
+    return reformat_stream_or_path(path, out_path, options=options)
 
 
-def reformat_streams(
-    in_stream: BinaryIO, out_stream: Optional[BinaryIO], *, options: Options
+def reformat_stream_or_path(
+    in_stream_or_path: Union[BinaryIO, Path],
+    out_stream_or_path: Union[None, BinaryIO, Path],
+    *,
+    options: Options,
 ) -> bool:
-    src_contents, encoding, existing_newline = decode_stream(in_stream)
+    with open_stream_or_path(in_stream_or_path, "rb") as in_stream:
+        src_contents, encoding, existing_newline = decode_stream(in_stream)
 
     newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
 
@@ -98,12 +92,14 @@ def reformat_streams(
     if not content_changed and newline == existing_newline:
         return False
 
-    if out_stream is not None:
-        tiow = TextIOWrapper(out_stream, encoding=encoding, newline=newline)
-        tiow.write(dst_contents)
-        # Ensures that the underlying stream is not closed when the
-        # TextIOWrapper is garbage collected, which wouldn't be good for stdout
-        tiow.detach()
+    if out_stream_or_path is not None:
+        with open_stream_or_path(out_stream_or_path, "wb") as out_stream:
+            tiow = TextIOWrapper(out_stream, encoding=encoding, newline=newline)
+            tiow.write(dst_contents)
+            # Ensures that the underlying stream is not closed when the
+            # TextIOWrapper is garbage collected. We don't want to close a
+            # stream that was passed to us.
+            tiow.detach()
 
     return True
 

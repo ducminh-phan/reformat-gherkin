@@ -3,8 +3,10 @@ import io
 import re
 import tempfile
 import tokenize
+from contextlib import nullcontext
 from functools import lru_cache, partial
-from typing import BinaryIO, Tuple
+from pathlib import Path
+from typing import IO, AnyStr, BinaryIO, Tuple, Union
 
 import click
 from wcwidth import wcswidth
@@ -68,6 +70,8 @@ def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
     `newline` is either CRLF or LF but `decoded_contents` is decoded with
     universal newlines (i.e. only contains LF).
     """
+    # in case the source is not seekable, read into memory now
+    src = io.BytesIO(src.read())
     encoding, lines = tokenize.detect_encoding(src.readline)
     if not lines:
         return "", encoding, "\n"
@@ -97,3 +101,10 @@ def get_display_width(text: str) -> int:
     if width < 0:
         width = len(text)
     return width
+
+
+def open_stream_or_path(stream_or_path: Union[IO[AnyStr], Path], mode: str):
+    if isinstance(stream_or_path, Path):
+        return open(stream_or_path, mode)
+    else:
+        return nullcontext(stream_or_path)

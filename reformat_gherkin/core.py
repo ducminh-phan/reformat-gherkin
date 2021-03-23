@@ -61,7 +61,9 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 
 def reformat_stdin(*, options: Options) -> bool:
     output = sys.stdout.buffer if options.write_back == WriteBackMode.INPLACE else None
-    return reformat_stream_or_path(sys.stdin.buffer, output, options=options)
+    return reformat_stream_or_path(
+        sys.stdin.buffer, output, force_write=True, options=options
+    )
 
 
 def reformat_single_file(path: Path, *, options: Options) -> bool:
@@ -73,12 +75,14 @@ def reformat_stream_or_path(
     in_stream_or_path: Union[BinaryIO, Path],
     out_stream_or_path: Union[None, BinaryIO, Path],
     *,
+    force_write: bool = False,
     options: Options,
 ) -> bool:
     with open_stream_or_path(in_stream_or_path, "rb") as in_stream:
         src_contents, encoding, existing_newline = decode_stream(in_stream)
 
     newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
+    newline_changed = newline != existing_newline
 
     content_changed = True
     try:
@@ -87,12 +91,9 @@ def reformat_stream_or_path(
         content_changed = False
         dst_contents = src_contents
 
-    # We reformat the file if either the content is changed, or the line separators
-    # need to be changed.
-    if not content_changed and newline == existing_newline:
-        return False
+    will_write = force_write or content_changed or newline_changed
 
-    if out_stream_or_path is not None:
+    if will_write and out_stream_or_path is not None:
         with open_stream_or_path(out_stream_or_path, "wb") as out_stream:
             tiow = TextIOWrapper(out_stream, encoding=encoding, newline=newline)
             tiow.write(dst_contents)
@@ -101,7 +102,7 @@ def reformat_stream_or_path(
             # stream that was passed to us.
             tiow.detach()
 
-    return True
+    return content_changed or newline_changed
 
 
 def format_file_contents(src_contents: str, *, options: Options) -> str:

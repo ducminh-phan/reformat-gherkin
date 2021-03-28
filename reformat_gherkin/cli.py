@@ -113,7 +113,8 @@ def main(
     config: Optional[str],
 ) -> None:
     """
-    Reformat the given Gherkin files and all files in the given directories recursively.
+    Reformat the given SRC files and all .feature files in SRC folders. If -
+    is passed as a file, reformat stdin and print the result to stdout.
     """
     if config:
         out(f"Using configuration from {config}.", bold=False, fg="blue")

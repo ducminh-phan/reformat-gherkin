@@ -23,6 +23,25 @@ def make_options(
     )
 
 
+def options_to_cli_args(options):
+    return [
+        "" if options.write_back == WriteBackMode.INPLACE else "--check",
+        ""
+        if options.step_keyword_alignment == AlignmentMode.NONE
+        else f"--alignment {options.step_keyword_alignment.value}",
+        ""
+        if options.newline == NewlineMode.KEEP
+        else f"--newline {options.newline.value}",
+        "--fast" if options.fast else "--safe",
+        "--single-line-tags"
+        if options.tag_line_mode == TagLineMode.SINGLELINE
+        else "--multi-line-tags",
+        "--use-tabs"
+        if options.indent == "\t"
+        else f"--tab-width {len(options.indent)}",
+    ]
+
+
 OPTIONS = [
     make_options(step_keyword_alignment=alignment_mode)
     for alignment_mode in AlignmentMode

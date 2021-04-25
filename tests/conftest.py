@@ -111,4 +111,4 @@ def source_with_newline(request):
 
 @pytest.fixture
 def runner():
-    return CliRunner()
+    return CliRunner(mix_stderr=False)

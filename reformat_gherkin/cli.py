@@ -23,7 +23,12 @@ from .version import __version__
     "src",
     nargs=-1,
     type=click.Path(
-        exists=True, file_okay=True, dir_okay=True, readable=True, resolve_path=True
+        exists=True,
+        file_okay=True,
+        dir_okay=True,
+        readable=True,
+        resolve_path=True,
+        allow_dash=True,
     ),
     is_eager=True,
 )
@@ -108,7 +113,8 @@ def main(
     config: Optional[str],
 ) -> None:
     """
-    Reformat the given Gherkin files and all files in the given directories recursively.
+    Reformat the given SRC files and all .feature files in SRC folders. If -
+    is passed as a file, reformat stdin and print the result to stdout.
     """
     if config:
         out(f"Using configuration from {config}.", bold=False, fg="blue")

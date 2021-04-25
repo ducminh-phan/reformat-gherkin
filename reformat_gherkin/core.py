@@ -1,6 +1,8 @@
+import sys
 import traceback
+from io import TextIOWrapper
 from pathlib import Path
-from typing import Iterator, Set, Tuple
+from typing import BinaryIO, Iterable, Iterator, Set, Tuple, Union
 
 from .ast_node import GherkinDocument
 from .errors import (
@@ -15,14 +17,14 @@ from .formatter import LineGenerator
 from .options import NewlineMode, Options, WriteBackMode
 from .parser import parse
 from .report import Report
-from .utils import decode_bytes, diff, dump_to_file, err
+from .utils import decode_stream, diff, dump_to_file, err, open_stream_or_path
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
 NEWLINE_FROM_OPTION = {NewlineMode.CRLF: "\r\n", NewlineMode.LF: "\n"}
 
 
-def find_sources(src: Tuple[str]) -> Set[Path]:
+def find_sources(src: Iterable[str]) -> Set[Path]:
     sources: Set[Path] = set()
 
     for s in src:
@@ -39,25 +41,48 @@ def find_sources(src: Tuple[str]) -> Set[Path]:
 
 
 def reformat(src: Tuple[str], report: Report, *, options: Options):
-    sources = find_sources(src)
+    use_stdin = "-" in src
+    sources = find_sources(filter((lambda it: it != "-"), src))
 
-    if not sources:
+    if not sources and not use_stdin:
         raise EmptySources
+
+    if use_stdin:
+        changed = reformat_stdin(options=options)
+        report.done("stdin", changed)
 
     for path in sources:
         try:
             changed = reformat_single_file(path, options=options)
-            report.done(path, changed)
+            report.done(str(path), changed)
         except Exception as e:
             report.failed(path, str(e))
 
 
-# noinspection PyTypeChecker
+def reformat_stdin(*, options: Options) -> bool:
+    output = sys.stdout.buffer if options.write_back == WriteBackMode.INPLACE else None
+    return reformat_stream_or_path(
+        sys.stdin.buffer, output, force_write=True, options=options
+    )
+
+
 def reformat_single_file(path: Path, *, options: Options) -> bool:
-    with open(path, "rb") as buf:
-        src_contents, encoding, existing_newline = decode_bytes(buf.read())
+    out_path = path if options.write_back == WriteBackMode.INPLACE else None
+    return reformat_stream_or_path(path, out_path, options=options)
+
+
+def reformat_stream_or_path(
+    in_stream_or_path: Union[BinaryIO, Path],
+    out_stream_or_path: Union[None, BinaryIO, Path],
+    *,
+    force_write: bool = False,
+    options: Options,
+) -> bool:
+    with open_stream_or_path(in_stream_or_path, "rb") as in_stream:
+        src_contents, encoding, existing_newline = decode_stream(in_stream)
 
     newline = NEWLINE_FROM_OPTION.get(options.newline, existing_newline)
+    newline_changed = newline != existing_newline
 
     content_changed = True
     try:
@@ -66,16 +91,18 @@ def reformat_single_file(path: Path, *, options: Options) -> bool:
         content_changed = False
         dst_contents = src_contents
 
-    # We reformat the file if either the content is changed, or the line separators
-    # need to be changed.
-    if not content_changed and newline == existing_newline:
-        return False
+    will_write = force_write or content_changed or newline_changed
 
-    if options.write_back == WriteBackMode.INPLACE:
-        with open(path, "w", encoding=encoding, newline=newline) as f:
-            f.write(dst_contents)
+    if will_write and out_stream_or_path is not None:
+        with open_stream_or_path(out_stream_or_path, "wb") as out_stream:
+            tiow = TextIOWrapper(out_stream, encoding=encoding, newline=newline)
+            tiow.write(dst_contents)
+            # Ensures that the underlying stream is not closed when the
+            # TextIOWrapper is garbage collected. We don't want to close a
+            # stream that was passed to us.
+            tiow.detach()
 
-    return True
+    return content_changed or newline_changed
 
 
 def format_file_contents(src_contents: str, *, options: Options) -> str:

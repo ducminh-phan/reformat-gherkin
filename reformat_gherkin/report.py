@@ -15,7 +15,7 @@ class Report:
     same_count: int = 0
     failure_count: int = 0
 
-    def done(self, path: Path, changed: bool) -> None:
+    def done(self, path: str, changed: bool) -> None:
         """Increment the counter for successful reformatting. Write out a message."""
         if changed:
             reformatted = "Would reformat" if self.check else "Reformatted"

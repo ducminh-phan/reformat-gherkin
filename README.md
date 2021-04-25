@@ -55,8 +55,8 @@ You can list the available options by running `reformat-gherkin --help`.
 ```text
 Usage: reformat-gherkin [OPTIONS] [SRC]...
 
-  Reformat the given Gherkin files and all files in the given directories
-  recursively.
+  Reformat the given SRC files and all .feature files in SRC folders. If -
+  is passed as a file, reformat stdin and print the result to stdout.
 
 Options:
   --check                         Don't write the files back, just return the
@@ -64,6 +64,7 @@ Options:
                                   change. Return code 1 means some files would
                                   be reformatted. Return code 123 means there
                                   was an internal error.
+
   -a, --alignment [left|right]    Specify the alignment of step keywords
                                   (Given, When, Then,...). If specified, all
                                   statements after step keywords are left-
@@ -72,18 +73,23 @@ Options:
                                   default, step keywords are left-aligned, and
                                   there is a single space between the step
                                   keyword and the statement.
+
   -n, --newline [LF|CRLF]         Specify the line separators when formatting
                                   files inplace. If not specified, line
                                   separators are preserved.
+
   --fast / --safe                 If --fast given, skip the sanity checks of
                                   file contents. [default: --safe]
+
   --single-line-tags / --multi-line-tags
                                   If --single-line-tags given, output
                                   consecutive tags on one line. If --multi-
                                   line-tags given, output one tag per line.
                                   [default: --single-line-tags]
+
   --tab-width INTEGER             Specify the number of spaces per
                                   indentation-level. [default: 2]
+
   --use-tabs                      Indent lines with tabs instead of spaces.
   --config FILE                   Read configuration from FILE.
   --version                       Show the version and exit.
@@ -93,6 +99,7 @@ Options:
 Reformat-gherkin is a well-behaved Unix-style command-line tool:
 
 - it does nothing if no sources are passed to it;
+- it will read from standard input and write to standard output if - is used as the filename;
 - it only outputs messages to users on standard error;
 - it exits with code 0 unless an internal error occurred (or --check was used).
 

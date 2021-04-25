@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2021-04-25
+
+### Added
+
+- Add support for formatting stdin to stdout ([#45](https://github.com/ducminh-phan/reformat-gherkin/pull/45))
+
 ## [2.0.2] - 2020-11-02
 
 ### Fixed
@@ -62,7 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.2...develop
+[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.0...develop
+[2.1.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.0...v2.0.2
 [2.0.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.0.2...v1.1.0

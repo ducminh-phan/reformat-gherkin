@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2021-08-16
+
+### Fixed
+
+- Blank lines in docstrings have spaces added ([#46](https://github.com/ducminh-phan/reformat-gherkin/pull/46))
+
 ## [2.1.0] - 2021-04-25
 
 ### Added
@@ -68,7 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.0...develop
+[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.1...develop
+[2.1.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.0...v2.0.2
 [2.0.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v1.1.0...v2.0.0

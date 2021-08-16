@@ -180,7 +180,7 @@ def generate_doc_string_lines(docstring: DocString, indent: str) -> List[str]:
 
     indent_level = INDENT_LEVEL_MAP[Step]
 
-    return [f"{indent * indent_level}{line}" for line in raw_lines]
+    return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 
 
 ContextMap = Dict[Union[Comment, Tag, TagGroup, TableRow], Any]

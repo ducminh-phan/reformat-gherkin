@@ -1,22 +1,34 @@
-import os
+import subprocess
+
+COMMON_ARGS = ["poetry", "run", "python", "-m", "reformat_gherkin"]
 
 
 def test_run_as_package_success(sources):
-    args = " ".join(sources(contain_invalid=False))
-    exit_code = os.system(f"python -m reformat_gherkin {args}")
+    args = [
+        *COMMON_ARGS,
+        *sources(contain_invalid=False),
+    ]
+    result = subprocess.run(args)
 
-    assert exit_code == 0
+    assert result.returncode == 0
 
 
 def test_run_as_package_check(sources):
-    args = " ".join(sources(contain_invalid=False))
-    exit_code = os.system(f"python -m reformat_gherkin --check {args}")
+    args = [
+        *COMMON_ARGS,
+        "--check",
+        *sources(contain_invalid=False),
+    ]
+    result = subprocess.run(args)
 
-    assert exit_code == 1
+    assert result.returncode == 1
 
 
 def test_run_as_package_failed(sources):
-    args = " ".join(sources())
-    exit_code = os.system(f"python -m reformat_gherkin --check {args}")
+    args = [
+        *COMMON_ARGS,
+        *sources(),
+    ]
+    result = subprocess.run(args)
 
-    assert exit_code == 1
+    assert result.returncode == 123

@@ -30,6 +30,7 @@ INDENT_LEVEL_MAP: Mapping[Any, int] = {
     ScenarioOutline: 1,
     Step: 2,
     Examples: 2,
+    DocString: 3,
     TableRow: 3,
 }
 
@@ -178,7 +179,7 @@ def generate_doc_string_lines(docstring: DocString, indent: str) -> List[str]:
     raw_lines = docstring.content.splitlines()
     raw_lines = ['"""'] + raw_lines + ['"""']
 
-    indent_level = INDENT_LEVEL_MAP[Step]
+    indent_level = INDENT_LEVEL_MAP[DocString]
 
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2022-01-29
+
+### Fixed
+
+- DocString indentation is not right ([#49](https://github.com/ducminh-phan/reformat-gherkin/issues/49))
+- Newline `\n` in table cell causes formatter to fail ([#51](https://github.com/ducminh-phan/reformat-gherkin/issues/51))
+
+### Added
+
+- Enable using `reformat-gherkin` as a package ([#48](https://github.com/ducminh-phan/reformat-gherkin/issues/48))
+
 ## [2.1.1] - 2021-08-16
 
 ### Fixed
@@ -74,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.1...develop
+[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.2.0...develop
+[2.2.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.0.0...v2.0.2

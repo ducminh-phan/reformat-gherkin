@@ -4,7 +4,7 @@ from .helpers import options_to_cli_args
 
 
 def test_cli_success(runner, sources):
-    result = runner.invoke(main, [*sources(contain_invalid=False)])
+    result = runner.invoke(main, sources(contain_invalid=False))
 
     assert len(result.stdout) == 0
     assert result.exit_code == 0

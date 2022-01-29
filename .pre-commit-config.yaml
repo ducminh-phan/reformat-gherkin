@@ -1,19 +1,22 @@
 repos:
   - repo: https://github.com/PyCQA/isort
-    rev: 5.8.0
+    rev: 5.10.1
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 21.12b0
     hooks:
       - id: black
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.0
+    rev: 3.9.2
     hooks:
       - id: flake8
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.812
+    rev: v0.931
     hooks:
       - id: mypy
-        additional_dependencies: [attrs==20.2]
-        args: [--ignore-missing-imports]
+        additional_dependencies:
+          - attrs==20.2
+          - types-all
+        args:
+          - --ignore-missing-imports

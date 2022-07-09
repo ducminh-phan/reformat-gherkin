@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import Optional, Tuple
+from typing import Tuple
 
 from ._base import prepare
 from .location import LocationMixin
@@ -11,7 +11,7 @@ class Background(LocationMixin):
     keyword: str
     name: str
     steps: Tuple[Step, ...]
-    description: Optional[str] = None
+    description: str
 
     def __iter__(self):
         yield self

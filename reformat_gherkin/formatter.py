@@ -13,8 +13,8 @@ from .ast_node import (
     GherkinDocument,
     Location,
     Node,
+    Rule,
     Scenario,
-    ScenarioOutline,
     Step,
     TableRow,
     Tag,
@@ -27,7 +27,7 @@ INDENT_LEVEL_MAP: Mapping[Any, int] = {
     Feature: 0,
     Background: 1,
     Scenario: 1,
-    ScenarioOutline: 1,
+    Rule: 1,
     Step: 2,
     Examples: 2,
     DocString: 3,
@@ -320,7 +320,7 @@ class LineGenerator:
             children: List[Node] = []
 
             # Add an empty line after the last step, including its argument, if any
-            if isinstance(node, (Background, Scenario, ScenarioOutline)):
+            if isinstance(node, (Background, Scenario)):
                 children = list(chain.from_iterable(node.steps))
 
             # Add an empty line after an examples table

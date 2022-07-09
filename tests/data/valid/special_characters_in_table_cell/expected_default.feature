@@ -6,5 +6,5 @@ Feature: Breaking gherkin reformatter
     Then gherkin reformatter explodes
 
     Examples:
-      | message                   |
-      | a\| b\n c\r d\t e\r\n f\n |
+      | message                     |
+      | a \| \\\n \\r \\t \\r\n z\n |

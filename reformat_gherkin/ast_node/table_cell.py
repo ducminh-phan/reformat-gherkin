@@ -5,12 +5,15 @@ from .location import LocationMixin
 
 
 def escape_table_cell_value(text: str) -> str:
-    """
-    Escape pipe characters `|` in a table cell's value. Since the pipe characters
-    are used to separate cells in a row, we need to replace them by `\\|`.
+    r"""
+    Escape special characters in a table cell's value. There are three of them:
+        - \\
+        - \|
+        - \n
+    (Source: https://github.com/cucumber/common/blob/7cdd5259c90410971877dbe480733ba1b44e9a62/gherkin/testdata/good/escaped_pipes.feature)
     """
 
-    return text.replace("|", "\\|").replace("\n", "\\n")
+    return text.replace("\\", "\\\\").replace("|", "\\|").replace("\n", "\\n")
 
 
 @prepare

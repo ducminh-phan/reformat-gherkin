@@ -41,7 +41,9 @@ def find_project_root(srcs: Iterable[str]) -> Path:
 
 
 def read_config_file(
-    ctx: click.Context, _: click.Parameter, value: Optional[str]
+    ctx: click.Context,
+    _: click.Parameter,
+    value: Optional[str],
 ) -> Optional[str]:
     """
     Inject the configuration from ".reformat-gherkin.yaml" into defaults in `ctx`.
@@ -62,7 +64,8 @@ def read_config_file(
             config = yaml.safe_load(f)
     except (yaml.YAMLError, OSError) as e:
         raise click.FileError(
-            filename=value, hint=f"Error reading configuration file: {e}"
+            filename=value,
+            hint=f"Error reading configuration file: {e}",
         )
 
     if not config:

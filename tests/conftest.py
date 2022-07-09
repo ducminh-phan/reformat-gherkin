@@ -1,4 +1,4 @@
-import os
+import secrets
 import shutil
 from pathlib import Path
 
@@ -9,14 +9,17 @@ from reformat_gherkin.config import CONFIG_FILE
 from tests.helpers import FILENAME_OPTION_MAP
 
 TEST_DIR = Path("tests")
+VALID_DATA_DIR = TEST_DIR / "data" / "valid"
+INVALID_DATA_DIR = TEST_DIR / "data" / "invalid"
 
 
 @pytest.fixture
 def valid_contents():
     def _valid_contents(*, with_expected=False, with_options=False):
-        for feature_dir in (TEST_DIR / "data" / "valid").iterdir():
+        for feature_dir in VALID_DATA_DIR.iterdir():
             if not feature_dir.is_dir():
                 continue
+
             content = (feature_dir / "input.feature").read_text(encoding="utf-8")
             for expected in feature_dir.glob("expected_*.feature"):
                 result = [content]
@@ -25,6 +28,7 @@ def valid_contents():
                 if with_options:
                     options = FILENAME_OPTION_MAP[expected.stem]
                     result.append(options)
+
                 if len(result) <= 1:
                     yield result[0]
                 else:
@@ -36,35 +40,46 @@ def valid_contents():
 @pytest.fixture
 def invalid_contents():
     def _invalid_contents():
-        for path in (TEST_DIR / "data" / "invalid").rglob("*.feature"):
+        for path in INVALID_DATA_DIR.rglob("*.feature"):
             yield path.read_text(encoding="utf-8")
 
     return _invalid_contents()
 
 
 @pytest.fixture
-def sources(request):
-    # noinspection PyTypeChecker
+def tmp_dir():
+    _tmp_dir = Path(f"tmp_{secrets.token_hex(4)}")
+    _tmp_dir.mkdir()
+
+    return _tmp_dir
+
+
+@pytest.fixture
+def sources(request, tmp_dir):
     def construct_sources(
         contain_invalid=True,
         with_config_file=False,
         valid_config=True,
         empty_config=False,
     ):
-        tmp_dir = Path(f"tmp{os.urandom(4).hex()}")
-        tmp_dir.mkdir()
-
-        for valid_dir in (TEST_DIR / "data" / "valid").iterdir():
-            if valid_dir.is_dir():
+        for feature_dir in VALID_DATA_DIR.iterdir():
+            if feature_dir.is_dir():
                 shutil.copyfile(
-                    valid_dir / "input.feature", tmp_dir / f"{valid_dir.name}.feature"
+                    feature_dir / "input.feature",
+                    tmp_dir / f"{feature_dir.name}.feature",
                 )
             else:
-                shutil.copyfile(valid_dir, tmp_dir / valid_dir.name)
+                shutil.copyfile(
+                    feature_dir,
+                    tmp_dir / feature_dir.name,
+                )
 
         if contain_invalid:
-            for invalid_feature in (TEST_DIR / "data" / "invalid").rglob("*.feature"):
-                shutil.copyfile(invalid_feature, tmp_dir / invalid_feature.name)
+            for invalid_feature in INVALID_DATA_DIR.rglob("*.feature"):
+                shutil.copyfile(
+                    invalid_feature,
+                    tmp_dir / invalid_feature.name,
+                )
 
         if with_config_file:
             file_name = "valid"
@@ -74,7 +89,7 @@ def sources(request):
                 file_name = "empty"
 
             shutil.copyfile(
-                TEST_DIR / "config_files" / "{}.yaml".format(file_name),
+                TEST_DIR / "config_files" / f"{file_name}.yaml",
                 tmp_dir / CONFIG_FILE,
             )
 
@@ -91,9 +106,9 @@ def sources(request):
 @pytest.fixture
 def source_with_newline(request):
     def construct_source_with_newline(newline):
-        tmp_file = Path(f"tmp{os.urandom(4).hex()}.feature")
+        tmp_file = Path(f"tmp_{secrets.token_hex(4)}.feature")
 
-        content = (TEST_DIR / "data" / "valid" / "full" / "input.feature").read_text(
+        content = (VALID_DATA_DIR / "full" / "input.feature").read_text(
             encoding="utf-8"
         )
         with tmp_file.open("w", newline=newline) as f:

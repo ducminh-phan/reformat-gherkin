@@ -47,6 +47,7 @@ def test_remove_trailing_spaces():
     assert f("asd") == "asd"
     assert f("  asd  ") == "  asd"
     assert f(" a s d \n  def  ") == " a s d\n  def"
+    assert f(" a s d \n  def  \n") == " a s d\n  def\n"
 
 
 def test_decode_stream():

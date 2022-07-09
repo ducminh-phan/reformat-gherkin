@@ -59,7 +59,12 @@ def extract_beginning_spaces(string: str) -> str:
 
 
 def remove_trailing_spaces(string: str) -> str:
+    ends_with_newline = string.endswith("\n")
+
     lines = string.splitlines()
+    if ends_with_newline:
+        lines.append("")
+
     return "\n".join(line.rstrip() for line in lines)
 
 

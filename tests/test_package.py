@@ -1,6 +1,6 @@
 import subprocess
 
-COMMON_ARGS = ["poetry", "run", "python", "-m", "reformat_gherkin"]
+COMMON_ARGS = "poetry run python -m reformat_gherkin".split()
 
 
 def test_run_as_package_success(sources):

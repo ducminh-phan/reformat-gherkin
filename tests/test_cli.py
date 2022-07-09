@@ -12,7 +12,8 @@ def test_cli_success(runner, sources):
 
 def test_cli_stdin_success(runner, valid_contents):
     for content, expected, options in valid_contents(
-        with_expected=True, with_options=True
+        with_expected=True,
+        with_options=True,
     ):
         args = options_to_cli_args(options) + ["-"]
         args.remove("--check")
@@ -24,7 +25,13 @@ def test_cli_stdin_success(runner, valid_contents):
 
 
 def test_cli_check(runner, sources):
-    result = runner.invoke(main, [*sources(contain_invalid=False), "--check"])
+    result = runner.invoke(
+        main,
+        [
+            *sources(contain_invalid=False),
+            "--check",
+        ],
+    )
 
     assert len(result.stdout) == 0
     assert result.exit_code == 1
@@ -40,7 +47,13 @@ def test_cli_stdin_check(runner, valid_contents):
 
 
 def test_cli_failed(runner, sources):
-    result = runner.invoke(main, [*sources(), "--check"])
+    result = runner.invoke(
+        main,
+        [
+            *sources(),
+            "--check",
+        ],
+    )
 
     assert len(result.stdout) == 0
     assert result.exit_code == 123
@@ -55,7 +68,11 @@ def test_cli_empty_sources(runner):
 
 def test_cli_check_with_valid_config(runner, sources):
     result = runner.invoke(
-        main, [*sources(contain_invalid=False, with_config_file=True)]
+        main,
+        sources(
+            contain_invalid=False,
+            with_config_file=True,
+        ),
     )
 
     assert len(result.stdout) == 0
@@ -66,7 +83,11 @@ def test_cli_check_with_valid_config(runner, sources):
 def test_cli_check_with_invalid_config(runner, sources):
     result = runner.invoke(
         main,
-        [*sources(contain_invalid=False, with_config_file=True, valid_config=False)],
+        sources(
+            contain_invalid=False,
+            with_config_file=True,
+            valid_config=False,
+        ),
     )
 
     assert len(result.stdout) == 0
@@ -77,7 +98,11 @@ def test_cli_check_with_invalid_config(runner, sources):
 def test_cli_check_with_empty_config(runner, sources):
     result = runner.invoke(
         main,
-        [*sources(contain_invalid=False, with_config_file=True, empty_config=True)],
+        sources(
+            contain_invalid=False,
+            with_config_file=True,
+            empty_config=True,
+        ),
     )
 
     assert len(result.stdout) == 0

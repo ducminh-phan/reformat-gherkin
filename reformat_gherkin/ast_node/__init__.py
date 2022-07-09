@@ -8,8 +8,8 @@ from .examples import Examples
 from .feature import Feature
 from .gherkin_document import GherkinDocument
 from .location import Location
+from .rule import Rule
 from .scenario import Scenario
-from .scenario_outline import ScenarioOutline
 from .step import Step
 from .table_cell import TableCell
 from .table_row import TableRow
@@ -25,8 +25,8 @@ Node = Union[
     Feature,
     GherkinDocument,
     Location,
+    Rule,
     Scenario,
-    ScenarioOutline,
     Step,
     TableCell,
     TableRow,

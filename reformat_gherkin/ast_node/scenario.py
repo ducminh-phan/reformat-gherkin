@@ -1,7 +1,8 @@
 from itertools import chain
-from typing import Optional, Tuple
+from typing import Tuple
 
 from ._base import prepare
+from .examples import Examples
 from .location import LocationMixin
 from .step import Step
 from .tag import Tag
@@ -13,7 +14,8 @@ class Scenario(LocationMixin):
     name: str
     steps: Tuple[Step, ...]
     tags: Tuple[Tag, ...]
-    description: Optional[str] = None
+    description: str
+    examples: Tuple[Examples, ...]
 
     def __iter__(self):
         yield from self.tags
@@ -21,3 +23,5 @@ class Scenario(LocationMixin):
         yield self
 
         yield from chain.from_iterable(self.steps)
+
+        yield from chain.from_iterable(self.examples)

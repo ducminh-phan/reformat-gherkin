@@ -1,5 +1,5 @@
 from itertools import chain, groupby
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Set, Tuple, Union
+from typing import Any, Callable, Dict, Iterator, List, Mapping, Optional, Set, Union
 
 from attr import attrib, dataclass
 
@@ -68,14 +68,19 @@ def generate_step_line(
     indent_level: int = INDENT_LEVEL_MAP[Step]
 
     formatted_keyword = format_step_keyword(
-        step.keyword, keyword_alignment, keyword_padding_width=keyword_padding_width
+        step.keyword,
+        keyword_alignment,
+        keyword_padding_width=keyword_padding_width,
     )
 
     return f"{indent * indent_level}{formatted_keyword} {step.text}"
 
 
 def format_step_keyword(
-    keyword: str, keyword_alignment: AlignmentMode, *, keyword_padding_width: int = 0
+    keyword: str,
+    keyword_alignment: AlignmentMode,
+    *,
+    keyword_padding_width: int = 0,
 ) -> str:
     """
     Insert padding to step keyword if necessary based on how we want to align them.
@@ -92,15 +97,20 @@ def format_step_keyword(
 
 
 def generate_keyword_line(
-    keyword: str, name: str, indent: str, indent_level: int
+    keyword: str,
+    name: str,
+    indent: str,
+    indent_level: int,
 ) -> str:
     return f"{indent * indent_level}{keyword}: {name}".rstrip()
 
 
 def generate_description_lines(
-    description: Optional[str], indent: str, indent_level: int
+    description: str,
+    indent: str,
+    indent_level: int,
 ) -> List[str]:
-    description_lines = extract_description_lines(description)
+    description_lines = description.splitlines()
 
     lines = [f"{indent * indent_level}{line}" for line in description_lines]
 
@@ -109,13 +119,6 @@ def generate_description_lines(
         lines.append("")
 
     return lines
-
-
-def extract_description_lines(description: Optional[str]) -> List[str]:
-    if description is None:
-        return []
-
-    return description.splitlines()
 
 
 def generate_table_lines(rows: List[TableRow], indent: str) -> List[str]:
@@ -223,12 +226,15 @@ class LineGenerator:
         node: Node
         for node in self.ast:
             if hasattr(node, "tags"):
-                tags: Tuple[Tag, ...] = node.tags
+                tags = node.tags
 
                 if tags:
-                    # The tag group should be placed at the position of the last tag
                     tag_group = TagGroup(
-                        members=tags, context=node, location=tags[-1].location
+                        members=tags,
+                        context=node,
+                        # The tag group should be placed
+                        # at the position of the last tag
+                        location=tags[-1].location,
                     )
                     tag_groups.append(tag_group)
 
@@ -382,21 +388,30 @@ class LineGenerator:
     def visit(self, node: Node) -> Lines:
         class_name = type(node).__name__
 
-        yield from getattr(
-            self, f"visit_{camel_to_snake_case(class_name)}", self.visit_default
-        )(node)
+        visit_method: Callable[[Node], Lines] = getattr(
+            self,
+            f"visit_{camel_to_snake_case(class_name)}",
+            self.visit_default,
+        )
+
+        yield from visit_method(node)
 
     def visit_default(self, node: Node) -> Lines:
         indent_level = INDENT_LEVEL_MAP.get(type(node), 0)
 
         if hasattr(node, "keyword") and hasattr(node, "name"):
             yield generate_keyword_line(
-                node.keyword, node.name, self.indent, indent_level  # type: ignore
+                node.keyword,  # type: ignore
+                node.name,  # type: ignore
+                self.indent,
+                indent_level,
             )
 
         if hasattr(node, "description"):
             yield from generate_description_lines(
-                node.description, self.indent, indent_level + 1  # type: ignore
+                node.description,  # type: ignore
+                self.indent,
+                indent_level + 1,
             )
 
     def visit_step(self, step: Step) -> Lines:

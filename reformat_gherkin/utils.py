@@ -15,7 +15,7 @@ out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
 
 _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
-_all_cap_re = re.compile(r"([a-z0-9])([A-Z])")
+_all_cap_re = re.compile(r"([a-z\d])([A-Z])")
 
 
 @lru_cache()
@@ -33,7 +33,11 @@ def dump_to_file(*output: str) -> str:
     Dump `output` to a temporary file. Return path to the file.
     """
     with tempfile.NamedTemporaryFile(
-        mode="w", prefix="rfmt-ghk_", suffix=".log", delete=False, encoding="utf-8"
+        mode="w",
+        prefix="rfmt-ghk_",
+        suffix=".log",
+        delete=False,
+        encoding="utf-8",
     ) as f:
         for lines in output:
             f.write(lines)
@@ -47,7 +51,13 @@ def diff(a: str, b: str, a_name: str, b_name: str) -> str:
     a_lines = [line + "\n" for line in a.split("\n")]
     b_lines = [line + "\n" for line in b.split("\n")]
     return "".join(
-        difflib.unified_diff(a_lines, b_lines, fromfile=a_name, tofile=b_name, n=5)
+        difflib.unified_diff(
+            a_lines,
+            b_lines,
+            fromfile=a_name,
+            tofile=b_name,
+            n=5,
+        )
     )
 
 

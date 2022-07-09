@@ -16,13 +16,6 @@ T = TypeVar("T")
 
 class CustomConverter(Converter):
     def structure_attrs_fromdict(self, obj: Dict[str, Any], cls: Type[T]) -> T:
-        # Make sure the type in the parsed object matches the class we use
-        # to structure the object
-        if "type" in obj:
-            type_name = obj.pop("type")
-            cls_name = cls.__name__
-            assert type_name == cls_name, f"{type_name} does not match {cls_name}"
-
         # Note that keys are in camelCase convention, for example, tableHeader,
         # tableBody. Therefore, we need to convert the keys to snake_case.
         transformed_obj = {}

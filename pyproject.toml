@@ -29,10 +29,10 @@ reformat-gherkin = "reformat_gherkin.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-PyYAML = "^6.0"
-attrs = "^21.4.0"
-cattrs = "^22.1.0"
-click = "^8.1.3"
+PyYAML = ">=5.4"
+attrs = ">=20.2"
+cattrs = ">=1.1"
+click = ">=7"
 gherkin-official = "24.0.0"
 wcwidth = "^0.2.5"
 

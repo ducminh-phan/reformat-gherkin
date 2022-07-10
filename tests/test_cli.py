@@ -1,6 +1,6 @@
 from reformat_gherkin.cli import main
 
-from .helpers import options_to_cli_args
+from .helpers import GHERKIN_TEST_DATA_DIR, options_to_cli_args
 
 
 def test_cli_success(runner, sources):
@@ -8,6 +8,7 @@ def test_cli_success(runner, sources):
 
     assert len(result.stdout) == 0
     assert result.exit_code == 0
+    assert result.stderr.startswith("Reformatted")
 
 
 def test_cli_stdin_success(runner, valid_contents):
@@ -22,6 +23,7 @@ def test_cli_stdin_success(runner, valid_contents):
 
         assert result.stdout == expected
         assert result.exit_code == 0
+        assert result.stderr.startswith("Reformatted stdin")
 
 
 def test_cli_check(runner, sources):
@@ -35,6 +37,20 @@ def test_cli_check(runner, sources):
 
     assert len(result.stdout) == 0
     assert result.exit_code == 1
+    assert result.stderr.startswith("Would reformat")
+
+
+def test_cli_check_gherkin_test_data(runner):
+    result = runner.invoke(
+        main,
+        [
+            str(GHERKIN_TEST_DATA_DIR.absolute()),
+            "--check",
+        ],
+    )
+    assert len(result.stdout) == 0
+    assert result.exit_code == 1
+    assert result.stderr.startswith("Would reformat")
 
 
 def test_cli_stdin_check(runner, valid_contents):

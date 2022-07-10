@@ -3,11 +3,11 @@ name: Publish package
 on:
   workflow_run:
     workflows:
-      - Run tests
+      - Test
     types:
       - completed
     branches:
-      - gh-actions
+      - master
 
 jobs:
   publish:

@@ -1,5 +1,3 @@
-import shutil
-
 import pytest
 
 from reformat_gherkin import config
@@ -15,5 +13,3 @@ def test_find_project_root_with_vcs(tmp_dir, vcs_dir):
     root = config.find_project_root([str(src)])
 
     assert root.resolve() == tmp_dir.resolve()
-
-    shutil.rmtree(tmp_dir)

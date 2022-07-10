@@ -1,4 +1,4 @@
-name: Run tests
+name: Test
 
 on:
   - push
@@ -52,7 +52,7 @@ jobs:
 
       - name: Coveralls
         uses: AndreMiras/coveralls-python-action@develop
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+        if: matrix.os == 'ubuntu-latest'
         with:
           parallel: true
           flag-name: test

@@ -51,11 +51,22 @@ def tmp_dir():
     _tmp_dir = Path(f"tmp_{secrets.token_hex(4)}")
     _tmp_dir.mkdir()
 
-    return _tmp_dir
+    yield _tmp_dir
+
+    shutil.rmtree(_tmp_dir)
 
 
 @pytest.fixture
-def sources(request, tmp_dir):
+def tmp_file():
+    _tmp_file = Path(f"tmp_{secrets.token_hex(4)}.feature")
+
+    yield _tmp_file
+
+    _tmp_file.unlink()
+
+
+@pytest.fixture
+def sources(tmp_dir):
     def construct_sources(
         contain_invalid=True,
         with_config_file=False,
@@ -93,31 +104,19 @@ def sources(request, tmp_dir):
                 tmp_dir / CONFIG_FILE,
             )
 
-        def fin():
-            shutil.rmtree(tmp_dir)
-
-        request.addfinalizer(fin)
-
         return str(tmp_dir), str(tmp_dir / "full.ghk"), str(tmp_dir / "empty.ghk")
 
     return construct_sources
 
 
 @pytest.fixture
-def source_with_newline(request):
+def source_with_newline(tmp_file):
     def construct_source_with_newline(newline):
-        tmp_file = Path(f"tmp_{secrets.token_hex(4)}.feature")
-
         content = (VALID_DATA_DIR / "full" / "input.feature").read_text(
             encoding="utf-8"
         )
         with tmp_file.open("w", newline=newline) as f:
             f.write(content)
-
-        def fin():
-            tmp_file.unlink()
-
-        request.addfinalizer(fin)
 
         return tmp_file
 

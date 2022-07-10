@@ -20,7 +20,7 @@ install:
   - poetry install
   - pip install coveralls
 script:
-  - pytest --cov=reformat_gherkin/
+  - pytest --cov
 after_success:
   - coveralls
 deploy:

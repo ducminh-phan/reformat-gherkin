@@ -14,6 +14,12 @@ jobs:
         with:
           python-version: "3.8"
 
+      - name: Cache installation
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-hooks-${{ hashFiles('.pre-commit-hooks.yaml') }}
+
       - name: Install pre-commit hooks
         run: |
           pip install pre-commit

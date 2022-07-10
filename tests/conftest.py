@@ -6,9 +6,8 @@ import pytest
 from click.testing import CliRunner
 
 from reformat_gherkin.config import CONFIG_FILE
-from tests.helpers import FILENAME_OPTION_MAP
+from tests.helpers import FILENAME_OPTION_MAP, TEST_DIR
 
-TEST_DIR = Path("tests")
 VALID_DATA_DIR = TEST_DIR / "data" / "valid"
 INVALID_DATA_DIR = TEST_DIR / "data" / "invalid"
 

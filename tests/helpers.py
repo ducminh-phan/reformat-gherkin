@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from reformat_gherkin.options import (
     AlignmentMode,
     NewlineMode,
@@ -5,6 +7,9 @@ from reformat_gherkin.options import (
     TagLineMode,
     WriteBackMode,
 )
+
+TEST_DIR = Path("tests")
+GHERKIN_TEST_DATA_DIR = TEST_DIR / "gherkin_test_data"
 
 
 def make_options(

@@ -7,4 +7,4 @@ Feature: Breaking gherkin reformatter
 
     Examples:
       | message                 |
-      | a\| b\n c\r d\t e\r\n f\n |
+      | a \| \\ \n \r \t \r\n z \n |

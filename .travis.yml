@@ -1,13 +1,13 @@
 language: python
 dist: focal
 python:
-  - "3.7"
+  - "3.7.9"
   - "3.8"
   - "3.9"
   - "3.10"
 jobs:
   include:
-    - python: "3.7"
+    - python: "3.8"
       env:
         - JOB=linting
       install:
@@ -15,24 +15,19 @@ jobs:
         - pre-commit install
       script:
         - pre-commit run --all-files
-env:
-  global:
-    - secure: bCzwjA2giSbv4/eyVqh71t3I59YsNv1FTCNXsHPBMsK1jZXjYQ9yWWigjouzrQUWZsFto1DQRaL7qreDrlaFOEdYDXv8f0Lo3xQcUhyWgC22rRlBIEFbkaoQJP4xxbM+Q8Zq7IEkWPfl9jgTg1F34oBvsNBolbsM6QZ2o2c5HOo/h08Zr97a6+FhyG9R1TAE5RfyvoJtItsf8OEEK05EvWhqiLIe7cPkim6x/hKKBS3YfgTwTpnM245rJR2hiIIfdoEURbqZ0xdIV8VFhO1mQEc5CMOkPmat+8oBpB7rewFq99pZOTWCnJ59mNPz6J9ZrSHMshU6MoYJ8mnMDZ44K1+zjrYtrRn5YSKVXN8ZyGmeXOHfFN5VhY1AcuytoPIbSRoEyjhc/0Vgc5624PXX7XPATiB+OyWFhKe81WxJrjKn/Yg9OcCWb+1ztbebCVBgekcNOSA9MoRLDxhy41zR5c/3B1CljxFgDpF04KwBLXdfT5rxlG7PH0RFcMWNoMHVaL5wcNpsOehlbIA+zxnxbQA3Fm2wzFrGFmJ7U635efczrcb5mSm9j5cj8ULeyv2HtPsuTnJ0QuOUSboZAW+oDOw76wAa4MeWlZfM/2yyvCrEgqMh6V82GqYm8+T4pVlFOG/vOPYljZEsOEhwAOkoZZq3brd90ZIlUs9jkh9/Usg=
-    - secure: lp60nRuUxFiABJSg/nJFUdndfrKDOZ0QYP7IoCGpn0pXgU3bWDLioRqWL8LxWLXULYTvdE+mrjX4iRNv1ifOaIxbQI2cZR8bpFNIpvdSQpkB+H62nCnbQSFBtO19XfqzInqvJcwcH7rQ3qKQv1XdG4NQD0PQO99EdU/QInHgkqHSxZotlIUXR2A0MYuIuStsAyOCUilksIHLtVPy22XhciXZXsVUbBC1e/TvNQybQ52JZEcX9TPKTL78btRxxL13oTSjFRiM+aynT+GkQRMTOY7ohWvr+bNispiFGOqzqmsHOQjv5k4PET29T+lXEQcNAM9I1mOsrVXhi4E4x9LGyikUDWMzIo2upNXulS4Ipd7d5MTTLSY4Fi4m//Qwx4+HZcd+xORDTBslgLDColM7XGMwxK2jWE/UdktWcF8efd3rEeJ/U97lpy61y0ai+Ktk0UDdUvZtNQJmbHjPp2Fm841CMiWpBhFH+z4dq8u0Dq4qOicJlkEHLjK7X6aO8iApyTCBwcwro+qXFkOhG550OxyUjKxVsv5zLCBN0u4pgmWhM9i6kugymc77e7guIDY9rUIQwterhesKKHaPqZBnl9rzk39ny9nervQiTcN6M2sRmRcfZt2oJWfcSBGtakscemMOxg03E874m86JwmXKY3A+ie4obq7NpH17TZtmE+I=
 install:
   - pip install poetry
   - poetry install
   - pip install coveralls
 script:
-  - pytest --cov=reformat_gherkin/
+  - pytest --cov
 after_success:
   - coveralls
-before_deploy:
-  - poetry config http-basic.pypi $PYPI_USERNAME $PYPI_PASSWORD
-  - poetry build
 deploy:
-  provider: script
-  script: poetry publish
+  provider: pypi
+  username: __token__
+  password:
+    secure: Mos4EuuXhINiPZwTnY2lAaIepKa0g71eJaEo8APsG6Or/deCI/kgWaboRfqxcQ3jsHkHC0E5xPR9Sh8quGu/BSh9O7a0988X+gjvKBJ48h7JcHElfGnWU2CCMcnQqQs91BOvBQbqt14I2Pm+2G2TDwo+rmNvkvYag2GfwG0GuzyZ6FWQ2vVkuOCafadE5QwODBE7n6NbJfwEovRSd7GVU8CUdw3hYemOcwJ0xNiO3A3iWJydvpmmRtdeOfVpYa19IWuSjAPN2RJ+EqZSRTeSfCZOkTOQMXdm9WuwYdYzdSHj7XZxMGlioWbBTDjS6EFIQMqWI2up2RN0/ierU+hmotJB+wza6reZjb7vnRWTQCPlhK2gpfb5+z3R9tm5NmOCpeeIEO9lK3MGDU/96QlmhWLYmtPky5TWnmF+RNYUouV3IBSCpx9RfIPtUU3s+AdmcMKVo/vPJKmeZu2dqwXvTzU3Ck3bcd+NTz3lFukyT2vvGYLAbepmP1IjdiNGyx4cm6Oj1qXOqTqEr8HaHJvl6BIgqS+SdbfLjPSKWcYvNpvMzOodW0K6EBnkuVnmbQPGw0kQQChY9UwDDeV0qjPk1YKcbUuqYKFdZthgZOd4rH4LVkaI6vdFYYfmlFRZMSSwsg9eZEkPotgE4qwkvDJV4D+N8z0WHuIBJPxV7ga5O9s=
   skip_cleanup: true
   on:
     branch: master

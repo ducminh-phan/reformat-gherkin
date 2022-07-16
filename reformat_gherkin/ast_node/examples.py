@@ -11,9 +11,9 @@ class Examples(LocationMixin):
     keyword: str
     name: str
     tags: Tuple[Tag, ...]
+    description: str
+    table_body: Tuple[TableRow, ...]
     table_header: Optional[TableRow] = None
-    table_body: Optional[Tuple[TableRow, ...]] = None
-    description: Optional[str] = None
 
     def __iter__(self):
         yield from self.tags
@@ -23,5 +23,4 @@ class Examples(LocationMixin):
         if self.table_header is not None:
             yield self.table_header
 
-        if self.table_body is not None:
-            yield from self.table_body
+        yield from self.table_body

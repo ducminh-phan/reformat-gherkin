@@ -21,7 +21,10 @@ from .utils import decode_stream, diff, dump_to_file, err, open_stream_or_path
 
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
-NEWLINE_FROM_OPTION = {NewlineMode.CRLF: "\r\n", NewlineMode.LF: "\n"}
+NEWLINE_FROM_OPTION = {
+    NewlineMode.CRLF: "\r\n",
+    NewlineMode.LF: "\n",
+}
 
 
 def find_sources(src: Iterable[str]) -> Set[Path]:
@@ -62,7 +65,10 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 def reformat_stdin(*, options: Options) -> bool:
     output = sys.stdout.buffer if options.write_back == WriteBackMode.INPLACE else None
     return reformat_stream_or_path(
-        sys.stdin.buffer, output, force_write=True, options=options
+        sys.stdin.buffer,
+        output,
+        force_write=True,
+        options=options,
     )
 
 
@@ -134,7 +140,10 @@ def format_str(src_contents: str, *, options: Options) -> str:
     ast = parse(src_contents)
 
     line_generator = LineGenerator(
-        ast, options.step_keyword_alignment, options.tag_line_mode, options.indent
+        ast,
+        options.step_keyword_alignment,
+        options.tag_line_mode,
+        options.indent,
     )
     lines = line_generator.generate()
 

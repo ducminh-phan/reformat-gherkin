@@ -1,7 +1,6 @@
 # Reformat-gherkin
 
-[![Build Status](https://dev.azure.com/alephvn/reformat-gherkin/_apis/build/status/ducminh-phan.reformat-gherkin?branchName=master)](https://dev.azure.com/alephvn/reformat-gherkin/_build/latest?definitionId=1&branchName=master)
-&nbsp; [![Build Status](https://travis-ci.com/ducminh-phan/reformat-gherkin.svg?branch=master)](https://travis-ci.com/ducminh-phan/reformat-gherkin)
+[![Test](https://github.com/ducminh-phan/reformat-gherkin/actions/workflows/test.yml/badge.svg)](https://github.com/ducminh-phan/reformat-gherkin/actions/workflows/test.yml)
 &nbsp; [![Coverage Status](https://coveralls.io/repos/github/ducminh-phan/reformat-gherkin/badge.svg?branch=master)](https://coveralls.io/github/ducminh-phan/reformat-gherkin?branch=master)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/16718a231901c293215d/maintainability)](https://codeclimate.com/github/ducminh-phan/reformat-gherkin/maintainability)

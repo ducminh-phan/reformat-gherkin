@@ -32,9 +32,10 @@ jobs:
 
       - name: Cache poetry
         uses: actions/cache@v3
+        if: matrix.os != 'windows-latest'
         with:
           path: ~/.local
-          key: poetry-${{ env.poetry_version }}
+          key: poetry-${{ matrix.python-version }}-${{ matrix.os }}-${{ env.poetry_version }}
 
       - name: Install Poetry
         uses: snok/install-poetry@v1

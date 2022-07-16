@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2022-07-16
+
+### Changed
+
+- Update `gherkin-official` version to `24.0.0`
+- Keep newlines at the end of table cell values ([#51](https://github.com/ducminh-phan/reformat-gherkin/issues/51))
+- Triple backticks in docstrings are not escaped to `` \`\`\` `` ([#32](https://github.com/ducminh-phan/reformat-gherkin/pull/32))
+
 ## [2.2.1] - 2022-03-14
 
 ### Fixed
@@ -91,7 +99,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.2.1...develop
+[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v3.0.0...develop
+[3.0.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.2.1...v3.0.0
 [2.2.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.1...v2.2.0
 [2.1.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.0...v2.1.1

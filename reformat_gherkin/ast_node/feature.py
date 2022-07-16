@@ -1,12 +1,21 @@
 from itertools import chain
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 from ._base import prepare
-from .background import Background
 from .location import LocationMixin
-from .scenario import Scenario
-from .scenario_outline import ScenarioOutline
+from .rule import Rule, RuleChildren
 from .tag import Tag
+
+
+@prepare
+class FeatureChildren(RuleChildren):
+    rule: Optional[Rule] = None
+
+    def __iter__(self):
+        yield from super().__iter__()
+
+        if self.rule is not None:
+            yield from self.rule
 
 
 @prepare
@@ -14,9 +23,9 @@ class Feature(LocationMixin):
     language: str
     keyword: str
     name: str
-    children: Tuple[Union[Background, Scenario, ScenarioOutline], ...]
+    children: Tuple[FeatureChildren, ...]
     tags: Tuple[Tag, ...]
-    description: Optional[str] = None
+    description: str
 
     def __iter__(self):
         yield from self.tags

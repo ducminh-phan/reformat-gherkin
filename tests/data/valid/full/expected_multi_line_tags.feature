@@ -60,6 +60,39 @@ Feature: Some meaningful feature
     When I exit the bank
     Then the police will start to chase me
 
+  Rule: There can be only One
+
+    Background: A rule can has a background
+      A description for this background
+
+    @tag-for-example-in-rule
+    Example: Only One -- More than one alive
+      # Comment in step in example in rule
+      Given there are 3 ninjas
+      And there are more than one ninja alive
+      When 2 ninjas meet, they will fight
+      Then one ninja dies (but not me)
+      And there is one ninja less alive
+
+    Example: Only One -- One alive
+      Given there is only 1 ninja alive
+      Then he (or she) will live forever ;-)
+
+  Rule: A rule, looks like nested, but actually not
+    A very meaningful description for this rule
+
+    Scenario Outline: A scenario in a rule
+      # Another comment in step in example in rule
+      Given a setup step
+      Then a condition is satisfied
+      And the answer is <Answer>
+
+      @examples-tag
+      Examples: Examples
+        This is the description for these examples
+
+        | Answer | 42 |
+
 # The next line is a comment with spaces only, it should be stripped
 #
 # Some random comment at the end of the document

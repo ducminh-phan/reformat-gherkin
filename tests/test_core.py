@@ -57,7 +57,8 @@ def test_assert_stable_fail(options):
 
 def test_format_file_contents(valid_contents):
     for src, expected_dst, options in valid_contents(
-        with_expected=True, with_options=True
+        with_expected=True,
+        with_options=True,
     ):
         dst = core.format_file_contents(src, options=options)
 
@@ -85,7 +86,9 @@ def test_format_file_contents_no_change(options):
 def test_line_separators_changed(source_with_newline, newline_mode, newline):
     options = OPTIONS[0]
     options = attr.evolve(
-        options, write_back=core.WriteBackMode.INPLACE, newline=newline_mode
+        options,
+        write_back=core.WriteBackMode.INPLACE,
+        newline=newline_mode,
     )
 
     source = source_with_newline(newline)

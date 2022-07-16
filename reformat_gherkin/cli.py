@@ -44,7 +44,12 @@ from .version import __version__
 @click.option(
     "-a",
     "--alignment",
-    type=click.Choice([AlignmentMode.LEFT.value, AlignmentMode.RIGHT.value]),
+    type=click.Choice(
+        [
+            AlignmentMode.LEFT.value,
+            AlignmentMode.RIGHT.value,
+        ]
+    ),
     help=(
         "Specify the alignment of step keywords (Given, When, Then,...). "
         "If specified, all statements after step keywords are left-aligned, "
@@ -56,7 +61,12 @@ from .version import __version__
 @click.option(
     "-n",
     "--newline",
-    type=click.Choice([NewlineMode.LF.value, NewlineMode.CRLF.value]),
+    type=click.Choice(
+        [
+            NewlineMode.LF.value,
+            NewlineMode.CRLF.value,
+        ]
+    ),
     help=(
         "Specify the line separators when formatting files inplace. "
         "If not specified, line separators are preserved."
@@ -92,7 +102,11 @@ from .version import __version__
 @click.option(
     "--config",
     type=click.Path(
-        exists=True, file_okay=True, dir_okay=False, readable=True, allow_dash=False
+        exists=True,
+        file_okay=True,
+        dir_okay=False,
+        readable=True,
+        allow_dash=False,
     ),
     is_eager=True,
     callback=read_config_file,
@@ -117,7 +131,11 @@ def main(
     is passed as a file, reformat stdin and print the result to stdout.
     """
     if config:
-        out(f"Using configuration from {config}.", bold=False, fg="blue")
+        out(
+            f"Using configuration from {config}.",
+            bold=False,
+            fg="blue",
+        )
 
     write_back_mode = WriteBackMode.from_configuration(check)
     alignment_mode = AlignmentMode.from_configuration(alignment)

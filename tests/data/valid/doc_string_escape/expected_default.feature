@@ -21,8 +21,8 @@ Feature: Docstrings
     And I have a nested single-quote docstring
       """
       This is a backtick docstring.
-        \`\`\`
+        ```
         It also has an escaped docstring inside it.
-        \`\`\`
+        ```
       """
     Then the escaped characters are printed when the document is reformatted

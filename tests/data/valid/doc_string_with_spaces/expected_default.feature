@@ -17,3 +17,8 @@ Feature: Docstrings with spaces
 
       That empty line has no spaces on it
       """
+    And There is a docstring with backticks as delimiters
+      """
+      This docstring has backticks as delimiters
+      The delimiters should be \"\"\" after being formatted
+      """

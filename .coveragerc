@@ -1,0 +1,12 @@
+[run]
+source = reformat_gherkin
+omit = reformat_gherkin/__main__.py
+
+relative_files = True
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if TYPE_CHECKING:
+    @abstractmethod
+    @overload

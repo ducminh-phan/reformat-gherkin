@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2022-10-04
+
+### Fixed
+
+- Fix `cattrs`'s breaking changes ([#59](https://github.com/ducminh-phan/reformat-gherkin/issues/59))
+
 ## [3.0.0] - 2022-07-16
 
 ### Changed
@@ -99,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v3.0.0...develop
+[unreleased]: https://github.com/ducminh-phan/reformat-gherkin/compare/v3.0.1...develop
+[3.0.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.2.1...v3.0.0
 [2.2.1]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/ducminh-phan/reformat-gherkin/compare/v2.1.1...v2.2.0

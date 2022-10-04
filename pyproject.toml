@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reformat-gherkin"
-version = "3.0.0"
+version = "3.0.1"
 description = "Formatter for Gherkin language"
 readme = "README.md"
 authors = ["Duc-Minh Phan <alephvn@gmail.com>"]

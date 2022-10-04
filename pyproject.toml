@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reformat-gherkin"
-version = "3.0.0"
+version = "3.0.1"
 description = "Formatter for Gherkin language"
 readme = "README.md"
 authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
@@ -31,7 +31,7 @@ reformat-gherkin = "reformat_gherkin.cli:main"
 python = "^3.7"
 PyYAML = ">=5.4"
 attrs = ">=20.2"
-cattrs = ">=1.1"
+cattrs = ">=1.1, <22.2"
 click = ">=7"
 gherkin-official = "24.0.0"
 wcwidth = "^0.2.5"

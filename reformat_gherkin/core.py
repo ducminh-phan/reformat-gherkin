@@ -63,7 +63,7 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 
 
 def reformat_stdin(*, options: Options) -> bool:
-    output = sys.stdout.buffer if options.write_back == WriteBackMode.INPLACE else None
+    output = sys.stdout.buffer if options.write_back is WriteBackMode.INPLACE else None
     return reformat_stream_or_path(
         sys.stdin.buffer,
         output,
@@ -73,7 +73,7 @@ def reformat_stdin(*, options: Options) -> bool:
 
 
 def reformat_single_file(path: Path, *, options: Options) -> bool:
-    out_path = path if options.write_back == WriteBackMode.INPLACE else None
+    out_path = path if options.write_back is WriteBackMode.INPLACE else None
     return reformat_stream_or_path(path, out_path, options=options)
 
 

@@ -1,5 +1,4 @@
 from itertools import chain
-from typing import Tuple
 
 from ._base import prepare
 from .examples import Examples
@@ -12,10 +11,10 @@ from .tag import Tag
 class Scenario(LocationMixin):
     keyword: str
     name: str
-    steps: Tuple[Step, ...]
-    tags: Tuple[Tag, ...]
+    steps: tuple[Step, ...]
+    tags: tuple[Tag, ...]
     description: str
-    examples: Tuple[Examples, ...]
+    examples: tuple[Examples, ...]
 
     def __iter__(self):
         yield from self.tags

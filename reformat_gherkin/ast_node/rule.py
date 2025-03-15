@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import Optional, Tuple
+from typing import Optional
 
 from ._base import prepare
 from .background import Background
@@ -25,8 +25,8 @@ class RuleChildren:
 class Rule(LocationMixin):
     keyword: str
     name: str
-    tags: Tuple[Tag, ...]
-    children: Tuple[RuleChildren, ...]
+    tags: tuple[Tag, ...]
+    children: tuple[RuleChildren, ...]
     description: str
 
     def __iter__(self):

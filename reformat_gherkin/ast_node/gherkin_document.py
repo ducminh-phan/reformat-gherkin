@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 from ._base import prepare
 from .comment import Comment
@@ -7,7 +7,7 @@ from .feature import Feature
 
 @prepare
 class GherkinDocument:
-    comments: Tuple[Comment, ...]
+    comments: tuple[Comment, ...]
     feature: Optional[Feature] = None
 
     def __iter__(self):

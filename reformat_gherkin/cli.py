@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 import click
 
@@ -116,7 +116,7 @@ from .version import __version__
 @click.pass_context
 def main(
     ctx: click.Context,
-    src: Tuple[str],
+    src: tuple[str],
     check: bool,
     alignment: Optional[str],
     newline: Optional[str],

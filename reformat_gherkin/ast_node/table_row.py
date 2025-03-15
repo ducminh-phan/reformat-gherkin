@@ -1,4 +1,3 @@
-from typing import Tuple
 
 from ._base import prepare
 from .location import LocationMixin
@@ -7,7 +6,7 @@ from .table_cell import TableCell
 
 @prepare
 class TableRow(LocationMixin):
-    cells: Tuple[TableCell, ...]
+    cells: tuple[TableCell, ...]
 
     def __len__(self):
         return len(self.cells)

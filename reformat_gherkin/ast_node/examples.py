@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 from ._base import prepare
 from .location import LocationMixin
@@ -10,9 +10,9 @@ from .tag import Tag
 class Examples(LocationMixin):
     keyword: str
     name: str
-    tags: Tuple[Tag, ...]
+    tags: tuple[Tag, ...]
     description: str
-    table_body: Tuple[TableRow, ...]
+    table_body: tuple[TableRow, ...]
     table_header: Optional[TableRow] = None
 
     def __iter__(self):

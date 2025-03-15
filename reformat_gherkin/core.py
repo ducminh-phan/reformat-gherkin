@@ -1,8 +1,9 @@
 import sys
 import traceback
+from collections.abc import Iterable, Iterator
 from io import TextIOWrapper
 from pathlib import Path
-from typing import BinaryIO, Iterable, Iterator, Set, Tuple, Union
+from typing import BinaryIO, Union
 
 from .ast_node import GherkinDocument
 from .errors import (
@@ -28,8 +29,8 @@ NEWLINE_FROM_OPTION = {
 }
 
 
-def find_sources(src: Iterable[str]) -> Set[Path]:
-    sources: Set[Path] = set()
+def find_sources(src: Iterable[str]) -> set[Path]:
+    sources: set[Path] = set()
 
     for s in src:
         path = Path(s).resolve()
@@ -44,7 +45,7 @@ def find_sources(src: Iterable[str]) -> Set[Path]:
     return sources
 
 
-def reformat(src: Tuple[str], report: Report, *, options: Options):
+def reformat(src: tuple[str], report: Report, *, options: Options):
     use_stdin = "-" in src
     sources = find_sources(filter((lambda it: it != "-"), src))
 

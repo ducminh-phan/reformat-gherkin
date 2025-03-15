@@ -2,8 +2,8 @@ import hashlib
 import shutil
 import subprocess
 import tempfile
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 
 GHERKIN_TEST_DATA_DIR = Path("tests/gherkin_test_data")

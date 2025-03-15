@@ -19,6 +19,7 @@ from .parser import parse
 from .report import Report
 from .utils import decode_stream, diff, dump_to_file, err, open_stream_or_path
 
+
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
 NEWLINE_FROM_OPTION = {
@@ -173,7 +174,7 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"{exc}\n"
             f"Please report a bug on {REPORT_URL}.\n"
             f"This invalid output might be helpful:\n"
-            f"{log}\n"
+            f"{log}\n",
         ) from exc
 
     src_ast_str = "\n".join(_v(src_ast))
@@ -185,7 +186,7 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"INTERNAL ERROR: The new content produced is not equivalent to "
             f"the source.\n"
             f"Please report a bug on {REPORT_URL}.\n"
-            f"This diff might be helpful: {log}\n"
+            f"This diff might be helpful: {log}\n",
         )
 
 
@@ -203,5 +204,5 @@ def assert_stable(src: str, dst: str, *, options: Options) -> None:
             f"INTERNAL ERROR: Different contents are produced on the second pass "
             f"of the formatter.\n"
             f"Please report a bug on {REPORT_URL}.\n"
-            f"This diff might be helpful: {log}\n"
+            f"This diff might be helpful: {log}\n",
         ) from None

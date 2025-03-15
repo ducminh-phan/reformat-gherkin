@@ -1,4 +1,5 @@
 from reformat_gherkin.core import reformat_stream_or_path
+
 from tests.conftest import TEST_DIR
 from tests.helpers import FILENAME_OPTION_MAP
 

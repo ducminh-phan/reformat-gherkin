@@ -10,6 +10,7 @@ from reformat_gherkin.errors import (
     NothingChanged,
     StableError,
 )
+
 from tests.helpers import OPTIONS, dump_to_stderr, get_content
 
 

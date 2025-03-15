@@ -16,6 +16,7 @@ from .table_row import TableRow
 from .tag import Tag
 from .tag_group import TagGroup
 
+
 Node = Union[
     Background,
     Comment,

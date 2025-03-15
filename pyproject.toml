@@ -7,9 +7,9 @@ authors = ["Duc-Minh Phan <alephvn@gmail.com>"]
 homepage = "https://github.com/ducminh-phan/reformat-gherkin"
 license = "MIT"
 packages = [
-    {include = "reformat_gherkin"}
+    { include = "reformat_gherkin" }
 ]
-classifiers=[
+classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
@@ -21,6 +21,8 @@ classifiers=[
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Quality Assurance",
 ]
 
@@ -43,6 +45,73 @@ coverage = "^6.4.1"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Same as Black.
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "F", # Pyflakes
+    "E", # Pycodestyle
+    "W", # Pycodestyle
+    "I", # isort
+    "COM", # flake8-commas
+    "C4", # flake8-comprehensions
+    "ISC", # flake8-implicit-str-concat
+    "INP", # flake8-no-pep420
+    "T20", # flake8-print
+    "RSE", # flake8-raise
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "C90", # mccabe
+    "RUF", # Ruff-specific rules
+]
+
+ignore = [
+    "S101",
+    "S105",
+    "S301",
+]
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+split-on-trailing-comma = false
+forced-separate = ["tests"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"scripts/*" = ["T201"]
+
+[tool.mypy]
+ignore_missing_imports = true
+strict_optional = true
+follow_imports = "silent"
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disable_error_code = "var-annotated"
+
+[tool.coverage.run]
+source = ["reformat_gherkin"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "@overload",
+]

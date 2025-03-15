@@ -8,6 +8,7 @@ from reformat_gherkin.options import (
     WriteBackMode,
 )
 
+
 TEST_DIR = Path("tests")
 GHERKIN_TEST_DATA_DIR = TEST_DIR / "gherkin_test_data"
 

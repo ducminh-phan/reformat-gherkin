@@ -46,6 +46,16 @@ Feature: Some meaningful feature
     ```
     And   I see a lot of money
 
+    And   we have a docstring with json
+    """json
+    {
+    "errors": [{
+      "title": "field X cannot be empty",
+      "status": "422"
+    }]
+    }
+    """
+
 
     # Examples can have tags? Hmmm...
   @test-examples-tags

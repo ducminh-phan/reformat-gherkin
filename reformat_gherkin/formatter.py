@@ -190,7 +190,7 @@ def generate_doc_string_lines(
     indent_level: int,
 ) -> list[str]:
     raw_lines = docstring.content.splitlines()
-    raw_lines = ['"""', *raw_lines, '"""']
+    raw_lines = [f'"""{docstring.media_type}', *raw_lines, '"""']
 
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 

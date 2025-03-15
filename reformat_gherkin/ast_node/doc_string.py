@@ -12,6 +12,7 @@ def escape_doc_string_value(text: str) -> str:
 @prepare
 class DocString(LocationMixin):
     content: str = attrib(converter=escape_doc_string_value)
+    media_type: str = ""
 
     def __iter__(self):
         yield self

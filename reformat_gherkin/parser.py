@@ -1,6 +1,6 @@
 import io
 import textwrap
-from typing import Any, Dict, Type, TypeVar
+from typing import Any, TypeVar
 
 from cattr.converters import Converter
 from gherkin.errors import ParserError
@@ -16,7 +16,7 @@ T = TypeVar("T")
 
 
 class CustomConverter(Converter):
-    def structure_attrs_fromdict(self, obj: Dict[str, Any], cls: Type[T]) -> T:
+    def structure_attrs_fromdict(self, obj: dict[str, Any], cls: type[T]) -> T:
         # Note that keys are in camelCase convention, for example, tableHeader,
         # tableBody. Therefore, we need to convert the keys to snake_case.
         transformed_obj = {}
@@ -31,7 +31,7 @@ class CustomConverter(Converter):
 
             transformed_obj[camel_to_snake_case(key)] = value
 
-        return super(CustomConverter, self).structure_attrs_fromdict(
+        return super().structure_attrs_fromdict(
             transformed_obj,
             cls,
         )

@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import Optional, Tuple
+from typing import Optional
 
 from ._base import prepare
 from .location import LocationMixin
@@ -23,8 +23,8 @@ class Feature(LocationMixin):
     language: str
     keyword: str
     name: str
-    children: Tuple[FeatureChildren, ...]
-    tags: Tuple[Tag, ...]
+    children: tuple[FeatureChildren, ...]
+    tags: tuple[Tag, ...]
     description: str
 
     def __iter__(self):

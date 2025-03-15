@@ -1,5 +1,6 @@
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Optional
 
 import click
 import yaml
@@ -61,7 +62,7 @@ def read_config_file(
             return None
 
     try:
-        with open(value, "r") as f:
+        with open(value) as f:
             config = yaml.safe_load(f)
     except (yaml.YAMLError, OSError) as e:
         raise click.FileError(

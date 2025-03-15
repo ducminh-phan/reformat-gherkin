@@ -6,7 +6,7 @@ import tokenize
 from contextlib import nullcontext
 from functools import lru_cache, partial
 from pathlib import Path
-from typing import IO, AnyStr, BinaryIO, Tuple, Union
+from typing import IO, AnyStr, BinaryIO, Union
 
 import click
 from wcwidth import wcswidth
@@ -19,7 +19,7 @@ _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
 _all_cap_re = re.compile(r"([a-z\d])([A-Z])")
 
 
-@lru_cache()
+@lru_cache
 def camel_to_snake_case(name: str) -> str:
     """
     Convert camelCase to snake_case.
@@ -79,7 +79,7 @@ def remove_trailing_spaces(string: str) -> str:
     return "\n".join(line.rstrip() for line in lines)
 
 
-def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
+def decode_stream(src: BinaryIO) -> tuple[str, str, str]:
     """
     Return a tuple of (decoded_contents, encoding, newline).
 
@@ -98,7 +98,7 @@ def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
         return tiow.read(), encoding, newline
 
 
-@lru_cache()
+@lru_cache
 def get_display_width(text: str) -> int:
     """
     Get the display width of a string.

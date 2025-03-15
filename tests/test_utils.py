@@ -29,7 +29,7 @@ def test_dump_to_file(output, content):
 
     name = f(*output)
 
-    with open(name, "r") as file:
+    with open(name) as file:
         assert file.read() == content
 
     os.remove(name)

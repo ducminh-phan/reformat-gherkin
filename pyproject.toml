@@ -55,6 +55,8 @@ build-backend = "poetry.core.masonry.api"
 # Same as Black.
 line-length = 88
 
+target-version = "py39"
+
 [tool.ruff.lint]
 select = [
     "F", # Pyflakes
@@ -70,6 +72,7 @@ select = [
     "RET", # flake8-return
     "SIM", # flake8-simplify
     "C90", # mccabe
+    "UP", # pyupgrade
     "RUF", # Ruff-specific rules
 ]
 

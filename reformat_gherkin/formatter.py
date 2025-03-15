@@ -1,16 +1,6 @@
+from collections.abc import Iterator, Mapping
 from itertools import chain, groupby
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
-    Set,
-    Union,
-    overload,
-)
+from typing import Any, Callable, Optional, Union, overload
 
 from attr import attrib, dataclass
 
@@ -121,7 +111,7 @@ def generate_description_lines(
     description: str,
     indent: str,
     indent_level: int,
-) -> List[str]:
+) -> list[str]:
     description_lines = description.splitlines()
 
     lines = [f"{indent * indent_level}{line}" for line in description_lines]
@@ -134,10 +124,10 @@ def generate_description_lines(
 
 
 def generate_table_lines(
-    rows: List[TableRow],
+    rows: list[TableRow],
     indent: str,
     indent_level: int,
-) -> List[str]:
+) -> list[str]:
     """
     Generate lines for table. The columns in a table need to have the same width.
     """
@@ -171,7 +161,7 @@ def generate_table_lines(
     return [f"{indent * indent_level}{line}" for line in lines]
 
 
-def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
+def extract_rows(node: Union[DataTable, Examples]) -> list[TableRow]:
     """
     Extract table rows from either a Datable or Example instance.
     """
@@ -198,14 +188,14 @@ def generate_doc_string_lines(
     docstring: DocString,
     indent: str,
     indent_level: int,
-) -> List[str]:
+) -> list[str]:
     raw_lines = docstring.content.splitlines()
     raw_lines = ['"""', *raw_lines, '"""']
 
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 
 
-ContextMap = Dict[Union[Comment, Tag, TagGroup, TableRow], Any]
+ContextMap = dict[Union[Comment, Tag, TagGroup, TableRow], Any]
 Lines = Iterator[str]
 
 
@@ -216,10 +206,10 @@ class LineGenerator:
     tag_line_mode: TagLineMode
     indent: str
 
-    __nodes: List[Node] = attrib(init=False)
+    __nodes: list[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
-    __nodes_with_newline: Set[Node] = attrib(init=False)
-    __nodes_within_rules: Set[Node] = attrib(init=False)
+    __nodes_with_newline: set[Node] = attrib(init=False)
+    __nodes_within_rules: set[Node] = attrib(init=False)
     __max_step_keyword_width: int = attrib(init=False)
 
     def __attrs_post_init__(self):
@@ -244,7 +234,7 @@ class LineGenerator:
         Group the tags of a node, so that we can render them on a single line.
         """
 
-        tag_groups: List[TagGroup] = []
+        tag_groups: list[TagGroup] = []
         node: Node
         for node in self.ast:
             if hasattr(node, "tags"):
@@ -306,7 +296,7 @@ class LineGenerator:
         return contexts
 
     @staticmethod
-    def __construct_contexts_for_comments(nodes: List[Node]) -> ContextMap:
+    def __construct_contexts_for_comments(nodes: list[Node]) -> ContextMap:
         # The context of each comment line is the next non-comment line.
         #
         # The steps of the algorithm:
@@ -340,12 +330,12 @@ class LineGenerator:
 
         return contexts
 
-    def __find_nodes_with_newline(self) -> Set[Node]:
+    def __find_nodes_with_newline(self) -> set[Node]:
         """
         Find all nodes in the AST that needs a new line after it.
         """
 
-        nodes_with_newline: Set[Node] = set()
+        nodes_with_newline: set[Node] = set()
 
         node: Optional[Node] = None
 
@@ -356,7 +346,7 @@ class LineGenerator:
             if isinstance(node, (Feature, Rule)) and not node.description:
                 nodes_with_newline.add(node)
 
-            children: List[Node] = []
+            children: list[Node] = []
 
             # Add an empty line after the last step, including its argument, if any
             if isinstance(node, (Background, Scenario)):
@@ -376,8 +366,8 @@ class LineGenerator:
 
         return nodes_with_newline
 
-    def __find_nodes_within_rules(self) -> Set[Node]:
-        nodes_within_rules: Set[Node] = set()
+    def __find_nodes_within_rules(self) -> set[Node]:
+        nodes_within_rules: set[Node] = set()
 
         feature = self.ast.feature
         if feature is not None:

@@ -1,3 +1,5 @@
+# ruff: noqa: RUF001
+
 import os
 from io import BytesIO, StringIO
 
@@ -27,8 +29,8 @@ def test_dump_to_file(output, content):
 
     name = f(*output)
 
-    with open(name, "r") as f:
-        assert f.read() == content
+    with open(name, "r") as file:
+        assert file.read() == content
 
     os.remove(name)
 

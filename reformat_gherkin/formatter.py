@@ -34,6 +34,7 @@ from .ast_node import (
 from .options import AlignmentMode, TagLineMode
 from .utils import camel_to_snake_case, extract_beginning_spaces, get_display_width
 
+
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
     Feature: 0,
     Background: 1,
@@ -104,8 +105,7 @@ def format_step_keyword(
 
     if keyword_alignment is AlignmentMode.LEFT:
         return keyword + padding
-    else:
-        return padding + keyword
+    return padding + keyword
 
 
 def generate_keyword_line(
@@ -200,7 +200,7 @@ def generate_doc_string_lines(
     indent_level: int,
 ) -> List[str]:
     raw_lines = docstring.content.splitlines()
-    raw_lines = ['"""'] + raw_lines + ['"""']
+    raw_lines = ['"""', *raw_lines, '"""']
 
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 
@@ -223,7 +223,8 @@ class LineGenerator:
     __max_step_keyword_width: int = attrib(init=False)
 
     def __attrs_post_init__(self):
-        # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
+        # Use `__attrs_post_init__` instead of `property`
+        # to avoid re-computing attributes
 
         self.__nodes = list(self.ast)
 
@@ -328,7 +329,8 @@ class LineGenerator:
         for key, group in groups:
             if key is False:
                 # The current group consists of non-comments, we set the current context
-                # to be the last node in the group, since we grouped in the reverse order
+                # to be the last node in the group, since we grouped in the reverse
+                # order
                 current_context = list(group)[-1]
             else:
                 # The current group consists of comments. These comments should have the

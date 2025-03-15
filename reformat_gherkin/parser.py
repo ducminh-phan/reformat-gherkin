@@ -11,6 +11,7 @@ from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
 from .utils import camel_to_snake_case, remove_trailing_spaces
 
+
 T = TypeVar("T")
 
 
@@ -31,7 +32,8 @@ class CustomConverter(Converter):
             transformed_obj[camel_to_snake_case(key)] = value
 
         return super(CustomConverter, self).structure_attrs_fromdict(
-            transformed_obj, cls
+            transformed_obj,
+            cls,
         )
 
 

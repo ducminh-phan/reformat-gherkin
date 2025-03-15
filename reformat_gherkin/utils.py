@@ -11,6 +11,7 @@ from typing import IO, AnyStr, BinaryIO, Tuple, Union
 import click
 from wcwidth import wcswidth
 
+
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
 
@@ -57,7 +58,7 @@ def diff(a: str, b: str, a_name: str, b_name: str) -> str:
             fromfile=a_name,
             tofile=b_name,
             n=5,
-        )
+        ),
     )
 
 
@@ -91,7 +92,7 @@ def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
     if not lines:
         return "", encoding, "\n"
 
-    newline = "\r\n" if b"\r\n" == lines[0][-2:] else "\n"
+    newline = "\r\n" if lines[0][-2:] == b"\r\n" else "\n"
     src.seek(0)
     with io.TextIOWrapper(src, encoding) as tiow:
         return tiow.read(), encoding, newline
@@ -121,5 +122,5 @@ def get_display_width(text: str) -> int:
 def open_stream_or_path(stream_or_path: Union[IO[AnyStr], Path], mode: str):
     if isinstance(stream_or_path, Path):
         return open(stream_or_path, mode)
-    else:
-        return nullcontext(stream_or_path)
+
+    return nullcontext(stream_or_path)

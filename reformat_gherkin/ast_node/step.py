@@ -1,15 +1,14 @@
 from typing import Optional
 
-from ._base import prepare
+from ._base import GherkinString
 from .data_table import DataTable
 from .doc_string import DocString
 from .location import LocationMixin
 
 
-@prepare
 class Step(LocationMixin):
-    keyword: str
-    text: str
+    keyword: GherkinString
+    text: GherkinString
     data_table: Optional[DataTable] = None
     doc_string: Optional[DocString] = None
 

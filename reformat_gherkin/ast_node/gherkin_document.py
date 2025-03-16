@@ -1,12 +1,11 @@
 from typing import Optional
 
-from ._base import prepare
+from ._base import BaseNode
 from .comment import Comment
 from .feature import Feature
 
 
-@prepare
-class GherkinDocument:
+class GherkinDocument(BaseNode):
     comments: tuple[Comment, ...]
     feature: Optional[Feature] = None
 

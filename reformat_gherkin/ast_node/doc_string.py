@@ -1,6 +1,8 @@
-from attr import attrib
+from typing import Annotated
 
-from ._base import prepare
+from pydantic import AfterValidator
+
+from ._base import GherkinString
 from .location import LocationMixin
 
 
@@ -9,10 +11,9 @@ def escape_doc_string_value(text: str) -> str:
     return text.replace('"""', '\\"\\"\\"')
 
 
-@prepare
 class DocString(LocationMixin):
-    content: str = attrib(converter=escape_doc_string_value)
-    media_type: str = ""
+    content: Annotated[GherkinString, AfterValidator(escape_doc_string_value)]
+    media_type: GherkinString = ""
 
     def __iter__(self):
         yield self

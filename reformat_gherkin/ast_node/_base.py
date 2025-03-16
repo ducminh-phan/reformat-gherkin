@@ -1,18 +1,29 @@
-from attr import dataclass
+import textwrap
+from typing import Annotated
+
+from pydantic import AfterValidator, BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
+
+from reformat_gherkin.utils import remove_trailing_spaces
 
 
-def prepare(cls=None, slots=True, frozen=True, eq=False):
-    """
-    A common class decorator to decorate AST node classes. We can either use `@prepare`
-    with default parameters, or `@prepare(...)` to override the default values of the
-    parameters. By default, `eq=False` makes the objects hashable, and the hash is an
-    object's id. Therefore, every AST node is unique, even if they have identical
-    attributes (think of two identical rows or steps at two different places in a
-    document).
-    """
-    wrapper = dataclass(slots=slots, frozen=frozen, eq=eq)
+class BaseNode(BaseModel):
+    model_config = ConfigDict(
+        frozen=True,
+        # The result keys from gherkin parser are in camelCase convention, for example,
+        # tableHeader, tableBody.
+        alias_generator=to_camel,
+    )
 
-    if cls is None:
-        return wrapper
 
-    return wrapper(cls)
+def gherkin_string_validator(value: str) -> str:
+    # For some types of node, the indentation of the lines is included
+    # in the value of such nodes. Then the indentation can be changed after
+    # formatting. Therefore, we need to dedent the value here for consistent
+    # results. We also need to remove trailing spaces.
+
+    value = remove_trailing_spaces(value)
+    return textwrap.dedent(value)
+
+
+GherkinString = Annotated[str, AfterValidator(gherkin_string_validator)]

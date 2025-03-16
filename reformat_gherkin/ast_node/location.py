@@ -1,14 +1,15 @@
-from attr import attrib
+from pydantic import Field
+from pydantic.dataclasses import dataclass
 
-from ._base import prepare
+from ._base import BaseNode
 
 
-@prepare(eq=True)
+@dataclass(frozen=True, eq=True, order=True)
 class Location:
     line: int
     column: int
 
 
-@prepare
-class LocationMixin:
-    location: Location = attrib(eq=False, repr=False)
+class LocationMixin(BaseNode):
+    # The location field should be excluded from model serialization for AST diff
+    location: Location = Field(exclude=True)

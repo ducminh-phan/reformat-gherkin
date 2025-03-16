@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import click
-from attr import dataclass
+from pydantic.dataclasses import dataclass
 
 from .utils import err, out
 

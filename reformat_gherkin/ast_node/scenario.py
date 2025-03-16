@@ -1,19 +1,18 @@
 from itertools import chain
 
-from ._base import prepare
+from ._base import GherkinString
 from .examples import Examples
 from .location import LocationMixin
 from .step import Step
 from .tag import Tag
 
 
-@prepare
 class Scenario(LocationMixin):
-    keyword: str
-    name: str
+    keyword: GherkinString
+    name: GherkinString
     steps: tuple[Step, ...]
     tags: tuple[Tag, ...]
-    description: str
+    description: GherkinString
     examples: tuple[Examples, ...]
 
     def __iter__(self):

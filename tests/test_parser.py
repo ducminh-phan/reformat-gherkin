@@ -1,5 +1,6 @@
 import pytest
 
+from reformat_gherkin.ast_node import GherkinDocument
 from reformat_gherkin.errors import DeserializeError, InvalidInput
 from reformat_gherkin.parser import parse
 
@@ -17,8 +18,9 @@ def test_valid_input(valid_contents):
 
 def test_parse_with_exception(mocker, valid_contents):
     exception_message = "exception message"
-    mocker.patch(
-        "reformat_gherkin.parser.converter.structure",
+    mocker.patch.object(
+        GherkinDocument,
+        "model_validate",
         side_effect=Exception(exception_message),
     )
 

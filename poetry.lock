@@ -178,13 +178,17 @@ typing = ["typing-extensions (>=4.12.2)"]
 
 [[package]]
 name = "gherkin-official"
-version = "24.0.0"
+version = "30.0.4"
 description = "Gherkin parser (official, by Cucumber team)"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "gherkin-official-24.0.0.tar.gz", hash = "sha256:c126de30ac2a2262967ddde83912511267fa76be4883418974f529292e76c415"},
+    {file = "gherkin_official-30.0.4-py3-none-any.whl", hash = "sha256:944073d0a5b16f2ecf550ee1034209d792b32ce485da655fd8074311d8623f6f"},
+    {file = "gherkin_official-30.0.4.tar.gz", hash = "sha256:20bbcdd34c6076e7152f886a8732fd0189123922e3b0b52aee6dd39085e8c7a4"},
 ]
+
+[package.dependencies]
+typing-extensions = ">=4"
 
 [[package]]
 name = "identify"
@@ -470,6 +474,17 @@ files = [
 ]
 
 [[package]]
+name = "typing-extensions"
+version = "4.12.2"
+description = "Backported and Experimental Type Hints for Python 3.8+"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
+    {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
+]
+
+[[package]]
 name = "virtualenv"
 version = "20.29.3"
 description = "Virtual Python Environment builder"
@@ -503,4 +518,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "4c2f66a1984b694d0961bea7b6fab49e7406029c307dc5d388d0042abdd881db"
+content-hash = "5b66555206b4aff17e96816bd3775ba164e002560c785d02e7d4a7243912eea1"

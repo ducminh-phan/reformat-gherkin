@@ -34,7 +34,7 @@ PyYAML = ">=5.4"
 attrs = ">=20.2"
 cattrs = ">=1.1, <22.2"
 click = ">=7"
-gherkin-official = "24.0.0"
+gherkin-official = "30.0.4"
 wcwidth = "^0.2.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -44,6 +44,7 @@ pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
 ruff = "^0.11.0"
+tomli = "^2.2.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

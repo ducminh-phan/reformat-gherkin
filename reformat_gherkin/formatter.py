@@ -1,6 +1,6 @@
 from collections.abc import Iterator, Mapping
 from itertools import chain, groupby
-from typing import Any, Callable, Optional, Union, overload
+from typing import Any, Callable, Optional, Union, cast, overload
 
 from pydantic import BaseModel
 
@@ -254,9 +254,12 @@ class LineGenerator(BaseModel):
 
         # After grouping the tags, we need to include the tag groups into
         # the list of nodes and remove the tags from the list.
-        self.__nodes = [
+        non_tag_nodes: list[Node] = [
             node for node in self.__nodes if not isinstance(node, Tag)
-        ] + tag_groups
+        ]
+        tag_groups_as_nodes = cast(list[Node], tag_groups)
+
+        self.__nodes = non_tag_nodes + tag_groups_as_nodes
 
     def __construct_contexts(self) -> ContextMap:
         """

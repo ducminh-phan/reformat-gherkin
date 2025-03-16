@@ -166,7 +166,7 @@ def generate_table_lines(
 
 def extract_rows(node: Union[DataTable, Examples]) -> list[TableRow]:
     """
-    Extract table rows from either a Datable or Example instance.
+    Extract table rows from either a DataTable or Example instance.
     """
 
     if isinstance(node, DataTable):
@@ -326,7 +326,16 @@ class LineGenerator(BaseModel):
                 # The current group consists of non-comments, we set the current context
                 # to be the last node in the group, since we grouped in the reverse
                 # order
-                current_context = list(group)[-1]
+                group_list = list(group)
+                current_context = group_list[-1]
+
+                # If the current context is a DataTable, we need to skip to the next
+                # node, which must be a TableRow. Otherwise, since DataTables are not
+                # rendered, we cannot get the indent level for the comment holding it
+                # as context.
+                if isinstance(current_context, DataTable):
+                    current_context = group_list[-2]
+
             else:
                 # The current group consists of comments. These comments should have the
                 # same indent level, which is the indent level of the current context.

@@ -24,8 +24,6 @@ Node = Union[
     DocString,
     Examples,
     Feature,
-    GherkinDocument,
-    Location,
     Rule,
     Scenario,
     Step,

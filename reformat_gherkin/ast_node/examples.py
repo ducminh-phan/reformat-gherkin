@@ -1,17 +1,16 @@
 from typing import Optional
 
-from ._base import prepare
+from ._base import GherkinString
 from .location import LocationMixin
 from .table_row import TableRow
 from .tag import Tag
 
 
-@prepare
 class Examples(LocationMixin):
-    keyword: str
-    name: str
+    keyword: GherkinString
+    name: GherkinString
     tags: tuple[Tag, ...]
-    description: str
+    description: GherkinString
     table_body: tuple[TableRow, ...]
     table_header: Optional[TableRow] = None
 

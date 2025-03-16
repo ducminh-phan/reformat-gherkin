@@ -1,16 +1,15 @@
 from itertools import chain
 
-from ._base import prepare
+from ._base import GherkinString
 from .location import LocationMixin
 from .step import Step
 
 
-@prepare
 class Background(LocationMixin):
-    keyword: str
-    name: str
+    keyword: GherkinString
+    name: GherkinString
     steps: tuple[Step, ...]
-    description: str
+    description: GherkinString
 
     def __iter__(self):
         yield self

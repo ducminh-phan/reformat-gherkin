@@ -30,11 +30,11 @@ reformat-gherkin = "reformat_gherkin.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+
 PyYAML = ">=5.4"
-attrs = ">=20.2"
-cattrs = ">=1.1, <22.2"
 click = ">=7"
 gherkin-official = "30.0.4"
+pydantic = "^2.10.6"
 wcwidth = "^0.2.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -98,6 +98,7 @@ ignore_missing_imports = true
 strict_optional = true
 follow_imports = "silent"
 check_untyped_defs = true
+plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
 module = "tests.*"

@@ -2,7 +2,7 @@ from collections.abc import Iterator, Mapping
 from itertools import chain, groupby
 from typing import Any, Callable, Optional, Union, overload
 
-from attr import attrib, dataclass
+from pydantic import BaseModel
 
 from .ast_node import (
     Background,
@@ -38,7 +38,10 @@ INDENT_LEVEL_MAP: Mapping[Any, int] = {
 
 
 def generate_language_header(language: str) -> Comment:
-    return Comment(Location(1, 1), f"# language: {language}")  # type: ignore
+    return Comment(
+        location=Location(line=1, column=1),
+        text=f"# language: {language}",
+    )
 
 
 def generate_step_line(
@@ -199,21 +202,20 @@ ContextMap = dict[Union[Comment, Tag, TagGroup, TableRow], Any]
 Lines = Iterator[str]
 
 
-@dataclass
-class LineGenerator:
+class LineGenerator(BaseModel):
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
     tag_line_mode: TagLineMode
     indent: str
 
-    __nodes: list[Node] = attrib(init=False)
-    __contexts: ContextMap = attrib(init=False)
-    __nodes_with_newline: set[Node] = attrib(init=False)
-    __nodes_within_rules: set[Node] = attrib(init=False)
-    __max_step_keyword_width: int = attrib(init=False)
+    __nodes: list[Node]
+    __contexts: ContextMap
+    __nodes_with_newline: set[Node]
+    __nodes_within_rules: set[Node]
+    __max_step_keyword_width: int
 
-    def __attrs_post_init__(self):
-        # Use `__attrs_post_init__` instead of `property`
+    def model_post_init(self, __context: Any) -> None:
+        # Use `model_post_init` instead of `property`
         # to avoid re-computing attributes
 
         self.__nodes = list(self.ast)

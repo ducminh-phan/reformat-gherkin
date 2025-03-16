@@ -26,10 +26,15 @@ def format_ast(
     tag_line_mode=TagLineMode.MULTILINE,
     indent="  ",
 ):
-    line_generator = LineGenerator(ast, alignment_mode, tag_line_mode, indent)
+    line_generator = LineGenerator(
+        ast=ast,
+        step_keyword_alignment=alignment_mode,
+        tag_line_mode=tag_line_mode,
+        indent=indent,
+    )
     lines = line_generator.generate()
     return "\n".join(lines)
 
 
 def test_format_empty_ast():
-    assert format_ast(GherkinDocument(())) == ""
+    assert format_ast(GherkinDocument(comments=())) == ""

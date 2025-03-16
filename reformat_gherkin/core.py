@@ -1,11 +1,10 @@
 import sys
 import traceback
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable
 from io import TextIOWrapper
 from pathlib import Path
 from typing import BinaryIO, Union
 
-from .ast_node import GherkinDocument
 from .errors import (
     BaseError,
     EmptySources,
@@ -142,10 +141,10 @@ def format_str(src_contents: str, *, options: Options) -> str:
     ast = parse(src_contents)
 
     line_generator = LineGenerator(
-        ast,
-        options.step_keyword_alignment,
-        options.tag_line_mode,
-        options.indent,
+        ast=ast,
+        step_keyword_alignment=options.step_keyword_alignment,
+        tag_line_mode=options.tag_line_mode,
+        indent=options.indent,
     )
     lines = line_generator.generate()
 
@@ -156,13 +155,6 @@ def assert_equivalent(src: str, dst: str) -> None:
     """
     Raise EquivalentError if `src` and `dst` aren't equivalent.
     """
-
-    def _v(ast: GherkinDocument) -> Iterator[str]:
-        """
-        Simple visitor generating strings to compare ASTs by content
-        """
-        for node in ast:
-            yield repr(node)
 
     src_ast = parse(src)
 
@@ -178,8 +170,8 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"{log}\n",
         ) from exc
 
-    src_ast_str = "\n".join(_v(src_ast))
-    dst_ast_str = "\n".join(_v(dst_ast))
+    src_ast_str = src_ast.model_dump_json(indent=2)
+    dst_ast_str = dst_ast.model_dump_json(indent=2)
 
     if src_ast_str != dst_ast_str:
         log = dump_to_file(diff(src_ast_str, dst_ast_str, "src", "dst"))

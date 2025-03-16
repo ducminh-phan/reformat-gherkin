@@ -1,43 +1,15 @@
 import io
-import textwrap
-from typing import Any, TypeVar
+from typing import TypeVar
 
-from cattr.converters import Converter
 from gherkin.errors import ParserError
 from gherkin.parser import Parser
 from gherkin.token_scanner import TokenScanner
 
 from .ast_node.gherkin_document import GherkinDocument
 from .errors import DeserializeError, InvalidInput
-from .utils import camel_to_snake_case, remove_trailing_spaces
 
 
 T = TypeVar("T")
-
-
-class CustomConverter(Converter):
-    def structure_attrs_fromdict(self, obj: dict[str, Any], cls: type[T]) -> T:
-        # Note that keys are in camelCase convention, for example, tableHeader,
-        # tableBody. Therefore, we need to convert the keys to snake_case.
-        transformed_obj = {}
-        for key, value in obj.items():
-            if isinstance(value, str):
-                # For some types of node, the indentation of the lines is included
-                # in the value of such nodes. Then the indentation can be changed after
-                # formatting. Therefore, we need to dedent the value here for consistent
-                # results. We also need to remove trailing spaces.
-                value = remove_trailing_spaces(value)
-                value = textwrap.dedent(value)
-
-            transformed_obj[camel_to_snake_case(key)] = value
-
-        return super().structure_attrs_fromdict(
-            transformed_obj,
-            cls,
-        )
-
-
-converter = CustomConverter()
 
 
 # noinspection PyMissingConstructor
@@ -66,7 +38,7 @@ def parse(content: str) -> GherkinDocument:
         raise InvalidInput(e) from e
 
     try:
-        result = converter.structure(parse_result, GherkinDocument)
+        result = GherkinDocument.model_validate(parse_result)
     except Exception as e:
         raise DeserializeError(f"{type(e).__name__}: {e}") from e
 

@@ -1,10 +1,7 @@
-
-from ._base import prepare
 from .location import LocationMixin
 from .table_cell import TableCell
 
 
-@prepare
 class TableRow(LocationMixin):
     cells: tuple[TableCell, ...]
 

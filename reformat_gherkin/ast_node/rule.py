@@ -1,15 +1,14 @@
 from itertools import chain
 from typing import Optional
 
-from ._base import prepare
+from ._base import BaseNode, GherkinString
 from .background import Background
 from .location import LocationMixin
 from .scenario import Scenario
 from .tag import Tag
 
 
-@prepare
-class RuleChildren:
+class RuleChildren(BaseNode):
     background: Optional[Background] = None
     scenario: Optional[Scenario] = None
 
@@ -21,13 +20,12 @@ class RuleChildren:
             yield from self.scenario
 
 
-@prepare
 class Rule(LocationMixin):
-    keyword: str
-    name: str
+    keyword: GherkinString
+    name: GherkinString
     tags: tuple[Tag, ...]
     children: tuple[RuleChildren, ...]
-    description: str
+    description: GherkinString
 
     def __iter__(self):
         yield from self.tags

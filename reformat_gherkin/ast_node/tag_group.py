@@ -1,8 +1,8 @@
 from typing import Union
 
+from ._base import LocationMixin
 from .examples import Examples
 from .feature import Feature
-from .location import LocationMixin
 from .rule import Rule
 from .scenario import Scenario
 from .tag import Tag

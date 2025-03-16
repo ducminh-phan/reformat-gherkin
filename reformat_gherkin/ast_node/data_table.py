@@ -1,4 +1,4 @@
-from .location import LocationMixin
+from ._base import LocationMixin
 from .table_row import TableRow
 
 

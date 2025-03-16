@@ -1,5 +1,4 @@
-from ._base import GherkinString
-from .location import LocationMixin
+from ._base import GherkinString, LocationMixin
 
 
 class Tag(LocationMixin):

@@ -1,9 +1,8 @@
 from itertools import chain
 from typing import Optional
 
-from ._base import BaseNode, GherkinString
+from ._base import BaseNode, DescriptionMixin, GherkinString, LocationMixin
 from .background import Background
-from .location import LocationMixin
 from .scenario import Scenario
 from .tag import Tag
 
@@ -20,12 +19,11 @@ class RuleChildren(BaseNode):
             yield from self.scenario
 
 
-class Rule(LocationMixin):
+class Rule(LocationMixin, DescriptionMixin):
     keyword: GherkinString
     name: GherkinString
     tags: tuple[Tag, ...]
     children: tuple[RuleChildren, ...]
-    description: GherkinString
 
     def __iter__(self):
         yield from self.tags

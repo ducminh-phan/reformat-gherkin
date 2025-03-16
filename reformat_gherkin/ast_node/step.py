@@ -1,9 +1,8 @@
 from typing import Optional
 
-from ._base import GherkinString
+from ._base import GherkinString, LocationMixin
 from .data_table import DataTable
 from .doc_string import DocString
-from .location import LocationMixin
 
 
 class Step(LocationMixin):

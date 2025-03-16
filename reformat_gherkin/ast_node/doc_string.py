@@ -2,8 +2,7 @@ from typing import Annotated
 
 from pydantic import AfterValidator
 
-from ._base import GherkinString
-from .location import LocationMixin
+from ._base import GherkinString, LocationMixin
 
 
 def escape_doc_string_value(text: str) -> str:

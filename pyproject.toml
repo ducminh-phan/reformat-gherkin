@@ -104,6 +104,7 @@ disable_error_code = "var-annotated"
 
 [tool.coverage.run]
 source = ["reformat_gherkin"]
+relative_files = true
 
 [tool.coverage.report]
 exclude_lines = [

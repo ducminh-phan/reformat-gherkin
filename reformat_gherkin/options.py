@@ -57,6 +57,7 @@ class Options(BaseModel):
     tag_line_mode: TagLineMode
     fast: bool
     indent: str
+    keep_blank_lines: bool = False
 
     model_config = ConfigDict(
         frozen=True,

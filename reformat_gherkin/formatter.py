@@ -215,6 +215,8 @@ class LineGenerator:
     step_keyword_alignment: AlignmentMode
     tag_line_mode: TagLineMode
     indent: str
+    keep_blank_lines: bool = False
+    src_contents: str = ""
 
     __nodes: List[Node] = attrib(init=False)
     __contexts: ContextMap = attrib(init=False)
@@ -359,6 +361,14 @@ class LineGenerator:
             # Add an empty line after the last step, including its argument, if any
             if isinstance(node, (Background, Scenario)):
                 children = list(chain.from_iterable(node.steps))
+
+                if self.keep_blank_lines:
+                    src_lines = self.src_contents.splitlines()
+                    for i in range(len(node.steps) - 1):
+                        start = node.steps[i].location.line  # 0-indexed lines after step i
+                        end = node.steps[i + 1].location.line - 1  # 0-indexed exclusive
+                        if any(not src_lines[j].strip() for j in range(start, end)):
+                            nodes_with_newline.add(list(node.steps[i])[-1])
 
             # Add an empty line after an examples table
             if isinstance(node, Examples):

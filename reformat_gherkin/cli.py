@@ -100,6 +100,12 @@ from .version import __version__
     help="Indent lines with tabs instead of spaces.",
 )
 @click.option(
+    "--keep-blank-lines",
+    is_flag=True,
+    default=False,
+    help="Preserve blank lines between steps within a scenario.",
+)
+@click.option(
     "--config",
     type=click.Path(
         exists=True,
@@ -124,6 +130,7 @@ def main(
     single_line_tags: bool,
     tab_width: int,
     use_tabs: bool,
+    keep_blank_lines: bool,
     config: Optional[str],
 ) -> None:
     """
@@ -150,6 +157,7 @@ def main(
         fast=fast,
         tag_line_mode=tag_line_mode,
         indent=indent,
+        keep_blank_lines=keep_blank_lines,
     )
 
     report = Report(check=check)

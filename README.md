@@ -90,6 +90,8 @@ Options:
                                   indentation-level. [default: 2]
 
   --use-tabs                      Indent lines with tabs instead of spaces.
+  --keep-blank-lines              Preserve blank lines between steps within a
+                                  scenario.
   --config FILE                   Read configuration from FILE.
   --version                       Show the version and exit.
   --help                          Show this message and exit.
@@ -119,6 +121,7 @@ Example config file:
 check: False
 alignment: left
 tab_width: 4
+keep_blank_lines: true
 ```
 
 ## Version control integration

@@ -1,14 +1,13 @@
-from typing import Tuple, Union
+from typing import Union
 
-from ._base import prepare
+from ._base import LocationMixin
 from .examples import Examples
 from .feature import Feature
-from .location import LocationMixin
+from .rule import Rule
 from .scenario import Scenario
 from .tag import Tag
 
 
-@prepare
 class TagGroup(LocationMixin):
-    members: Tuple[Tag, ...]
-    context: Union[Examples, Feature, Scenario]
+    members: tuple[Tag, ...]
+    context: Union[Examples, Feature, Scenario, Rule]

@@ -1,17 +1,13 @@
 from itertools import chain
-from typing import Tuple
 
-from ._base import prepare
-from .location import LocationMixin
+from ._base import DescriptionMixin, GherkinString, LocationMixin
 from .step import Step
 
 
-@prepare
-class Background(LocationMixin):
-    keyword: str
-    name: str
-    steps: Tuple[Step, ...]
-    description: str
+class Background(LocationMixin, DescriptionMixin):
+    keyword: GherkinString
+    name: GherkinString
+    steps: tuple[Step, ...]
 
     def __iter__(self):
         yield self

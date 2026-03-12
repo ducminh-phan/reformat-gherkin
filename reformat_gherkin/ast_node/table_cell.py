@@ -1,7 +1,8 @@
-from attr import attrib
+from typing import Annotated
 
-from ._base import prepare
-from .location import LocationMixin
+from pydantic import AfterValidator
+
+from ._base import GherkinString, LocationMixin
 
 
 def escape_table_cell_value(text: str) -> str:
@@ -16,6 +17,5 @@ def escape_table_cell_value(text: str) -> str:
     return text.replace("\\", "\\\\").replace("|", "\\|").replace("\n", "\\n")
 
 
-@prepare
 class TableCell(LocationMixin):
-    value: str = attrib(converter=escape_table_cell_value)
+    value: Annotated[GherkinString, AfterValidator(escape_table_cell_value)]

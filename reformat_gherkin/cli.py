@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 import click
 
@@ -48,7 +48,7 @@ from .version import __version__
         [
             AlignmentMode.LEFT.value,
             AlignmentMode.RIGHT.value,
-        ]
+        ],
     ),
     help=(
         "Specify the alignment of step keywords (Given, When, Then,...). "
@@ -65,7 +65,7 @@ from .version import __version__
         [
             NewlineMode.LF.value,
             NewlineMode.CRLF.value,
-        ]
+        ],
     ),
     help=(
         "Specify the line separators when formatting files inplace. "
@@ -122,7 +122,7 @@ from .version import __version__
 @click.pass_context
 def main(
     ctx: click.Context,
-    src: Tuple[str],
+    src: tuple[str],
     check: bool,
     alignment: Optional[str],
     newline: Optional[str],

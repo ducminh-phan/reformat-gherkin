@@ -1,7 +1,7 @@
 from enum import Enum, unique
 from typing import Optional
 
-from attr import dataclass
+from pydantic import BaseModel, ConfigDict
 
 
 @unique
@@ -50,8 +50,7 @@ def get_indent_from_configuration(tab_width: int, use_tabs: bool):
     return "\t" if use_tabs else " " * tab_width
 
 
-@dataclass(frozen=True)
-class Options:
+class Options(BaseModel):
     write_back: WriteBackMode
     step_keyword_alignment: AlignmentMode
     newline: NewlineMode
@@ -59,3 +58,7 @@ class Options:
     fast: bool
     indent: str
     keep_blank_lines: bool = False
+
+    model_config = ConfigDict(
+        frozen=True,
+    )

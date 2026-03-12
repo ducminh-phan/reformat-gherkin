@@ -6,7 +6,9 @@ import pytest
 from click.testing import CliRunner
 
 from reformat_gherkin.config import CONFIG_FILE
+
 from tests.helpers import FILENAME_OPTION_MAP, TEST_DIR
+
 
 VALID_DATA_DIR = TEST_DIR / "data" / "valid"
 INVALID_DATA_DIR = TEST_DIR / "data" / "invalid"
@@ -112,7 +114,7 @@ def sources(tmp_dir):
 def source_with_newline(tmp_file):
     def construct_source_with_newline(newline):
         content = (VALID_DATA_DIR / "full" / "input.feature").read_text(
-            encoding="utf-8"
+            encoding="utf-8",
         )
         with tmp_file.open("w", newline=newline) as f:
             f.write(content)

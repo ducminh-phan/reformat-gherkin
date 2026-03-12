@@ -1,7 +1,8 @@
-from attr import attrib
+from typing import Annotated
 
-from ._base import prepare
-from .location import LocationMixin
+from pydantic import AfterValidator
+
+from ._base import GherkinString, LocationMixin
 
 
 def normalize_comment_text(text: str) -> str:
@@ -15,6 +16,5 @@ def normalize_comment_text(text: str) -> str:
     return ("# " + normalized_text).strip()
 
 
-@prepare
 class Comment(LocationMixin):
-    text: str = attrib(converter=normalize_comment_text)
+    text: Annotated[GherkinString, AfterValidator(normalize_comment_text)]

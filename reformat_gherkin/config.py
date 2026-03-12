@@ -1,8 +1,10 @@
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Optional
 
 import click
 import yaml
+
 
 CONFIG_FILE = ".reformat-gherkin.yaml"
 SYSTEM_ROOT = Path("/").resolve()
@@ -60,7 +62,7 @@ def read_config_file(
             return None
 
     try:
-        with open(value, "r") as f:
+        with open(value) as f:
             config = yaml.safe_load(f)
     except (yaml.YAMLError, OSError) as e:
         raise click.FileError(
@@ -75,6 +77,6 @@ def read_config_file(
         ctx.default_map = {}
 
     ctx.default_map.update(  # type: ignore  # bad types in .pyi
-        {k.replace("--", "").replace("-", "_"): v for k, v in config.items()}
+        {k.replace("--", "").replace("-", "_"): v for k, v in config.items()},
     )
     return value

@@ -16,10 +16,9 @@ def test_cli_stdin_success(runner, valid_contents):
         with_expected=True,
         with_options=True,
     ):
-        args = options_to_cli_args(options) + ["-"]
+        args = [*options_to_cli_args(options), "-"]
         args.remove("--check")
-        args = " ".join(args)
-        result = runner.invoke(main, args=args, input=content)
+        result = runner.invoke(main, args=" ".join(args), input=content)
 
         assert result.stdout == expected
         assert result.exit_code == 0

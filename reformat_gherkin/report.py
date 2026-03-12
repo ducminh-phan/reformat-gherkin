@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import click
-from attr import dataclass
+from pydantic.dataclasses import dataclass
 
 from .utils import err, out
 
@@ -44,7 +44,7 @@ class Report:
         if self.failure_count:
             return 123
 
-        elif self.change_count and self.check:
+        if self.change_count and self.check:
             return 1
 
         return 0
@@ -67,7 +67,7 @@ class Report:
         if self.change_count:
             s = "s" if self.change_count > 1 else ""
             report_lines.append(
-                click.style(f"{self.change_count} file{s} {reformatted}", bold=True)
+                click.style(f"{self.change_count} file{s} {reformatted}", bold=True),
             )
         if self.same_count:
             s = "s" if self.same_count > 1 else ""
@@ -75,6 +75,6 @@ class Report:
         if self.failure_count:
             s = "s" if self.failure_count > 1 else ""
             report_lines.append(
-                click.style(f"{self.failure_count} file{s} {failed}", fg="red")
+                click.style(f"{self.failure_count} file{s} {failed}", fg="red"),
             )
         return ", ".join(report_lines) + "."

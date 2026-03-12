@@ -1,7 +1,5 @@
-from ._base import prepare
-from .location import LocationMixin
+from ._base import GherkinString, LocationMixin
 
 
-@prepare
 class Tag(LocationMixin):
-    name: str
+    name: GherkinString

@@ -1,13 +1,9 @@
-from typing import Tuple
-
-from ._base import prepare
-from .location import LocationMixin
+from ._base import LocationMixin
 from .table_row import TableRow
 
 
-@prepare
 class DataTable(LocationMixin):
-    rows: Tuple[TableRow, ...]
+    rows: tuple[TableRow, ...]
 
     def __iter__(self):
         yield self

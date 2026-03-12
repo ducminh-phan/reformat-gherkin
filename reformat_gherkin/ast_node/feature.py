@@ -1,13 +1,11 @@
 from itertools import chain
-from typing import Optional, Tuple
+from typing import Optional
 
-from ._base import prepare
-from .location import LocationMixin
+from ._base import DescriptionMixin, GherkinString, LocationMixin
 from .rule import Rule, RuleChildren
 from .tag import Tag
 
 
-@prepare
 class FeatureChildren(RuleChildren):
     rule: Optional[Rule] = None
 
@@ -18,14 +16,12 @@ class FeatureChildren(RuleChildren):
             yield from self.rule
 
 
-@prepare
-class Feature(LocationMixin):
-    language: str
-    keyword: str
-    name: str
-    children: Tuple[FeatureChildren, ...]
-    tags: Tuple[Tag, ...]
-    description: str
+class Feature(LocationMixin, DescriptionMixin):
+    language: GherkinString
+    keyword: GherkinString
+    name: GherkinString
+    children: tuple[FeatureChildren, ...]
+    tags: tuple[Tag, ...]
 
     def __iter__(self):
         yield from self.tags

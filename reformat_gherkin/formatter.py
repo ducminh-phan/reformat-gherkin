@@ -1,18 +1,8 @@
+from collections.abc import Iterator, Mapping
 from itertools import chain, groupby
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
-    Set,
-    Union,
-    overload,
-)
+from typing import Any, Callable, Optional, Union, cast, overload
 
-from attr import attrib, dataclass
+from pydantic import BaseModel
 
 from .ast_node import (
     Background,
@@ -34,6 +24,7 @@ from .ast_node import (
 from .options import AlignmentMode, TagLineMode
 from .utils import camel_to_snake_case, extract_beginning_spaces, get_display_width
 
+
 INDENT_LEVEL_MAP: Mapping[Any, int] = {
     Feature: 0,
     Background: 1,
@@ -47,7 +38,10 @@ INDENT_LEVEL_MAP: Mapping[Any, int] = {
 
 
 def generate_language_header(language: str) -> Comment:
-    return Comment(Location(1, 1), f"# language: {language}")  # type: ignore
+    return Comment(
+        location=Location(line=1, column=1),
+        text=f"# language: {language}",
+    )
 
 
 def generate_step_line(
@@ -104,8 +98,7 @@ def format_step_keyword(
 
     if keyword_alignment is AlignmentMode.LEFT:
         return keyword + padding
-    else:
-        return padding + keyword
+    return padding + keyword
 
 
 def generate_keyword_line(
@@ -121,7 +114,7 @@ def generate_description_lines(
     description: str,
     indent: str,
     indent_level: int,
-) -> List[str]:
+) -> list[str]:
     description_lines = description.splitlines()
 
     lines = [f"{indent * indent_level}{line}" for line in description_lines]
@@ -134,10 +127,10 @@ def generate_description_lines(
 
 
 def generate_table_lines(
-    rows: List[TableRow],
+    rows: list[TableRow],
     indent: str,
     indent_level: int,
-) -> List[str]:
+) -> list[str]:
     """
     Generate lines for table. The columns in a table need to have the same width.
     """
@@ -171,7 +164,7 @@ def generate_table_lines(
     return [f"{indent * indent_level}{line}" for line in lines]
 
 
-def extract_rows(node: Union[DataTable, Examples]) -> List[TableRow]:
+def extract_rows(node: Union[DataTable, Examples]) -> list[TableRow]:
     """
     Extract table rows from either a Datable or Example instance.
     """
@@ -198,19 +191,18 @@ def generate_doc_string_lines(
     docstring: DocString,
     indent: str,
     indent_level: int,
-) -> List[str]:
+) -> list[str]:
     raw_lines = docstring.content.splitlines()
-    raw_lines = ['"""'] + raw_lines + ['"""']
+    raw_lines = [f'"""{docstring.media_type}', *raw_lines, '"""']
 
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 
 
-ContextMap = Dict[Union[Comment, Tag, TagGroup, TableRow], Any]
+ContextMap = dict[Union[Comment, Tag, TagGroup, TableRow], Any]
 Lines = Iterator[str]
 
 
-@dataclass
-class LineGenerator:
+class LineGenerator(BaseModel):
     ast: GherkinDocument
     step_keyword_alignment: AlignmentMode
     tag_line_mode: TagLineMode
@@ -218,14 +210,15 @@ class LineGenerator:
     keep_blank_lines: bool = False
     src_contents: str = ""
 
-    __nodes: List[Node] = attrib(init=False)
-    __contexts: ContextMap = attrib(init=False)
-    __nodes_with_newline: Set[Node] = attrib(init=False)
-    __nodes_within_rules: Set[Node] = attrib(init=False)
-    __max_step_keyword_width: int = attrib(init=False)
+    __nodes: list[Node]
+    __contexts: ContextMap
+    __nodes_with_newline: set[Node]
+    __nodes_within_rules: set[Node]
+    __max_step_keyword_width: int
 
-    def __attrs_post_init__(self):
-        # Use `__attrs_post_init__` instead of `property` to avoid re-computing attributes
+    def model_post_init(self, __context: Any) -> None:
+        # Use `model_post_init` instead of `property`
+        # to avoid re-computing attributes
 
         self.__nodes = list(self.ast)
 
@@ -245,7 +238,7 @@ class LineGenerator:
         Group the tags of a node, so that we can render them on a single line.
         """
 
-        tag_groups: List[TagGroup] = []
+        tag_groups: list[TagGroup] = []
         node: Node
         for node in self.ast:
             if hasattr(node, "tags"):
@@ -263,9 +256,12 @@ class LineGenerator:
 
         # After grouping the tags, we need to include the tag groups into
         # the list of nodes and remove the tags from the list.
-        self.__nodes = [
+        non_tag_nodes: list[Node] = [
             node for node in self.__nodes if not isinstance(node, Tag)
-        ] + tag_groups
+        ]
+        tag_groups_as_nodes = cast(list[Node], tag_groups)
+
+        self.__nodes = non_tag_nodes + tag_groups_as_nodes
 
     def __construct_contexts(self) -> ContextMap:
         """
@@ -307,7 +303,7 @@ class LineGenerator:
         return contexts
 
     @staticmethod
-    def __construct_contexts_for_comments(nodes: List[Node]) -> ContextMap:
+    def __construct_contexts_for_comments(nodes: list[Node]) -> ContextMap:
         # The context of each comment line is the next non-comment line.
         #
         # The steps of the algorithm:
@@ -330,7 +326,8 @@ class LineGenerator:
         for key, group in groups:
             if key is False:
                 # The current group consists of non-comments, we set the current context
-                # to be the last node in the group, since we grouped in the reverse order
+                # to be the last node in the group, since we grouped in the reverse
+                # order
                 current_context = list(group)[-1]
             else:
                 # The current group consists of comments. These comments should have the
@@ -340,12 +337,12 @@ class LineGenerator:
 
         return contexts
 
-    def __find_nodes_with_newline(self) -> Set[Node]:
+    def __find_nodes_with_newline(self) -> set[Node]:
         """
         Find all nodes in the AST that needs a new line after it.
         """
 
-        nodes_with_newline: Set[Node] = set()
+        nodes_with_newline: set[Node] = set()
 
         node: Optional[Node] = None
 
@@ -356,7 +353,7 @@ class LineGenerator:
             if isinstance(node, (Feature, Rule)) and not node.description:
                 nodes_with_newline.add(node)
 
-            children: List[Node] = []
+            children: list[Node] = []
 
             # Add an empty line after the last step, including its argument, if any
             if isinstance(node, (Background, Scenario)):
@@ -365,8 +362,8 @@ class LineGenerator:
                 if self.keep_blank_lines:
                     src_lines = self.src_contents.splitlines()
                     for i in range(len(node.steps) - 1):
-                        start = node.steps[i].location.line  # 0-indexed lines after step i
-                        end = node.steps[i + 1].location.line - 1  # 0-indexed exclusive
+                        start = node.steps[i].location.line
+                        end = node.steps[i + 1].location.line - 1
                         if any(not src_lines[j].strip() for j in range(start, end)):
                             nodes_with_newline.add(list(node.steps[i])[-1])
 
@@ -384,8 +381,8 @@ class LineGenerator:
 
         return nodes_with_newline
 
-    def __find_nodes_within_rules(self) -> Set[Node]:
-        nodes_within_rules: Set[Node] = set()
+    def __find_nodes_within_rules(self) -> set[Node]:
+        nodes_within_rules: set[Node] = set()
 
         feature = self.ast.feature
         if feature is not None:

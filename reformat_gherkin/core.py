@@ -1,10 +1,10 @@
 import sys
 import traceback
+from collections.abc import Iterable
 from io import TextIOWrapper
 from pathlib import Path
-from typing import BinaryIO, Iterable, Iterator, Set, Tuple, Union
+from typing import BinaryIO, Union
 
-from .ast_node import GherkinDocument
 from .errors import (
     BaseError,
     EmptySources,
@@ -19,6 +19,7 @@ from .parser import parse
 from .report import Report
 from .utils import decode_stream, diff, dump_to_file, err, open_stream_or_path
 
+
 REPORT_URL = "https://github.com/ducminh-phan/reformat-gherkin/issues"
 
 NEWLINE_FROM_OPTION = {
@@ -27,8 +28,8 @@ NEWLINE_FROM_OPTION = {
 }
 
 
-def find_sources(src: Iterable[str]) -> Set[Path]:
-    sources: Set[Path] = set()
+def find_sources(src: Iterable[str]) -> set[Path]:
+    sources: set[Path] = set()
 
     for s in src:
         path = Path(s).resolve()
@@ -43,7 +44,7 @@ def find_sources(src: Iterable[str]) -> Set[Path]:
     return sources
 
 
-def reformat(src: Tuple[str], report: Report, *, options: Options):
+def reformat(src: tuple[str], report: Report, *, options: Options):
     use_stdin = "-" in src
     sources = find_sources(filter((lambda it: it != "-"), src))
 
@@ -63,7 +64,7 @@ def reformat(src: Tuple[str], report: Report, *, options: Options):
 
 
 def reformat_stdin(*, options: Options) -> bool:
-    output = sys.stdout.buffer if options.write_back == WriteBackMode.INPLACE else None
+    output = sys.stdout.buffer if options.write_back is WriteBackMode.INPLACE else None
     return reformat_stream_or_path(
         sys.stdin.buffer,
         output,
@@ -73,7 +74,7 @@ def reformat_stdin(*, options: Options) -> bool:
 
 
 def reformat_single_file(path: Path, *, options: Options) -> bool:
-    out_path = path if options.write_back == WriteBackMode.INPLACE else None
+    out_path = path if options.write_back is WriteBackMode.INPLACE else None
     return reformat_stream_or_path(path, out_path, options=options)
 
 
@@ -140,10 +141,10 @@ def format_str(src_contents: str, *, options: Options) -> str:
     ast = parse(src_contents)
 
     line_generator = LineGenerator(
-        ast,
-        options.step_keyword_alignment,
-        options.tag_line_mode,
-        options.indent,
+        ast=ast,
+        step_keyword_alignment=options.step_keyword_alignment,
+        tag_line_mode=options.tag_line_mode,
+        indent=options.indent,
         keep_blank_lines=options.keep_blank_lines,
         src_contents=src_contents,
     )
@@ -157,13 +158,6 @@ def assert_equivalent(src: str, dst: str) -> None:
     Raise EquivalentError if `src` and `dst` aren't equivalent.
     """
 
-    def _v(ast: GherkinDocument) -> Iterator[str]:
-        """
-        Simple visitor generating strings to compare ASTs by content
-        """
-        for node in ast:
-            yield repr(node)
-
     src_ast = parse(src)
 
     try:
@@ -175,11 +169,11 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"{exc}\n"
             f"Please report a bug on {REPORT_URL}.\n"
             f"This invalid output might be helpful:\n"
-            f"{log}\n"
+            f"{log}\n",
         ) from exc
 
-    src_ast_str = "\n".join(_v(src_ast))
-    dst_ast_str = "\n".join(_v(dst_ast))
+    src_ast_str = src_ast.model_dump_json(indent=2)
+    dst_ast_str = dst_ast.model_dump_json(indent=2)
 
     if src_ast_str != dst_ast_str:
         log = dump_to_file(diff(src_ast_str, dst_ast_str, "src", "dst"))
@@ -187,7 +181,7 @@ def assert_equivalent(src: str, dst: str) -> None:
             f"INTERNAL ERROR: The new content produced is not equivalent to "
             f"the source.\n"
             f"Please report a bug on {REPORT_URL}.\n"
-            f"This diff might be helpful: {log}\n"
+            f"This diff might be helpful: {log}\n",
         )
 
 
@@ -205,5 +199,5 @@ def assert_stable(src: str, dst: str, *, options: Options) -> None:
             f"INTERNAL ERROR: Different contents are produced on the second pass "
             f"of the formatter.\n"
             f"Please report a bug on {REPORT_URL}.\n"
-            f"This diff might be helpful: {log}\n"
+            f"This diff might be helpful: {log}\n",
         ) from None

@@ -1,18 +1,15 @@
-from typing import Optional, Tuple
+from typing import Optional
 
-from ._base import prepare
-from .location import LocationMixin
+from ._base import DescriptionMixin, GherkinString, LocationMixin
 from .table_row import TableRow
 from .tag import Tag
 
 
-@prepare
-class Examples(LocationMixin):
-    keyword: str
-    name: str
-    tags: Tuple[Tag, ...]
-    description: str
-    table_body: Tuple[TableRow, ...]
+class Examples(LocationMixin, DescriptionMixin):
+    keyword: GherkinString
+    name: GherkinString
+    tags: tuple[Tag, ...]
+    table_body: tuple[TableRow, ...]
     table_header: Optional[TableRow] = None
 
     def __iter__(self):

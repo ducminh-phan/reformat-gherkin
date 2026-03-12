@@ -1,21 +1,17 @@
 from itertools import chain
-from typing import Tuple
 
-from ._base import prepare
+from ._base import DescriptionMixin, GherkinString, LocationMixin
 from .examples import Examples
-from .location import LocationMixin
 from .step import Step
 from .tag import Tag
 
 
-@prepare
-class Scenario(LocationMixin):
-    keyword: str
-    name: str
-    steps: Tuple[Step, ...]
-    tags: Tuple[Tag, ...]
-    description: str
-    examples: Tuple[Examples, ...]
+class Scenario(LocationMixin, DescriptionMixin):
+    keyword: GherkinString
+    name: GherkinString
+    steps: tuple[Step, ...]
+    tags: tuple[Tag, ...]
+    examples: tuple[Examples, ...]
 
     def __iter__(self):
         yield from self.tags

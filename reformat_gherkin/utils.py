@@ -6,10 +6,11 @@ import tokenize
 from contextlib import nullcontext
 from functools import lru_cache, partial
 from pathlib import Path
-from typing import IO, AnyStr, BinaryIO, Tuple, Union
+from typing import IO, AnyStr, BinaryIO, Union
 
 import click
 from wcwidth import wcswidth
+
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -18,7 +19,7 @@ _first_cap_re = re.compile(r"(.)([A-Z][a-z]+)")
 _all_cap_re = re.compile(r"([a-z\d])([A-Z])")
 
 
-@lru_cache()
+@lru_cache
 def camel_to_snake_case(name: str) -> str:
     """
     Convert camelCase to snake_case.
@@ -57,7 +58,7 @@ def diff(a: str, b: str, a_name: str, b_name: str) -> str:
             fromfile=a_name,
             tofile=b_name,
             n=5,
-        )
+        ),
     )
 
 
@@ -78,7 +79,7 @@ def remove_trailing_spaces(string: str) -> str:
     return "\n".join(line.rstrip() for line in lines)
 
 
-def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
+def decode_stream(src: BinaryIO) -> tuple[str, str, str]:
     """
     Return a tuple of (decoded_contents, encoding, newline).
 
@@ -91,13 +92,13 @@ def decode_stream(src: BinaryIO) -> Tuple[str, str, str]:
     if not lines:
         return "", encoding, "\n"
 
-    newline = "\r\n" if b"\r\n" == lines[0][-2:] else "\n"
+    newline = "\r\n" if lines[0][-2:] == b"\r\n" else "\n"
     src.seek(0)
     with io.TextIOWrapper(src, encoding) as tiow:
         return tiow.read(), encoding, newline
 
 
-@lru_cache()
+@lru_cache
 def get_display_width(text: str) -> int:
     """
     Get the display width of a string.
@@ -121,5 +122,5 @@ def get_display_width(text: str) -> int:
 def open_stream_or_path(stream_or_path: Union[IO[AnyStr], Path], mode: str):
     if isinstance(stream_or_path, Path):
         return open(stream_or_path, mode)
-    else:
-        return nullcontext(stream_or_path)
+
+    return nullcontext(stream_or_path)

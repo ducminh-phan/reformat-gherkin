@@ -1,7 +1,8 @@
 import subprocess
+import sys
 
 
-COMMON_ARGS = ["poetry", "run", "python", "-m", "reformat_gherkin"]
+COMMON_ARGS = [sys.executable, "-m", "reformat_gherkin"]
 
 
 def test_run_as_package_success(sources):

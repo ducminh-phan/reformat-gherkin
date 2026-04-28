@@ -126,4 +126,4 @@ def source_with_newline(tmp_file):
 
 @pytest.fixture
 def runner():
-    return CliRunner(mix_stderr=False)
+    return CliRunner()

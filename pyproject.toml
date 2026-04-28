@@ -17,11 +17,11 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Quality Assurance",
 ]
 
@@ -29,22 +29,22 @@ classifiers = [
 reformat-gherkin = "reformat_gherkin.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 
-PyYAML = ">=5.4"
-click = ">=7"
-gherkin-official = "30.0.4"
-pydantic = "^2.10.6"
-wcwidth = "^0.2.5"
+PyYAML = "^6.0.3"
+click = "^8.3.0"
+gherkin-official = "39.0.0"
+pydantic = "^2.13.3"
+wcwidth = "^0.6.0"
 
 [tool.poetry.group.dev.dependencies]
-coverage = "^6.4.1"
-pre-commit = "^2.19.0"
-pytest = "^7.1.2"
-pytest-cov = "^3.0.0"
-pytest-mock = "^3.8.2"
-ruff = "^0.11.0"
-tomli = "^2.2.1"
+coverage = "^7.13.5"
+pre-commit = "^4.6.0"
+pytest = "^9.0.3"
+pytest-cov = "^7.1.0"
+pytest-mock = "^3.15.1"
+ruff = "^0.15.12"
+tomli = "^2.4.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -54,7 +54,7 @@ build-backend = "poetry.core.masonry.api"
 # Same as Black.
 line-length = 88
 
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [
@@ -107,6 +107,7 @@ disable_error_code = "var-annotated"
 [tool.coverage.run]
 source = ["reformat_gherkin"]
 relative_files = true
+branch = true
 
 [tool.coverage.report]
 exclude_lines = [

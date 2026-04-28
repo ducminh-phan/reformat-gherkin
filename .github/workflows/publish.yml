@@ -16,17 +16,17 @@ jobs:
 
     env:
       python_version: "3.11"
-      poetry_version: 1.8.3
+      poetry_version: 2.3.4
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.python_version }}
 
       - name: Cache poetry
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.local
           key: poetry-${{ env.python_version }}-${{ runner.os }}-${{ env.poetry_version }}

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from ._base import GherkinString, LocationMixin
 from .data_table import DataTable
 from .doc_string import DocString
@@ -8,8 +6,8 @@ from .doc_string import DocString
 class Step(LocationMixin):
     keyword: GherkinString
     text: GherkinString
-    data_table: Optional[DataTable] = None
-    doc_string: Optional[DocString] = None
+    data_table: DataTable | None = None
+    doc_string: DocString | None = None
 
     def __iter__(self):
         yield self

@@ -1,5 +1,4 @@
 from itertools import chain
-from typing import Optional
 
 from ._base import BaseNode, DescriptionMixin, GherkinString, LocationMixin
 from .background import Background
@@ -8,8 +7,8 @@ from .tag import Tag
 
 
 class RuleChildren(BaseNode):
-    background: Optional[Background] = None
-    scenario: Optional[Scenario] = None
+    background: Background | None = None
+    scenario: Scenario | None = None
 
     def __iter__(self):
         if self.background is not None:

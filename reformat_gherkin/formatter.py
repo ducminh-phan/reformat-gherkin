@@ -1,6 +1,6 @@
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from itertools import chain, groupby
-from typing import Any, Callable, Optional, Union, cast, overload
+from typing import Any, cast, overload
 
 from pydantic import BaseModel
 
@@ -164,7 +164,7 @@ def generate_table_lines(
     return [f"{indent * indent_level}{line}" for line in lines]
 
 
-def extract_rows(node: Union[DataTable, Examples]) -> list[TableRow]:
+def extract_rows(node: DataTable | Examples) -> list[TableRow]:
     """
     Extract table rows from either a DataTable or Example instance.
     """
@@ -198,7 +198,7 @@ def generate_doc_string_lines(
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 
 
-ContextMap = dict[Union[Comment, Tag, TagGroup, TableRow], Any]
+ContextMap = dict[Comment | Tag | TagGroup | TableRow, Any]
 Lines = Iterator[str]
 
 
@@ -351,7 +351,7 @@ class LineGenerator(BaseModel):
 
         nodes_with_newline: set[Node] = set()
 
-        node: Optional[Node] = None
+        node: Node | None = None
 
         for node in self.__nodes:
             # We want to add a newline after the Feature/Rule line, even
@@ -437,7 +437,7 @@ class LineGenerator(BaseModel):
         pass
 
     @overload
-    def get_indent_level(self, node: Node, *, default: Optional[int]) -> Optional[int]:
+    def get_indent_level(self, node: Node, *, default: int | None) -> int | None:
         pass
 
     def get_indent_level(self, node: Node, *, default=0):
@@ -520,7 +520,7 @@ class LineGenerator(BaseModel):
         # Find the indent level of this comment line
         if context is None:
             # In this case, this comment line is the last line of the document
-            indent_level: Optional[int] = 0
+            indent_level: int | None = 0
         else:
             # Try to look for the indent level of the context in the mapping. If not
             # successful, then we use the same amount of white spaces to indent as

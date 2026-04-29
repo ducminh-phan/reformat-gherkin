@@ -1,5 +1,4 @@
 from itertools import chain
-from typing import Optional
 
 from ._base import DescriptionMixin, GherkinString, LocationMixin
 from .rule import Rule, RuleChildren
@@ -7,7 +6,7 @@ from .tag import Tag
 
 
 class FeatureChildren(RuleChildren):
-    rule: Optional[Rule] = None
+    rule: Rule | None = None
 
     def __iter__(self):
         yield from super().__iter__()

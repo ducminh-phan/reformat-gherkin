@@ -1,5 +1,3 @@
-from typing import Union
-
 from ._base import LocationMixin
 from .examples import Examples
 from .feature import Feature
@@ -10,4 +8,4 @@ from .tag import Tag
 
 class TagGroup(LocationMixin):
     members: tuple[Tag, ...]
-    context: Union[Examples, Feature, Scenario, Rule]
+    context: Examples | Feature | Scenario | Rule

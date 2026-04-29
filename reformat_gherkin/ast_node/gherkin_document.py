@@ -1,5 +1,3 @@
-from typing import Optional
-
 from ._base import BaseNode
 from .comment import Comment
 from .feature import Feature
@@ -7,7 +5,7 @@ from .feature import Feature
 
 class GherkinDocument(BaseNode):
     comments: tuple[Comment, ...]
-    feature: Optional[Feature] = None
+    feature: Feature | None = None
 
     def __iter__(self):
         yield from self.comments

@@ -1,5 +1,3 @@
-from typing import Optional
-
 import click
 
 from .config import read_config_file
@@ -118,13 +116,13 @@ def main(
     ctx: click.Context,
     src: tuple[str],
     check: bool,
-    alignment: Optional[str],
-    newline: Optional[str],
+    alignment: str | None,
+    newline: str | None,
     fast: bool,
     single_line_tags: bool,
     tab_width: int,
     use_tabs: bool,
-    config: Optional[str],
+    config: str | None,
 ) -> None:
     """
     Reformat the given SRC files and all .feature files in SRC folders. If -

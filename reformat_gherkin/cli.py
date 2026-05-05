@@ -130,7 +130,6 @@ def main(
     use_tabs: bool,
     keep_blank_lines: bool,
     config: str | None,
-
 ) -> None:
     """
     Reformat the given SRC files and all .feature files in SRC folders. If -

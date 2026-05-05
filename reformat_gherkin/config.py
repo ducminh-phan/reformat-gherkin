@@ -1,6 +1,5 @@
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Optional
 
 import click
 import yaml
@@ -45,8 +44,8 @@ def find_project_root(srcs: Iterable[str]) -> Path:
 def read_config_file(
     ctx: click.Context,
     _: click.Parameter,
-    value: Optional[str],
-) -> Optional[str]:
+    value: str | None,
+) -> str | None:
     """
     Inject the configuration from ".reformat-gherkin.yaml" into defaults in `ctx`.
 

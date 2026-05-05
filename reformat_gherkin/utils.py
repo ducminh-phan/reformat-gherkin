@@ -6,7 +6,7 @@ import tokenize
 from contextlib import nullcontext
 from functools import lru_cache, partial
 from pathlib import Path
-from typing import IO, AnyStr, BinaryIO, Union
+from typing import IO, AnyStr, BinaryIO
 
 import click
 from wcwidth import wcswidth
@@ -119,7 +119,7 @@ def get_display_width(text: str) -> int:
     return width
 
 
-def open_stream_or_path(stream_or_path: Union[IO[AnyStr], Path], mode: str):
+def open_stream_or_path(stream_or_path: IO[AnyStr] | Path, mode: str):
     if isinstance(stream_or_path, Path):
         return open(stream_or_path, mode)
 

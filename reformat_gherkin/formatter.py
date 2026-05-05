@@ -1,6 +1,6 @@
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from itertools import chain, groupby
-from typing import Any, Callable, Optional, Union, cast, overload
+from typing import Any, cast, overload
 
 from pydantic import BaseModel
 
@@ -164,9 +164,9 @@ def generate_table_lines(
     return [f"{indent * indent_level}{line}" for line in lines]
 
 
-def extract_rows(node: Union[DataTable, Examples]) -> list[TableRow]:
+def extract_rows(node: DataTable | Examples) -> list[TableRow]:
     """
-    Extract table rows from either a Datable or Example instance.
+    Extract table rows from either a DataTable or Example instance.
     """
 
     if isinstance(node, DataTable):
@@ -198,7 +198,7 @@ def generate_doc_string_lines(
     return [f"{indent * indent_level}{line}" if line else "" for line in raw_lines]
 
 
-ContextMap = dict[Union[Comment, Tag, TagGroup, TableRow], Any]
+ContextMap = dict[Comment | Tag | TagGroup | TableRow, Any]
 Lines = Iterator[str]
 
 
@@ -328,7 +328,16 @@ class LineGenerator(BaseModel):
                 # The current group consists of non-comments, we set the current context
                 # to be the last node in the group, since we grouped in the reverse
                 # order
-                current_context = list(group)[-1]
+                group_list = list(group)
+                current_context = group_list[-1]
+
+                # If the current context is a DataTable, we need to skip to the next
+                # node, which must be a TableRow. Otherwise, since DataTables are not
+                # rendered, we cannot get the indent level for the comment holding it
+                # as context.
+                if isinstance(current_context, DataTable):
+                    current_context = group_list[-2]
+
             else:
                 # The current group consists of comments. These comments should have the
                 # same indent level, which is the indent level of the current context.
@@ -344,7 +353,7 @@ class LineGenerator(BaseModel):
 
         nodes_with_newline: set[Node] = set()
 
-        node: Optional[Node] = None
+        node: Node | None = None
 
         for node in self.__nodes:
             # We want to add a newline after the Feature/Rule line, even
@@ -440,7 +449,7 @@ class LineGenerator(BaseModel):
         pass
 
     @overload
-    def get_indent_level(self, node: Node, *, default: Optional[int]) -> Optional[int]:
+    def get_indent_level(self, node: Node, *, default: int | None) -> int | None:
         pass
 
     def get_indent_level(self, node: Node, *, default=0):
@@ -523,7 +532,7 @@ class LineGenerator(BaseModel):
         # Find the indent level of this comment line
         if context is None:
             # In this case, this comment line is the last line of the document
-            indent_level: Optional[int] = 0
+            indent_level: int | None = 0
         else:
             # Try to look for the indent level of the context in the mapping. If not
             # successful, then we use the same amount of white spaces to indent as

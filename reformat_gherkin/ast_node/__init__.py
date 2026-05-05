@@ -1,5 +1,3 @@
-from typing import Union
-
 from ._base import Location
 from .background import Background
 from .comment import Comment
@@ -17,18 +15,18 @@ from .tag import Tag
 from .tag_group import TagGroup
 
 
-Node = Union[
-    Background,
-    Comment,
-    DataTable,
-    DocString,
-    Examples,
-    Feature,
-    Rule,
-    Scenario,
-    Step,
-    TableCell,
-    TableRow,
-    Tag,
-    TagGroup,
-]
+Node = (
+    Background
+    | Comment
+    | DataTable
+    | DocString
+    | Examples
+    | Feature
+    | Rule
+    | Scenario
+    | Step
+    | TableCell
+    | TableRow
+    | Tag
+    | TagGroup
+)

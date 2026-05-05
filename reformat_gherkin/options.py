@@ -1,5 +1,4 @@
 from enum import Enum, unique
-from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -21,7 +20,7 @@ class AlignmentMode(Enum):
     RIGHT = "right"
 
     @classmethod
-    def from_configuration(cls, alignment: Optional[str]) -> "AlignmentMode":
+    def from_configuration(cls, alignment: str | None) -> "AlignmentMode":
         return AlignmentMode(alignment)
 
 
@@ -32,7 +31,7 @@ class NewlineMode(Enum):
     CRLF = "CRLF"
 
     @classmethod
-    def from_configuration(cls, newline: Optional[str]) -> "NewlineMode":
+    def from_configuration(cls, newline: str | None) -> "NewlineMode":
         return NewlineMode(newline)
 
 

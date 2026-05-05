@@ -8,6 +8,7 @@ Feature: Some meaningful feature
       This description has multiple lines
 
     Given A lot of money
+      # A comment at the beginning of a DataTable
       | EUR |
       | USD |
       | VND |

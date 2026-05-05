@@ -3,7 +3,7 @@ import traceback
 from collections.abc import Iterable
 from io import TextIOWrapper
 from pathlib import Path
-from typing import BinaryIO, Union
+from typing import BinaryIO
 
 from .errors import (
     BaseError,
@@ -79,8 +79,8 @@ def reformat_single_file(path: Path, *, options: Options) -> bool:
 
 
 def reformat_stream_or_path(
-    in_stream_or_path: Union[BinaryIO, Path],
-    out_stream_or_path: Union[None, BinaryIO, Path],
+    in_stream_or_path: BinaryIO | Path,
+    out_stream_or_path: None | BinaryIO | Path,
     *,
     force_write: bool = False,
     options: Options,

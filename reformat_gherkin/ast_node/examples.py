@@ -1,5 +1,3 @@
-from typing import Optional
-
 from ._base import DescriptionMixin, GherkinString, LocationMixin
 from .table_row import TableRow
 from .tag import Tag
@@ -10,7 +8,7 @@ class Examples(LocationMixin, DescriptionMixin):
     name: GherkinString
     tags: tuple[Tag, ...]
     table_body: tuple[TableRow, ...]
-    table_header: Optional[TableRow] = None
+    table_header: TableRow | None = None
 
     def __iter__(self):
         yield from self.tags

@@ -18,6 +18,7 @@ def make_options(
     step_keyword_alignment=AlignmentMode.NONE,
     tag_line_mode=TagLineMode.SINGLELINE,
     indent="  ",
+    keep_blank_lines=False,
 ):
     return Options(
         write_back=WriteBackMode.CHECK,
@@ -26,6 +27,7 @@ def make_options(
         tag_line_mode=tag_line_mode,
         fast=False,
         indent=indent,
+        keep_blank_lines=keep_blank_lines,
     )
 
 
@@ -45,6 +47,7 @@ def options_to_cli_args(options):
         "--use-tabs"
         if options.indent == "\t"
         else f"--tab-width {len(options.indent)}",
+        "--keep-blank-lines" if options.keep_blank_lines else "",
     ]
 
 
@@ -59,6 +62,7 @@ FILENAME_OPTION_MAP = {
     "expected_right_aligned": make_options(step_keyword_alignment=AlignmentMode.RIGHT),
     "expected_multi_line_tags": make_options(tag_line_mode=TagLineMode.MULTILINE),
     "expected_use_tabs": make_options(indent="\t"),
+    "expected_keep_blank_lines": make_options(keep_blank_lines=True),
 }
 
 

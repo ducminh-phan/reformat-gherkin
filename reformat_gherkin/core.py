@@ -145,6 +145,8 @@ def format_str(src_contents: str, *, options: Options) -> str:
         step_keyword_alignment=options.step_keyword_alignment,
         tag_line_mode=options.tag_line_mode,
         indent=options.indent,
+        keep_blank_lines=options.keep_blank_lines,
+        src_contents=src_contents,
     )
     lines = line_generator.generate()
 
